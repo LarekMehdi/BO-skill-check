@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.question;
 
+import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,13 +27,31 @@ public class Question {
     @Column(nullable = false)
     private Integer timer;
 
+    @Column(nullable = false)
+    private Long    createdBy;
+
     public Question() {}
+
+    public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timer) {
+        this.id = id;
+        this.content = content;
+        this.isMultipleAnswer = isMultipleAnswer;
+        this.successRate = successRate;
+        this.timer = timer;
+    }
 
     public Question(String content, Boolean isMultipleAnswer, Double successRate, Integer timer) {
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
         this.successRate = successRate;
         this.timer = timer;
+    }
+
+    public Question(QuestionDto dto) {
+        this.content = dto.getContent();
+        this.isMultipleAnswer = dto.getIsMultipleAnswer();
+        this.successRate = dto.getSuccessRate();
+        this.timer = dto.getTimer();
     }
 
     /** ID **/
@@ -107,6 +126,20 @@ public class Question {
 
     public boolean hasTimer() {
         return !UtilEntity.isEmpty(this.timer);
+    }
+
+    /** CREATED BY **/
+
+    public Long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public boolean hasCreatedBy() {
+        return !UtilEntity.isEmpty(this.createdBy);
     }
 
 }

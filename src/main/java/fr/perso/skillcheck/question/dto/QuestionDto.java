@@ -1,5 +1,8 @@
 package fr.perso.skillcheck.question.dto;
 
+import java.util.List;
+
+import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +10,8 @@ import jakarta.validation.constraints.Positive;
 
 
 public class QuestionDto {
+
+    private Long id;
 
     @NotBlank(message = "Le content ne doit pas être vide")
     private String  content;
@@ -20,12 +25,35 @@ public class QuestionDto {
     @Positive(message = "Le champ timer doit être supérieur à 0")
     private Integer timer;
 
+    private List<AnswerDto> answers;
+
     public QuestionDto() {}
+
+    public QuestionDto(Long id,String content, Boolean isMultipleAnswer, Integer timer) {
+        this.id = id;
+        this.content = content;
+        this.isMultipleAnswer = isMultipleAnswer;
+        this.timer = timer;
+    }
 
     public QuestionDto(String content, Boolean isMultipleAnswer, Integer timer) {
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
         this.timer = timer;
+    }
+
+    /** ID **/
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean hasId() {
+        return !UtilEntity.isEmpty(this.id);
     }
 
     /** CONTENT **/
@@ -84,8 +112,22 @@ public class QuestionDto {
         this.timer = timer;
     }
 
-    public boolean hasTimert() {
+    public boolean hasTimer() {
         return !UtilEntity.isEmpty(this.timer);
+    }
+
+    /** ANsWERS **/
+
+    public List<AnswerDto> getAnswers() {
+        return this.answers;
+    }
+
+    public void setAnswers(List<AnswerDto> answers) {
+        this.answers = answers;
+    }
+
+    public boolean hasAnswers() {
+        return !UtilEntity.isEmpty(this.answers);
     }
 
 }

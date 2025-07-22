@@ -32,6 +32,10 @@ public class Question {
 
     public Question() {}
 
+    public Question(Long id) {
+        this.id = id;
+    }
+
     public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timer) {
         this.id = id;
         this.content = content;

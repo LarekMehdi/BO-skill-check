@@ -1,12 +1,15 @@
 package fr.perso.skillcheck.answer;
 
 import fr.perso.skillcheck.answer.dto.AnswerDto;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Answer {
@@ -15,8 +18,9 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long    id;
 
-    @Column(nullable = false)
-    private Long    questionId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
     @Column(nullable = false)
     private String  content;
@@ -28,20 +32,20 @@ public class Answer {
 
     public Answer(AnswerDto dto) {
         this.id = dto.getId();
-        this.questionId = dto.getQuestionId();
+        this.question = new Question(dto.getQuestionId());
         this.content = dto.getContent();
         this.isCorrect = dto.getIsCorrect();
     }
 
     public Answer(Long id, Long questionId, String content, Boolean isCorrect) {
         this.id = id;
-        this.questionId = questionId;
+        this.question = new Question(questionId);
         this.content = content;
         this.isCorrect = isCorrect;
     }
 
     public Answer(Long questionId, String content, Boolean isCorrect) {
-        this.questionId = questionId;
+        this.question = new Question(questionId);
         this.content = content;
         this.isCorrect = isCorrect;
     }
@@ -62,16 +66,16 @@ public class Answer {
 
     /** QUESTION ID **/
 
-    public Long getQuestionId() {
-        return this.questionId;
+    public Question getQuestion() {
+        return this.question;
     }
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
-    public boolean hasQuestionId() {
-        return !UtilEntity.isEmpty(this.questionId);
+    public boolean hasQuestion() {
+        return !UtilEntity.isEmpty(this.question);
     }
 
     /** CONTENT **/

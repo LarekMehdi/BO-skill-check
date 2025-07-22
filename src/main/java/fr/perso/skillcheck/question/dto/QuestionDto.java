@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -150,7 +151,7 @@ public class QuestionDto {
         List<Answer> answers = new ArrayList<>();
         for (AnswerDto a : this.answers) {
             Answer answer = new Answer(a);
-            answer.setQuestionId(questionId);
+            answer.setQuestion(new Question(questionId));
             answers.add(answer);
         }
         return answers;

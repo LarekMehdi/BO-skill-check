@@ -4,12 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import fr.perso.skillcheck.answer.Answer;
+import fr.perso.skillcheck.answer.AnswerRepository;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 
 public class QuestionService {
 
     @Autowired
     private QuestionRepository  questionRepository;
+
+    @Autowired
+    private AnswerRepository    answerRepository;
 
     /** FIND ALL **/
 
@@ -25,10 +30,14 @@ public class QuestionService {
 
     /** CREATE **/
     
-    // TODO: gerer les answers en meme temps
     public Question create(QuestionDto dto) {
         Question question = new Question(dto);
-        return this.questionRepository.save(question);
+        this.questionRepository.save(question);
+
+        List<Answer> answers = dto.getAnswersEntitiesWithQuestionId(question.getId());
+        this.answerRepository.saveAll(answers);
+
+        return question;
     }
 
     

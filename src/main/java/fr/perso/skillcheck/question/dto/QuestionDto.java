@@ -1,7 +1,9 @@
 package fr.perso.skillcheck.question.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.Valid;
@@ -119,7 +121,7 @@ public class QuestionDto {
         return !UtilEntity.isEmpty(this.timer);
     }
 
-    /** ANsWERS **/
+    /** ANSWERS **/
 
     public List<AnswerDto> getAnswers() {
         return this.answers;
@@ -131,6 +133,27 @@ public class QuestionDto {
 
     public boolean hasAnswers() {
         return !UtilEntity.isEmpty(this.answers);
+    }
+
+    /** METHODS **/
+
+    public List<Answer> getAnswersEntities() {
+        List<Answer> answers = new ArrayList<>();
+        for (AnswerDto a : this.answers) {
+            Answer answer = new Answer(a);
+            answers.add(answer);
+        }
+        return answers;
+    }
+
+    public List<Answer> getAnswersEntitiesWithQuestionId(Long questionId) {
+        List<Answer> answers = new ArrayList<>();
+        for (AnswerDto a : this.answers) {
+            Answer answer = new Answer(a);
+            answer.setQuestionId(questionId);
+            answers.add(answer);
+        }
+        return answers;
     }
 
 }

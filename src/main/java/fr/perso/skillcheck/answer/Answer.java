@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.answer;
 
+import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,13 @@ public class Answer {
     private Boolean isCorrect;
 
     public Answer() {}
+
+    public Answer(AnswerDto dto) {
+        this.id = dto.getId();
+        this.questionId = dto.getQuestionId();
+        this.content = dto.getContent();
+        this.isCorrect = dto.getIsCorrect();
+    }
 
     public Answer(Long id, Long questionId, String content, Boolean isCorrect) {
         this.id = id;

@@ -24,20 +24,20 @@ public class QuestionController {
 
   @GetMapping("/{id}")
   public Question findById(@PathVariable("id") Long id) {
-    return questionService.findById(id);
+    return this.questionService.findById(id);
   }
 
   /** FIND ALL **/
 
   @GetMapping
   public List<Question> findAll() {
-    return questionService.findAll();
+    return this.questionService.findAll();
   }
 
   /** CREATE **/
 
   @PostMapping
   public Question create(@RequestBody @Valid QuestionDto question) {
-    return questionService.create(question);
+    return this.questionService.create(question);
   }
 }

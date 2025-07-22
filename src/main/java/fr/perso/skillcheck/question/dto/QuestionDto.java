@@ -4,7 +4,9 @@ import java.util.List;
 
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.utils.UtilEntity;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -25,7 +27,8 @@ public class QuestionDto {
     @Positive(message = "Le champ timer doit être supérieur à 0")
     private Integer timer;
 
-    private List<AnswerDto> answers;
+    @NotEmpty(message = "La liste des réponses ne peut pas être vide")
+    private List<@Valid AnswerDto> answers;
 
     public QuestionDto() {}
 

@@ -40,6 +40,7 @@ public class AuthController {
     } catch (UsernameNotFoundException | BadCredentialsException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides");
     } catch (Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur");
     }
 }

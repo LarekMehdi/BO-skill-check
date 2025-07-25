@@ -133,4 +133,10 @@ public class User {
     public boolean hasRole() {
         return !UtilEntity.isEmpty(this.role);
     }
+
+    /** METHODS **/
+
+    public void setDefaultRoleIfNeeded() {
+        if (!this.hasRole()) this.role = Role.USER;
+    }
 }

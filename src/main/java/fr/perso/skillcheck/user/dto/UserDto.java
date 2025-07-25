@@ -1,41 +1,33 @@
-package fr.perso.skillcheck.user;
+package fr.perso.skillcheck.user.dto;
 
 import fr.perso.skillcheck.constants.Role;
-import fr.perso.skillcheck.user.dto.UserDto;
 import fr.perso.skillcheck.utils.UtilEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@Entity
-@Table(name = "app_user")
-public class User {
+
+public class UserDto {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long    id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Le pseudo ne doit pas être vide") 
+    @Size(min = 2, max = 50, message = "Le pseudo doit contenir entre 2 et 50 caractères")
     private String  pseudo;
 
-    @Column(nullable = false)
+    @NotBlank(message = "L'email ne doit pas être vide")
+    @Email(message = "L'email doit être valide")
     private String  email;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Le password ne doit pas être vide")
+    @Size(min = 6, message = "Le password doit contenir au moins 6 caractères")
     private String  password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role    role = Role.USER;
 
-    public User() {}
+    public UserDto() {}
 
-    public User(Long id, String pseudo, String email, String password, Role role) {
+    public UserDto(Long id, String pseudo, String email, String password, Role role) {
         this.id = id;
         this.pseudo = pseudo;
         this.email = email;
@@ -43,25 +35,17 @@ public class User {
         this.role = role;
     }
 
-    public User(String pseudo, String email, String password, Role role) {
+    public UserDto(String pseudo, String email, String password, Role role) {
         this.pseudo = pseudo;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public User(String pseudo, String email, String password) {
+    public UserDto(String pseudo, String email, String password) {
         this.pseudo = pseudo;
         this.email = email;
         this.password = password;
-    }
-
-    public User(UserDto dto) {
-        this.id = dto.getId();
-        this.pseudo = dto.getPseudo();
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-        this.role = dto.getRole();
     }
 
     /** ID **/

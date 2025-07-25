@@ -3,11 +3,13 @@ package fr.perso.skillcheck.question;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerRepository;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 
+@Service
 public class QuestionService {
 
     @Autowired

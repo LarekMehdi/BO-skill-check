@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.question;
 
+import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
@@ -25,33 +26,40 @@ public class Question {
     private Double  successRate;
 
     @Column(nullable = false)
-    private Integer timer;
+    private Integer timeLimit;
+
+    @Column(nullable = false)
+    private Difficulty difficulty;
 
     @Column(nullable = false)
     private Long    createdBy;
 
     public Question() {}
 
-    public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timer) {
+    public Question(Long id) {
+        this.id = id;
+    }
+
+    public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
         this.id = id;
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
         this.successRate = successRate;
-        this.timer = timer;
+        this.timeLimit = timeLimit;
     }
 
-    public Question(String content, Boolean isMultipleAnswer, Double successRate, Integer timer) {
+    public Question(String content, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
         this.successRate = successRate;
-        this.timer = timer;
+        this.timeLimit = timeLimit;
     }
 
     public Question(QuestionDto dto) {
         this.content = dto.getContent();
         this.isMultipleAnswer = dto.getIsMultipleAnswer();
         this.successRate = dto.getSuccessRate();
-        this.timer = dto.getTimer();
+        this.timeLimit = dto.getTimeLimit();
     }
 
     /** ID **/
@@ -114,18 +122,32 @@ public class Question {
         return !UtilEntity.isEmpty(this.successRate);
     }
 
-    /** TIMER **/
+    /** TIME LIMIT **/
 
-    public Integer getTimer() {
-        return this.timer;
+    public Integer getTimeLimit() {
+        return this.timeLimit;
     }
 
-    public void setTimer(Integer timer) {
-        this.timer = timer;
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
-    public boolean hasTimer() {
-        return !UtilEntity.isEmpty(this.timer);
+    public boolean hasTimeLimit() {
+        return !UtilEntity.isEmpty(this.timeLimit);
+    }
+
+    /** DIFFICULTY **/
+
+    public Difficulty getDifficulty() {
+        return this.difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public boolean hasDifficulty() {
+        return !UtilEntity.isEmpty(this.difficulty);
     }
 
     /** CREATED BY **/

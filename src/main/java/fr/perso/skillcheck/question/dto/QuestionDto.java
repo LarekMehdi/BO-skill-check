@@ -5,7 +5,12 @@ import java.util.List;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
+import fr.perso.skillcheck.constants.Difficulty;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,26 +30,30 @@ public class QuestionDto {
     
     private Double successRate;
 
-    @NotNull(message = "Le champ timer est requis")
-    @Positive(message = "Le champ timer doit être supérieur à 0")
-    private Integer timer;
+    @NotNull(message = "Le champ timeLimit est requis")
+    @Positive(message = "Le champ timeLimit doit être supérieur à 0")
+    private Integer timeLimit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
 
     @NotEmpty(message = "La liste des réponses ne peut pas être vide")
     private List<@Valid AnswerDto> answers;
 
     public QuestionDto() {}
 
-    public QuestionDto(Long id,String content, Boolean isMultipleAnswer, Integer timer) {
+    public QuestionDto(Long id,String content, Boolean isMultipleAnswer, Integer timeLimit) {
         this.id = id;
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
-        this.timer = timer;
+        this.timeLimit = timeLimit;
     }
 
-    public QuestionDto(String content, Boolean isMultipleAnswer, Integer timer) {
+    public QuestionDto(String content, Boolean isMultipleAnswer, Integer timeLimit) {
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
-        this.timer = timer;
+        this.timeLimit = timeLimit;
     }
 
     /** ID **/
@@ -107,18 +116,32 @@ public class QuestionDto {
         return !UtilEntity.isEmpty(this.successRate);
     }
 
-    /** TIMER **/
+    /** TIME LIMIT **/
 
-    public Integer getTimer() {
-        return this.timer;
+    public Integer getTimeLimit() {
+        return this.timeLimit;
     }
 
-    public void setTimer(Integer timer) {
-        this.timer = timer;
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
-    public boolean hasTimer() {
-        return !UtilEntity.isEmpty(this.timer);
+    public boolean hasTimeLimit() {
+        return !UtilEntity.isEmpty(this.timeLimit);
+    }
+
+    /** DIFFICULTY **/
+
+    public Difficulty getDifficulty() {
+        return this.difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public boolean hasDifficulty() {
+        return !UtilEntity.isEmpty(this.difficulty);
     }
 
     /** ANSWERS **/
@@ -150,7 +173,7 @@ public class QuestionDto {
         List<Answer> answers = new ArrayList<>();
         for (AnswerDto a : this.answers) {
             Answer answer = new Answer(a);
-            answer.setQuestionId(questionId);
+            answer.setQuestion(new Question(questionId));
             answers.add(answer);
         }
         return answers;

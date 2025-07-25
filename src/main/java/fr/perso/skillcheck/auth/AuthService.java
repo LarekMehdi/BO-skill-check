@@ -27,7 +27,8 @@ public class AuthService {
     @Autowired
     private AuthenticationManager   authenticationManager;
 
-    @Autowired JwtTokenProvider     jwtTokenProvider;
+    @Autowired 
+    private JwtTokenProvider        jwtTokenProvider;
 
     /** SIGNUP **/
     

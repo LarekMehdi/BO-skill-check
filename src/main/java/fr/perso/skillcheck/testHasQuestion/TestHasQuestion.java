@@ -3,12 +3,14 @@ package fr.perso.skillcheck.testHasQuestion;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+@Entity
 public class TestHasQuestion {
     
     @Id

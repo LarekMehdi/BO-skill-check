@@ -38,8 +38,10 @@ public class AuthController {
         AuthResponseDto response = this.authService.signin(dto);
         return ResponseEntity.ok(response);
     } catch (UsernameNotFoundException | BadCredentialsException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides");
     } catch (Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur");
     }
 }

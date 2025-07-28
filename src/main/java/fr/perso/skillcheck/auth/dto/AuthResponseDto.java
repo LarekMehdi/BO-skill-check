@@ -5,13 +5,13 @@ package fr.perso.skillcheck.auth.dto;
 public class AuthResponseDto {
     private String  accessToken;
     private String  tokenType = "Bearer";
-    private Long    userId;
+    private Long    id;
     private String  pseudo;
     private String  role;
 
-    public AuthResponseDto(String accessToken, Long userId, String pseudo, String role) {
+    public AuthResponseDto(String accessToken, Long id, String pseudo, String role) {
         this.accessToken = accessToken;
-        this.userId = userId;
+        this.id = id;
         this.pseudo = pseudo;
         this.role = role;
     }
@@ -24,8 +24,8 @@ public class AuthResponseDto {
         return tokenType;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     public String getPseudo() {

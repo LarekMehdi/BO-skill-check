@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerRepository;
 import fr.perso.skillcheck.question.dto.QuestionDto;
+import fr.perso.skillcheck.security.UserPrincipal;
 
 @Service
 public class QuestionService {
@@ -32,14 +33,11 @@ public class QuestionService {
 
     /** CREATE **/
     
-    public Question create(QuestionDto dto) {
+    public Question create(QuestionDto dto, UserPrincipal user) {
         Question question = new Question(dto);
-        //TODO: récup l'id du user courant
-        question.setCreatedBy(1l);
+        question.setCreatedBy(user.getId());
 
         this.questionRepository.save(question);
-
-        
 
         List<Answer> answers = dto.getAnswersEntitiesWithQuestionId(question.getId());
         this.answerRepository.saveAll(answers);

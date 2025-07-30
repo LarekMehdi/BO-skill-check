@@ -34,7 +34,12 @@ public class QuestionService {
     
     public Question create(QuestionDto dto) {
         Question question = new Question(dto);
+        //TODO: récup l'id du user courant
+        question.setCreatedBy(1l);
+
         this.questionRepository.save(question);
+
+        
 
         List<Answer> answers = dto.getAnswersEntitiesWithQuestionId(question.getId());
         this.answerRepository.saveAll(answers);

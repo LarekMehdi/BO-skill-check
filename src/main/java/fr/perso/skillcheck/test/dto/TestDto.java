@@ -1,38 +1,27 @@
-package fr.perso.skillcheck.test;
+package fr.perso.skillcheck.test.dto;
 
-import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.utils.UtilEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-public class Test {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TestDto {
+
     private Long        id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Le titre ne doit pas être vide")
     private String      title;
 
-    @Column(nullable = false)
+    @NotBlank(message = "La description ne doit pas être vide")
     private String      description;
 
-    @Column(nullable = false)
     private Double      successRate;
 
-    @Column(nullable = false)
     private Integer     timeLimit;
 
-    @Column(nullable = false)
     private Long        createdBy;
 
-    public Test() {}
+    public TestDto() {}
 
-    public Test(Long id, String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public TestDto(Long id, String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -41,7 +30,7 @@ public class Test {
         this.createdBy = createdBy;
     }
 
-    public Test(String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public TestDto(String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
         this.title = title;
         this.description = description;
         this.successRate = successRate;
@@ -49,13 +38,9 @@ public class Test {
         this.createdBy = createdBy;
     }
 
-    public Test(TestDto dto) {
-        this.id = dto.getId();
-        this.title = dto.getTitle();
-        this.description = dto.getDescription();
-        this.successRate = dto.getSuccessRate();
-        this.timeLimit = dto.getTimeLimit();
-        this.createdBy = dto.getCreatedBy();
+    public TestDto(String title, String description) {
+        this.title = title;
+        this.description = description;
     }
 
     /** ID **/
@@ -69,7 +54,7 @@ public class Test {
     }
 
     public boolean hasId() {
-        return !UtilEntity.isEmpty(this.id);
+        return !UtilEntity.isEmpty(id);
     }
 
     /** TITLE **/
@@ -83,7 +68,7 @@ public class Test {
     }
 
     public boolean hasTitle() {
-        return !UtilEntity.isEmpty(this.title);
+        return !UtilEntity.isEmpty(title);
     }
 
     /** DESCRIPTION **/
@@ -97,7 +82,7 @@ public class Test {
     }
 
     public boolean hasDescription() {
-        return !UtilEntity.isEmpty(this.description);
+        return !UtilEntity.isEmpty(description);
     }
 
     /** SUCCESS RATE **/
@@ -106,12 +91,12 @@ public class Test {
         return this.successRate;
     }
 
-    public void setSuccessRate(Double successRate) {
+    public void successRate(Double successRate) {
         this.successRate = successRate;
     }
 
     public boolean hasSuccessRate() {
-        return !UtilEntity.isEmpty(this.successRate);
+        return !UtilEntity.isEmpty(successRate);
     }
 
     /** TIME LIMIT **/
@@ -125,7 +110,7 @@ public class Test {
     }
 
     public boolean hasTimeLimit() {
-        return !UtilEntity.isEmpty(this.timeLimit);
+        return !UtilEntity.isEmpty(timeLimit);
     }
 
     /** CREATED BY **/
@@ -139,6 +124,6 @@ public class Test {
     }
 
     public boolean hasCreatedBy() {
-        return !UtilEntity.isEmpty(this.createdBy);
+        return !UtilEntity.isEmpty(createdBy);
     }
 }

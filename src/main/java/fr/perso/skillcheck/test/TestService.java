@@ -1,0 +1,27 @@
+package fr.perso.skillcheck.test;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.test.dto.TestDto;
+
+@Service
+public class TestService {
+
+    @Autowired
+    private TestRepository      testRepository;
+
+    /** CREATE **/
+
+    public Test create(TestDto dto, UserPrincipal user) {
+        Test test = new Test(dto);
+        test.setCreatedBy(user.getId());
+        test.setSuccessRate(0.0);
+        test.setTimeLimit(0);
+        return this.testRepository.save(test);
+    }
+    
+}

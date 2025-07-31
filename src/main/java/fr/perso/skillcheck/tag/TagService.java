@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.tag;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ public class TagService {
     /** FIND ALL **/
 
     public List<Tag> findAll() {
-        return this.tagRepository.findAll();
+        List<Tag> tags = this.tagRepository.findAll();
+        tags.sort(Comparator.comparing(Tag::getId));
+
+        return tags;
     }
 
     /** FIND **/

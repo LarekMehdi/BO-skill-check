@@ -26,6 +26,10 @@ public class Tag {
         this.label = label;
     }
 
+    public Tag(Long id) {
+        this.id = id;
+    }
+
     public Tag(String label) {
         this.label = label;
     }

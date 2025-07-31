@@ -13,5 +13,5 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
 
     @Modifying
     @Query("UPDATE Tag t set t.label = :label WHERE t.id = :id")
-    public Tag update(@Param("id") Long id, @Param("label") String label);
+    public int update(@Param("id") Long id, @Param("label") String label);
 }

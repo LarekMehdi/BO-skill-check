@@ -2,7 +2,6 @@ package fr.perso.skillcheck.test.dto;
 
 import java.util.List;
 
-import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;

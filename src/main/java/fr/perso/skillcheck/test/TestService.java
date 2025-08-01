@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.security.UserPrincipal;
-import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;

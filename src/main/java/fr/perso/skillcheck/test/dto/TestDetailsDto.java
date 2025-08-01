@@ -54,8 +54,6 @@ public class TestDetailsDto {
         this.id = test.getId();
         this.title = test.getTitle();
         this.description = test.getDescription();
-        this.successRate = test.getSuccessRate();
-        this.timeLimit = test.getTimeLimit();
         this.createdBy = test.getCreatedBy();
     }
 
@@ -107,7 +105,7 @@ public class TestDetailsDto {
         return this.successRate;
     }
 
-    public void successRate(Double successRate) {
+    public void setSuccessRate(Double successRate) {
         this.successRate = successRate;
     }
 

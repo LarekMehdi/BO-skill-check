@@ -22,30 +22,20 @@ public class Test {
     private String      description;
 
     @Column(nullable = false)
-    private Double      successRate;
-
-    @Column(nullable = false)
-    private Integer     timeLimit;
-
-    @Column(nullable = false)
     private Long        createdBy;
 
     public Test() {}
 
-    public Test(Long id, String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public Test(Long id, String title, String description, Long createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.successRate = successRate;
-        this.timeLimit = timeLimit;
         this.createdBy = createdBy;
     }
 
-    public Test(String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public Test(String title, String description, Long createdBy) {
         this.title = title;
         this.description = description;
-        this.successRate = successRate;
-        this.timeLimit = timeLimit;
         this.createdBy = createdBy;
     }
 
@@ -53,8 +43,6 @@ public class Test {
         this.id = dto.getId();
         this.title = dto.getTitle();
         this.description = dto.getDescription();
-        this.successRate = dto.getSuccessRate();
-        this.timeLimit = dto.getTimeLimit();
         this.createdBy = dto.getCreatedBy();
     }
 
@@ -102,34 +90,6 @@ public class Test {
 
     public boolean hasDescription() {
         return !UtilEntity.isEmpty(this.description);
-    }
-
-    /** SUCCESS RATE **/
-
-    public Double getSuccessRate() {
-        return this.successRate;
-    }
-
-    public void setSuccessRate(Double successRate) {
-        this.successRate = successRate;
-    }
-
-    public boolean hasSuccessRate() {
-        return !UtilEntity.isEmpty(this.successRate);
-    }
-
-    /** TIME LIMIT **/
-
-    public Integer getTimeLimit() {
-        return this.timeLimit;
-    }
-
-    public void setTimeLimit(Integer timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public boolean hasTimeLimit() {
-        return !UtilEntity.isEmpty(this.timeLimit);
     }
 
     /** CREATED BY **/

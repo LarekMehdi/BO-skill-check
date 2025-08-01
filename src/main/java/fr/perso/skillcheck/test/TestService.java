@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
+import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
@@ -21,6 +22,7 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.utils.GenericFilter;
+import fr.perso.skillcheck.utils.UtilEntity;
 
 @Service
 public class TestService {
@@ -30,6 +32,9 @@ public class TestService {
 
     @Autowired
     private TestHasQuestionService  thqService;
+
+    @Autowired
+    private QuestionService         questionService;
 
     /** FIND ALL **/
 
@@ -54,7 +59,14 @@ public class TestService {
         List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
         List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
         dto.setQuestionIds(questionIds);
-        
+
+        List<Question> questionList = this.questionService.findAllByIds(questionIds);
+        dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
+
+        dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
+
+
+
         return dto;
     }
 
@@ -100,8 +112,6 @@ public class TestService {
     public Test create(TestDto dto, UserPrincipal user) {
         Test test = new Test(dto);
         test.setCreatedBy(user.getId());
-        test.setSuccessRate(0.0);
-        test.setTimeLimit(0);
         return this.testRepository.save(test);
     }
     

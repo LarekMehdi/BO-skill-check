@@ -64,6 +64,10 @@ public class QuestionService {
         return dtos;
     }
 
+    public List<Question> findAllByIds(List<Long> ids) {
+        return this.questionRepository.findAllByIds(ids);
+    }
+
     /** FIND **/
 
     public Question findById(Long id) {

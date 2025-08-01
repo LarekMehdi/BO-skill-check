@@ -22,8 +22,14 @@ public class Question {
     @Column(nullable = false)
     private Boolean isMultipleAnswer;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Double  successRate;
+
+    @Column(nullable = false)
+    private Integer doneCount;
+
+    @Column(nullable = false)
+    private Integer correctCount;
 
     @Column(nullable = false)
     private Integer timeLimit;
@@ -61,6 +67,7 @@ public class Question {
         this.successRate = dto.getSuccessRate();
         this.timeLimit = dto.getTimeLimit();
         this.difficulty = dto.getDifficulty();
+        this.__initCountsIfNeeded();
     }
 
     /** ID **/
@@ -123,6 +130,34 @@ public class Question {
         return !UtilEntity.isEmpty(this.successRate);
     }
 
+    /** DONE COUNT **/
+
+    public Integer getDoneCount() {
+        return this.doneCount;
+    }
+
+    public void setDoneCount(Integer doneCount) {
+        this.doneCount = doneCount;
+    }
+
+    public boolean hasDoneCount() {
+        return !UtilEntity.isEmpty(this.doneCount);
+    }
+
+    /** CORRECT COUNT **/
+
+    public Integer getCorrectCount() {
+        return this.correctCount;
+    }
+
+    public void setCorrectCount(Integer correctCount) {
+        this.correctCount = correctCount;
+    }
+
+    public boolean hasCorrectCount() {
+        return !UtilEntity.isEmpty(this.correctCount);
+    }
+
     /** TIME LIMIT **/
 
     public Integer getTimeLimit() {
@@ -163,6 +198,14 @@ public class Question {
 
     public boolean hasCreatedBy() {
         return !UtilEntity.isEmpty(this.createdBy);
+    }
+
+    /** METHODS **/
+
+    private void __initCountsIfNeeded(){
+        if (!this.hasDoneCount()) this.doneCount = 0;
+        if (!this.hasCorrectCount()) this.correctCount = 0;
+        if (!this.hasSuccessRate()) this.successRate = 0.0;
     }
 
 }

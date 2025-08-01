@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
@@ -44,6 +45,17 @@ public class TestService {
     public Test findById(Long id) {
         Test test = this.testRepository.findById(id).orElseThrow(() -> new NotFoundException("No test found with id " + id));
         return test;
+    }
+
+    public TestDetailsDto findDtoById(Long id) {
+        Test test = this.testRepository.findById(id).orElseThrow(() -> new NotFoundException("No test found with id " + id));
+        TestDetailsDto dto = new TestDetailsDto(test);
+
+        List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
+        List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
+        dto.setQuestionIds(questionIds);
+        
+        return dto;
     }
 
     /** UPDATE **/

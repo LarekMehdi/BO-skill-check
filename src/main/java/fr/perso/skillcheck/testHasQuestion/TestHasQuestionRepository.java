@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TestHasQuestionRepository extends JpaRepository<TestHasQuestion, Long> {
     
-    @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.id = :testId")
+    @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.test.id = :testId")
     public List<TestHasQuestion> findAllByTestId(@Param("testId") Long testId);
 
     @Modifying(clearAutomatically = true)

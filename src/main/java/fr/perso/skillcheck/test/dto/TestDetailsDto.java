@@ -3,6 +3,7 @@ package fr.perso.skillcheck.test.dto;
 import java.util.List;
 
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 
@@ -47,6 +48,15 @@ public class TestDetailsDto {
     public TestDetailsDto(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public TestDetailsDto(Test test) {
+        this.id = test.getId();
+        this.title = test.getTitle();
+        this.description = test.getDescription();
+        this.successRate = test.getSuccessRate();
+        this.timeLimit = test.getTimeLimit();
+        this.createdBy = test.getCreatedBy();
     }
 
     /** ID **/

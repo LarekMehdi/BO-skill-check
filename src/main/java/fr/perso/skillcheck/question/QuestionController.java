@@ -1,18 +1,22 @@
 package fr.perso.skillcheck.question;
 
 import fr.perso.skillcheck.security.UserPrincipal;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import fr.perso.skillcheck.question.dto.QuestionDto;
+import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
+import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
+import fr.perso.skillcheck.utils.GenericFilter;
 import jakarta.validation.Valid;
 
 @RestController
@@ -31,15 +35,15 @@ public class QuestionController {
 
   /** FIND ALL **/
 
-  @GetMapping
-  public List<Question> findAll() {
-    return this.questionService.findAll();
+  @GetMapping()
+  public List<QuestionDtoWithTags> findAll(@ModelAttribute @Valid GenericFilter filter) {
+    return this.questionService.findAll(filter);
   }
 
   /** CREATE **/
 
-  @PostMapping
-  public Question create(@RequestBody @Valid QuestionDto question, @CurrentUser UserPrincipal user) {
+  @PostMapping()
+  public Question create(@RequestBody @Valid QuestionDtoWithTagIds question, @CurrentUser UserPrincipal user) {
     return this.questionService.create(question, user);
   }
 }

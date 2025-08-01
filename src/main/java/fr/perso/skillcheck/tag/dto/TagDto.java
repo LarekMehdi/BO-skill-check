@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.tag.dto;
 
+import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,6 +20,11 @@ public class TagDto {
 
     public TagDto(String label) {
         this.label = label;
+    }
+
+    public TagDto(Tag tag) {
+        this.id = tag.getId();
+        this.label = tag.getLabel();
     }
 
     /** ID **/

@@ -1,23 +1,28 @@
 package fr.perso.skillcheck.test.dto;
 
+import java.util.List;
+
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 
 public class TestDto {
 
-    private Long        id;
+    private Long            id;
 
     @NotBlank(message = "Le titre ne doit pas être vide")
-    private String      title;
+    private String          title;
 
     @NotBlank(message = "La description ne doit pas être vide")
-    private String      description;
+    private String          description;
 
-    private Double      successRate;
+    private Double          successRate;
 
-    private Integer     timeLimit;
+    private Integer         timeLimit;
 
-    private Long        createdBy;
+    private Long            createdBy;
+
+    private List<TagDto>    tags;
 
     public TestDto() {}
 
@@ -125,5 +130,19 @@ public class TestDto {
 
     public boolean hasCreatedBy() {
         return !UtilEntity.isEmpty(createdBy);
+    }
+
+    /** TAGS **/
+
+    public List<TagDto> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<TagDto> tags) {
+        this.tags = tags;
+    }
+
+    public boolean hasTags() {
+        return !UtilEntity.isEmpty(tags);
     }
 }

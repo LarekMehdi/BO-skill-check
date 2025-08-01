@@ -8,9 +8,6 @@ import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,28 +17,25 @@ import jakarta.validation.constraints.Positive;
 
 public class QuestionDto {
 
-    private Long id;
+    protected Long id;
 
     @NotBlank(message = "Le content ne doit pas être vide")
-    private String  content;
+    protected String  content;
 
     @NotNull(message = "Le champ isMultipleAnswer est requis")
-    private Boolean isMultipleAnswer;
+    protected Boolean isMultipleAnswer;
     
-    private Double successRate;
+    protected Double successRate;
 
     @NotNull(message = "Le champ timeLimit est requis")
     @Positive(message = "Le champ timeLimit doit être supérieur à 0")
-    private Integer timeLimit;
+    protected Integer timeLimit;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Difficulty difficulty;
+    @NotNull(message = "Le champ difficulty est requis")
+    protected Difficulty difficulty;
 
     @NotEmpty(message = "La liste des réponses ne peut pas être vide")
-    private List<@Valid AnswerDto> answers;
-
-    private List<Long> tagIds;
+    protected List<@Valid AnswerDto> answers;
 
     public QuestionDto() {}
 
@@ -56,6 +50,15 @@ public class QuestionDto {
         this.content = content;
         this.isMultipleAnswer = isMultipleAnswer;
         this.timeLimit = timeLimit;
+    }
+
+    public QuestionDto(Question question) {
+        this.id = question.getId();
+        this.content = question.getContent();
+        this.isMultipleAnswer = question.getIsMultipleAnswer();
+        this.timeLimit = question.getTimeLimit();
+        this.successRate = question.getSuccessRate();
+        this.difficulty = question.getDifficulty();
     }
 
     /** ID **/
@@ -158,20 +161,6 @@ public class QuestionDto {
 
     public boolean hasAnswers() {
         return !UtilEntity.isEmpty(this.answers);
-    }
-
-    /** TAG IDS **/
-
-    public List<Long> getTagIds() {
-        return this.tagIds;
-    }
-
-    public void setTagIds(List<Long> tagIds) {
-        this.tagIds = tagIds;
-    }
-
-    public boolean hasTagIds() {
-        return !UtilEntity.isEmpty(this.tagIds);
     }
 
     /** METHODS **/

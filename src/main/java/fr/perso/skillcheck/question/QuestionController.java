@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.question;
 
+import fr.perso.skillcheck.security.UserPrincipal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.perso.skillcheck.question.dto.QuestionDto;
+import fr.perso.skillcheck.security.annotations.CurrentUser;
 import jakarta.validation.Valid;
 
 @RestController
@@ -37,7 +39,7 @@ public class QuestionController {
   /** CREATE **/
 
   @PostMapping
-  public Question create(@RequestBody @Valid QuestionDto question) {
-    return this.questionService.create(question);
+  public Question create(@RequestBody @Valid QuestionDto question, @CurrentUser UserPrincipal user) {
+    return this.questionService.create(question, user);
   }
 }

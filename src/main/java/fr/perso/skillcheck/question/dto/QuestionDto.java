@@ -41,6 +41,8 @@ public class QuestionDto {
     @NotEmpty(message = "La liste des réponses ne peut pas être vide")
     private List<@Valid AnswerDto> answers;
 
+    private List<Long> tagIds;
+
     public QuestionDto() {}
 
     public QuestionDto(Long id,String content, Boolean isMultipleAnswer, Integer timeLimit) {
@@ -156,6 +158,20 @@ public class QuestionDto {
 
     public boolean hasAnswers() {
         return !UtilEntity.isEmpty(this.answers);
+    }
+
+    /** TAG IDS **/
+
+    public List<Long> getTagIds() {
+        return this.tagIds;
+    }
+
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public boolean hasTagIds() {
+        return !UtilEntity.isEmpty(this.tagIds);
     }
 
     /** METHODS **/

@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.tag;
 
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,8 +26,16 @@ public class Tag {
         this.label = label;
     }
 
+    public Tag(Long id) {
+        this.id = id;
+    }
+
     public Tag(String label) {
         this.label = label;
+    }
+
+    public Tag(TagDto dto) {
+        this.label = dto.getLabel();
     }
 
     /** ID **/

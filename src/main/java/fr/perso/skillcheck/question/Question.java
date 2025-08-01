@@ -22,7 +22,7 @@ public class Question {
     @Column(nullable = false)
     private Boolean isMultipleAnswer;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double  successRate;
 
     @Column(nullable = false)
@@ -60,6 +60,7 @@ public class Question {
         this.isMultipleAnswer = dto.getIsMultipleAnswer();
         this.successRate = dto.getSuccessRate();
         this.timeLimit = dto.getTimeLimit();
+        this.difficulty = dto.getDifficulty();
     }
 
     /** ID **/

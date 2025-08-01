@@ -58,6 +58,10 @@ public class Test {
         this.createdBy = dto.getCreatedBy();
     }
 
+    public Test(Long id) {
+        this.id = id;
+    }
+
     /** ID **/
 
     public Long getId() {

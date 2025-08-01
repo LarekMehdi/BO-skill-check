@@ -1,14 +1,11 @@
 package fr.perso.skillcheck.test;
 
-
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.utils.GenericFilter;
@@ -21,10 +18,18 @@ public class TestService {
 
     /** FIND ALL **/
 
+    // TODO: recuperer les tags en meme temps
     public Page<Test> findAllWithPagination(GenericFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
         return this.testRepository.findAllWithPagination(pageable);
+    }
+
+    /** FIND **/
+
+    public Test findById(Long id) {
+        Test test = this.testRepository.findById(id).orElseThrow(() -> new NotFoundException("No test found with id " + id));
+        return test;
     }
 
     /** CREATE **/

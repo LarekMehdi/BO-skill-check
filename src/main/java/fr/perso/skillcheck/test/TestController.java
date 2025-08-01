@@ -4,6 +4,7 @@ package fr.perso.skillcheck.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,13 @@ public class TestController {
     @GetMapping()
     public Page<Test> findAllWithPagination(GenericFilter filter) {
         return this.testService.findAllWithPagination(filter);
+    }
+
+    /** FIND **/
+
+    @GetMapping("/{id}")
+    public Test findById(@PathVariable("id") Long id) {
+        return this.testService.findById(id);
     }
 
     /** CREATE **/

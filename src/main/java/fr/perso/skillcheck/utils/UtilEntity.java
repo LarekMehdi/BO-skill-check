@@ -43,6 +43,6 @@ public abstract class UtilEntity {
 
     public static int computeTimeLimit(List<Question> questionList) {
         if (questionList == null || questionList.isEmpty()) return 0;
-        return (int) Math.round(questionList.stream().mapToInt(Question::getTimeLimit).average().orElse(0));
+        return questionList.stream().mapToInt(Question::getTimeLimit).sum();
     }
 }

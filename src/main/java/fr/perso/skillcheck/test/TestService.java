@@ -23,6 +23,7 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.UtilEntity;
+import fr.perso.skillcheck.utils.UtilMapper;
 
 @Service
 public class TestService {
@@ -58,9 +59,9 @@ public class TestService {
 
         List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
         List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
-        dto.setQuestionIds(questionIds);
 
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
+        dto.setQuestionList(UtilMapper.mapQuestionListToQuestionSmallDtos(questionList));
         dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
         dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
 

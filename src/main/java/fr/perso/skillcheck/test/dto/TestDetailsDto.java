@@ -2,6 +2,7 @@ package fr.perso.skillcheck.test.dto;
 
 import java.util.List;
 
+import fr.perso.skillcheck.question.dto.QuestionSmallDto;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
@@ -23,8 +24,8 @@ public class TestDetailsDto {
     private Long                createdBy;
 
     private List<TagDto>        tags;
-
-    private List<Long>          questionIds;    
+    
+    private List<QuestionSmallDto>  questionList;
 
     public TestDetailsDto() {}
 
@@ -155,17 +156,17 @@ public class TestDetailsDto {
         return !UtilEntity.isEmpty(tags);
     }
 
-    /** QUESTION IDS **/
+    /** QUESTION LIST **/
 
-    public List<Long> getQuestionIds() {
-        return this.questionIds;
+    public List<QuestionSmallDto> getQuestionList() {
+        return this.questionList;
     }
 
-    public void setQuestionIds(List<Long> questionIds) {
-        this.questionIds = questionIds;
+    public void setQuestionList(List<QuestionSmallDto> questionList) {
+        this.questionList = questionList;
     }
 
-    public boolean hasQuestionIds() {
-        return !UtilEntity.isEmpty(questionIds);
+    public boolean hasQuestionList() {
+        return !UtilEntity.isEmpty(questionList);
     }
 }

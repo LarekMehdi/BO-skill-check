@@ -62,10 +62,7 @@ public class TestService {
 
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
-
         dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
-
-
 
         return dto;
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
+import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
@@ -40,6 +41,11 @@ public class TestController {
     @GetMapping("/{id}")
     public TestDetailsDto findDtoById(@PathVariable("id") Long id) {
         return this.testService.findDtoById(id);
+    }
+
+    @GetMapping("/{id}/takeTest")
+    public TakeTestDto findTestToTake(@PathVariable("id") Long id) {
+        return this.testService.findTestToTake(id);
     }
 
     /** UPDATE **/

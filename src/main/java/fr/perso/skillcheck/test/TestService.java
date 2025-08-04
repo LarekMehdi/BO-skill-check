@@ -1,8 +1,10 @@
 package fr.perso.skillcheck.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,10 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import fr.perso.skillcheck.answer.Answer;
+import fr.perso.skillcheck.answer.AnswerService;
+import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
+import fr.perso.skillcheck.question.dto.TakeQuestionDto;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
@@ -36,6 +43,9 @@ public class TestService {
 
     @Autowired
     private QuestionService         questionService;
+
+    @Autowired
+    private AnswerService           answerService;
 
     /** FIND ALL **/
 
@@ -65,6 +75,36 @@ public class TestService {
         dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
         dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
 
+        return dto;
+    }
+
+    public TakeTestDto findTestToTake(Long id) {
+        Test test = this.findById(id);
+        TakeTestDto dto = new TakeTestDto(test);
+
+        //récup des questions du tests
+        List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
+        List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
+        List<Question> questions = this.questionService.findAllByIds(questionIds);
+
+        //récup des réponses des questions
+        List<Answer> answers = this.answerService.findAllByQuestionIds(questionIds);
+
+        //construction des dtos
+        Map<Long, List<Answer>> answersByQuestionId = new HashMap<>();
+        for (Question q : questions) {
+            Long questionId = q.getId();
+            List<Answer> questionAnswers = answers.stream().filter(a -> questionId.equals(a.getQuestion().getId())).collect(Collectors.toList());
+            answersByQuestionId.computeIfAbsent(questionId, k -> new ArrayList<>()).addAll(questionAnswers);
+        }
+        
+        List<TakeQuestionDto> questionDtos = new ArrayList<>();
+        for (Question q : questions) {
+            TakeQuestionDto qDto = new TakeQuestionDto(q);
+
+            List<AnswerDto> aDtos = new ArrayList<>();
+            qDto.setChoices(null);
+        }
         return dto;
     }
 

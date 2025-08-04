@@ -102,10 +102,12 @@ public class TestService {
         for (Question q : questions) {
             TakeQuestionDto qDto = new TakeQuestionDto(q);
 
-            List<AnswerDto> aDtos = UtilMapper.mapAnswerListToAnswerDtos(answers);
+            List<Answer> questionAnswers = answersByQuestionId.getOrDefault(q.getId(), new ArrayList<>());
+            List<AnswerDto> aDtos = UtilMapper.mapAnswerListToAnswerDtos(questionAnswers);
             qDto.setChoices(aDtos);
             questionDtos.add(qDto);
         }
+
         dto.setQuestionList(questionDtos);
         return dto;
     }

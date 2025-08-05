@@ -10,9 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+
+    /** FIND ALL **/
     
     @Query("SELECT q FROM Question q WHERE q.content LIKE %:keyword%")
     List<Question> findAllByContent(@Param("keyword") String keyword);
+
+    @Query("SELECT q FROM Question q WHERE id IN :ids")
+    List<Question> findAllByIds(@Param("ids") List<Long> ids);
+
+    /** FIND **/
 
     @Query("SELECT q FROM Question q WHERE q.id = :id")
     Optional<Question> findQuestionById(@Param("id") Long id);

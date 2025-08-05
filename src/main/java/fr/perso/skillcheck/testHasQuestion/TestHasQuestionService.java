@@ -1,0 +1,34 @@
+package fr.perso.skillcheck.testHasQuestion;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class TestHasQuestionService {
+    
+    @Autowired
+    private TestHasQuestionRepository   thqRepository;
+
+    /** FIND ALL **/
+
+    public List<TestHasQuestion> findAllByTestId(Long testId) {
+        return this.thqRepository.findAllByTestId(testId);
+    }
+
+    /** CREATE **/
+
+    public List<TestHasQuestion> createMany(List<TestHasQuestion> thqList) {
+        return this.thqRepository.saveAll(thqList);
+    }
+
+    /** DELETE **/
+
+    @Transactional
+    public Integer deleteAllByTestIdAndQuestionIds(Long testId, List<Long> questionIds) {
+        return this.thqRepository.deleteAllByTestIdAndQuestionIds(testId, questionIds);
+    }
+}

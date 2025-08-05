@@ -2,31 +2,34 @@ package fr.perso.skillcheck.test.dto;
 
 import java.util.List;
 
+import fr.perso.skillcheck.question.dto.QuestionSmallDto;
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 
-public class TestDto {
-
-    private Long            id;
+public class TestDetailsDto {
+     private Long               id;
 
     @NotBlank(message = "Le titre ne doit pas être vide")
-    private String          title;
+    private String              title;
 
     @NotBlank(message = "La description ne doit pas être vide")
-    private String          description;
+    private String              description;
 
-    private Double          successRate;
+    private Double              successRate;
 
-    private Integer         timeLimit;
+    private Integer             timeLimit;
 
-    private Long            createdBy;
+    private Long                createdBy;
 
-    private List<TagDto>    tags;
+    private List<TagDto>        tags;
+    
+    private List<QuestionSmallDto>  questionList;
 
-    public TestDto() {}
+    public TestDetailsDto() {}
 
-    public TestDto(Long id, String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public TestDetailsDto(Long id, String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -35,7 +38,7 @@ public class TestDto {
         this.createdBy = createdBy;
     }
 
-    public TestDto(String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
+    public TestDetailsDto(String title, String description, Double successRate, Integer timeLimit, Long createdBy) {
         this.title = title;
         this.description = description;
         this.successRate = successRate;
@@ -43,9 +46,16 @@ public class TestDto {
         this.createdBy = createdBy;
     }
 
-    public TestDto(String title, String description) {
+    public TestDetailsDto(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public TestDetailsDto(Test test) {
+        this.id = test.getId();
+        this.title = test.getTitle();
+        this.description = test.getDescription();
+        this.createdBy = test.getCreatedBy();
     }
 
     /** ID **/
@@ -96,7 +106,7 @@ public class TestDto {
         return this.successRate;
     }
 
-    public void successRate(Double successRate) {
+    public void setSuccessRate(Double successRate) {
         this.successRate = successRate;
     }
 
@@ -144,5 +154,19 @@ public class TestDto {
 
     public boolean hasTags() {
         return !UtilEntity.isEmpty(tags);
+    }
+
+    /** QUESTION LIST **/
+
+    public List<QuestionSmallDto> getQuestionList() {
+        return this.questionList;
+    }
+
+    public void setQuestionList(List<QuestionSmallDto> questionList) {
+        this.questionList = questionList;
+    }
+
+    public boolean hasQuestionList() {
+        return !UtilEntity.isEmpty(questionList);
     }
 }

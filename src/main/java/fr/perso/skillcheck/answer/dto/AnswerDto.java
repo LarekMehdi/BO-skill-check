@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.answer.dto;
 
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,13 @@ public class AnswerDto {
         this.questionId = questionId;
         this.content = content;
         this.isCorrect = isCorrect;
+    }
+
+    public AnswerDto(Answer answer) {
+        this.id = answer.getId();
+        this.questionId = answer.getQuestion().getId();
+        this.content = answer.getContent();
+        this.isCorrect = answer.getIsCorrect();
     }
 
     /** ID **/

@@ -38,6 +38,10 @@ public class TestHasQuestion {
         this.question = question;
     }
 
+    public TestHasQuestion(Long id) {
+        this.id = id;
+    }
+
     /** ID **/
 
     public Long getId() {

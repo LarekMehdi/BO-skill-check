@@ -61,6 +61,11 @@ public class UserHasAnswer {
         this.responseTime = responseTime;
     }
 
+    public UserHasAnswer(Answer answer) {
+        this.answer = answer;
+        this.isCorrect = answer.getIsCorrect();
+    }
+
     /** ID **/
 
     public Long getId() {

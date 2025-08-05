@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
+import fr.perso.skillcheck.question.dto.SubmitQuestionDto;
 import fr.perso.skillcheck.question.dto.TakeQuestionDto;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.dto.SubmitTestDto;
@@ -29,7 +31,9 @@ import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.UtilEntity;
 import fr.perso.skillcheck.utils.UtilMapper;
@@ -48,6 +52,9 @@ public class TestService {
 
     @Autowired
     private AnswerService           answerService;
+
+    @Autowired
+    private UserHasAnswerService    uhaService;
 
     /** FIND ALL **/
 
@@ -160,9 +167,30 @@ public class TestService {
     }
 
     public List<UserHasAnswer> submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
-        List<UserHasAnswer> dtos = new ArrayList<>();
 
-        return dtos;
+        List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
+        List<Answer> answerList = this.answerService.findAllByIds(answerIds);
+        Map<Long, Answer> answerById = answerList.stream().collect(Collectors.toMap(Answer::getId, Function.identity()));
+      
+        List<UserHasAnswer> userAnswers = new ArrayList<>();
+
+        for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
+            for (Long answerId : qDto.getSelectedAnswerIds()) {
+                if (answerById.containsKey(answerId)) {
+                    Answer currentAnswer = answerById.get(answerId);
+                    UserHasAnswer uha = new UserHasAnswer(currentAnswer);
+                    uha.setUser(new User(user));
+                    uha.setQuestion(new Question(qDto.getQuestionId()));
+                    uha.setTest(new Test(dataDto.getId()));
+
+                    userAnswers.add(uha);
+                }
+            }
+        }
+
+        return this.uhaService.createMany(userAnswers);
+
+
     }
     
 }

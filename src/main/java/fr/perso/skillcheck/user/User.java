@@ -1,6 +1,7 @@
 package fr.perso.skillcheck.user;
 
 import fr.perso.skillcheck.constants.Role;
+import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.user.dto.UserDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
@@ -62,6 +63,10 @@ public class User {
         this.email = dto.getEmail();
         this.password = dto.getPassword();
         this.role = dto.getRole();
+    }
+
+    public User(UserPrincipal principal) {
+        this.id = principal.getId();
     }
 
     /** ID **/

@@ -1,6 +1,8 @@
 package fr.perso.skillcheck.test;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
+import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.utils.GenericFilter;
 import jakarta.validation.Valid;
 
@@ -60,5 +64,11 @@ public class TestController {
     @PostMapping()
     public Test create(@RequestBody @Valid TestDto testDto, @CurrentUser UserPrincipal user) {
         return this.testService.create(testDto, user);
+    }
+
+    @PostMapping("/{id}/submit")
+    public List<UserHasAnswer> submitTestResult(@RequestBody @Valid SubmitTestDto dataDto, @CurrentUser UserPrincipal user) {
+        return this.testService.submitTestResult(dataDto, user);
+
     }
 }

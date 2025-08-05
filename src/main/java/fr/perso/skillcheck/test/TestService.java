@@ -21,6 +21,7 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.TakeQuestionDto;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
@@ -28,6 +29,7 @@ import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.UtilEntity;
 import fr.perso.skillcheck.utils.UtilMapper;
@@ -155,6 +157,12 @@ public class TestService {
         Test test = new Test(dto);
         test.setCreatedBy(user.getId());
         return this.testRepository.save(test);
+    }
+
+    public List<UserHasAnswer> submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
+        List<UserHasAnswer> dtos = new ArrayList<>();
+
+        return dtos;
     }
     
 }

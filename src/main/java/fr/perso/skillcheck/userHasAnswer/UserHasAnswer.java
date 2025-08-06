@@ -2,7 +2,7 @@ package fr.perso.skillcheck.userHasAnswer;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.question.Question;
-import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
@@ -17,23 +17,23 @@ public class UserHasAnswer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long        id;
+    private Long            id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User        user;
+    private User            user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "test_id", nullable = true)
-    private Test        test;
+    @JoinColumn(name = "session_id", nullable = true)
+    private TestSession     session;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question    question;
+    private Question        question;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "answer_id", nullable = false)
-    private Answer      answer;
+    private Answer          answer;
 
     public UserHasAnswer() {}
 
@@ -83,18 +83,18 @@ public class UserHasAnswer {
         return !UtilEntity.isEmpty(this.user);
     }
 
-    /** TEST **/
+    /** SESSION **/
 
-    public Test getTest() {
-        return this.test;
+    public TestSession getSession() {
+        return this.session;
     }
 
-    public void setTest(Test test) {
-        this.test = test;
+    public void setSession(TestSession session) {
+        this.session = session;
     }
 
-    public boolean hasTest() {
-        return !UtilEntity.isEmpty(this.test);
+    public boolean hasSession() {
+        return !UtilEntity.isEmpty(this.session);
     }
 
     /** QUESTION **/

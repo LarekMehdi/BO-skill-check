@@ -181,7 +181,7 @@ public class TestService {
                     UserHasAnswer uha = new UserHasAnswer(currentAnswer);
                     uha.setUser(new User(user));
                     uha.setQuestion(new Question(qDto.getQuestionId()));
-                    uha.setTest(new Test(dataDto.getId()));
+                    //uha.setTest(new Test(dataDto.getId()));
 
                     userAnswers.add(uha);
                 }

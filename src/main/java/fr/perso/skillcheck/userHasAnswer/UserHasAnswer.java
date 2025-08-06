@@ -5,7 +5,6 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,34 +35,24 @@ public class UserHasAnswer {
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer      answer;
 
-    @Column(nullable = false)
-    private Boolean     isCorrect;
-
-    @Column(nullable = true)
-    private Integer     responseTime;
-
     public UserHasAnswer() {}
 
-    public UserHasAnswer(Long id, User user, Question question, Answer answer, Boolean isCorrect, Integer responseTime) {
+    public UserHasAnswer(Long id, User user, Question question, Answer answer) {
         this.id = id;
         this.user = user;
         this.question = question;
         this.answer = answer;
-        this.isCorrect = isCorrect;
-        this.responseTime = responseTime;
+
     }
 
-    public UserHasAnswer(User user, Question question, Answer answer, Boolean isCorrect, Integer responseTime) {
+    public UserHasAnswer(User user, Question question, Answer answer) {
         this.user = user;
         this.question = question;
         this.answer = answer;
-        this.isCorrect = isCorrect;
-        this.responseTime = responseTime;
     }
 
     public UserHasAnswer(Answer answer) {
         this.answer = answer;
-        this.isCorrect = answer.getIsCorrect();
     }
 
     /** ID **/
@@ -134,38 +123,6 @@ public class UserHasAnswer {
 
     public boolean hasAnswer() {
         return !UtilEntity.isEmpty(this.answer);
-    }
-
-    /** IS CORRECT **/
-
-    public Boolean getIsCorrect() {
-        return this.isCorrect;
-    }
-
-    public void setIsCorrect(Boolean isCorrect) {
-        this.isCorrect = isCorrect;
-    }
-
-    public boolean hasIsCorrect() {
-        return !UtilEntity.isEmpty(this.isCorrect);
-    }
-
-    public boolean isCoorectTrue() {
-        return this.hasIsCorrect() && Boolean.TRUE.equals(this.isCorrect);
-    }
-
-    /** RESPONSE TIME **/
-
-    public Integer getResponseTime() {
-        return this.responseTime;
-    }
-
-    public void setResponseTime(Integer responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public boolean hasResponseTime() {
-        return !UtilEntity.isEmpty(this.responseTime);
     }
        
 }

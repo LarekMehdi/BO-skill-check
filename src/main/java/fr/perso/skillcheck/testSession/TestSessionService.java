@@ -9,6 +9,12 @@ public class TestSessionService {
     @Autowired
     private TestSessionRepository       tsRepository;
 
+    /** CREATE **/
+
+    public TestSession create(TestSession ts) {
+        return this.tsRepository.save(ts);
+    }
+
 
     
 }

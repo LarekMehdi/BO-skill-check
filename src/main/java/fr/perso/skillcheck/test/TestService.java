@@ -31,6 +31,8 @@ import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.testSession.TestSession;
+import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
@@ -55,6 +57,9 @@ public class TestService {
 
     @Autowired
     private UserHasAnswerService    uhaService;
+
+    @Autowired
+    private TestSessionService      tsService;
 
     /** FIND ALL **/
 
@@ -166,31 +171,38 @@ public class TestService {
         return this.testRepository.save(test);
     }
 
-    public List<UserHasAnswer> submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
+    public TestSession submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
 
         List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
         List<Answer> answerList = this.answerService.findAllByIds(answerIds);
         Map<Long, Answer> answerById = answerList.stream().collect(Collectors.toMap(Answer::getId, Function.identity()));
       
         List<UserHasAnswer> userAnswers = new ArrayList<>();
+        User u = new User(user);
+
+        TestSession session = new TestSession();
+        session.setTest(new Test(dataDto.getId()));
+        session.setUser(u);
+        this.tsService.create(session);
+
 
         for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
             for (Long answerId : qDto.getSelectedAnswerIds()) {
                 if (answerById.containsKey(answerId)) {
                     Answer currentAnswer = answerById.get(answerId);
                     UserHasAnswer uha = new UserHasAnswer(currentAnswer);
-                    uha.setUser(new User(user));
+                    uha.setUser(u);
                     uha.setQuestion(new Question(qDto.getQuestionId()));
-                    //uha.setTest(new Test(dataDto.getId()));
+                    uha.setSession(session);
 
                     userAnswers.add(uha);
                 }
             }
         }
 
-        return this.uhaService.createMany(userAnswers);
+        this.uhaService.createMany(userAnswers);
 
-
+        return session;
     }
     
 }

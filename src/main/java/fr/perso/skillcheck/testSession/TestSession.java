@@ -1,4 +1,4 @@
-package fr.perso.skillcheck.session;
+package fr.perso.skillcheck.testSession;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Session {
+public class TestSession {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,22 +34,22 @@ public class Session {
     @CreationTimestamp
     private LocalDateTime   createdAt;
 
-    public Session() {}
+    public TestSession() {}
 
-    public Session(Long id, Test test, User user, LocalDateTime createdAt) {
+    public TestSession(Long id, Test test, User user, LocalDateTime createdAt) {
         this.id = id;
         this.test = test;
         this.user = user;
         this.createdAt = createdAt;
     }
 
-    public Session(Test test, User user, LocalDateTime createdAt) {
+    public TestSession(Test test, User user, LocalDateTime createdAt) {
         this.test = test;
         this.user = user;
         this.createdAt = createdAt;
     }
 
-    public Session(Test test, User user) {
+    public TestSession(Test test, User user) {
         this.test = test;
         this.user = user;
     }

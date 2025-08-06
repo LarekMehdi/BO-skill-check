@@ -1,12 +1,12 @@
-package fr.perso.skillcheck.session;
+package fr.perso.skillcheck.testSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller("/sessions")
-public class SessionController {
+public class TestSessionController {
 
     @Autowired
-    private SessionService      sessionService;
+    private TestSessionService      tsService;
     
 }

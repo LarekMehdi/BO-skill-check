@@ -21,7 +21,7 @@ import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
-import fr.perso.skillcheck.testSession.TestSession;
+import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import jakarta.validation.Valid;
 
@@ -66,7 +66,7 @@ public class TestController {
     }
 
     @PostMapping("/{id}/submit")
-    public TestSession submitTestResult(@RequestBody @Valid SubmitTestDto dataDto, @CurrentUser UserPrincipal user) {
+    public TestSessionDto submitTestResult(@RequestBody @Valid SubmitTestDto dataDto, @CurrentUser UserPrincipal user) {
         return this.testService.submitTestResult(dataDto, user);
 
     }

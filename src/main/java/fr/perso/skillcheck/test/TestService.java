@@ -33,6 +33,7 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.TestSessionService;
+import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
@@ -171,7 +172,7 @@ public class TestService {
         return this.testRepository.save(test);
     }
 
-    public TestSession submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
+    public TestSessionDto submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
 
         List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
         List<Answer> answerList = this.answerService.findAllByIds(answerIds);
@@ -202,7 +203,7 @@ public class TestService {
 
         this.uhaService.createMany(userAnswers);
 
-        return session;
+        return new TestSessionDto(session);
     }
     
 }

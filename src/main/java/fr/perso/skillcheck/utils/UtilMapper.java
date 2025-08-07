@@ -31,7 +31,7 @@ public abstract class UtilMapper {
             if (answersByQuestionId.containsKey(q.getId())) {
                 List<Answer> answerList = answersByQuestionId.get(q.getId());
                 List<ResultAnswerDto> answerDtos = mapAnswerListToResultAnswerDtos(answerList, userAnswerIds);
-
+                dto.setChoices(answerDtos);
             }
 
             dtos.add(dto);

@@ -51,22 +51,24 @@ public class TestSessionService {
     }
 
     public TestSessionDetailsDto findTestSessionDetails(Long id, UserPrincipal user) {
+        // récup du test
         TestSession session = this.findById(id);
-        Test test = this.testQueryService.findById(id);
+        Test test = this.testQueryService.findById(session.getTest().getId());
+        
+        // récup des questions/réponses
         List<TestHasQuestion> thqList = this.thqService.findAllByTestId(test.getId());
         List<Long> questionIds = thqList.stream().map(thq -> thq.getQuestion().getId()).collect(Collectors.toList());
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         List<Answer> answerList = this.answerService.findAllByQuestionIds(questionIds);
-        Map<Long, List<Answer>> answersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId(), Collectors.toList()));
+
         List<UserHasAnswer> uhaList = this.uhaService.findAllBySessionId(id);
         List<Long> userAnswerIds = uhaList.stream().map(uha -> uha.getAnswer().getId()).collect(Collectors.toList());
 
+        // regroupement des données
+        Map<Long, List<Answer>> answersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId(), Collectors.toList()));
         List<ResultQuestionDto> questionDtos = UtilMapper.mapQuestionListToResultQuestionDtos(questionList, answersByQuestionId, userAnswerIds);
-
-
-
-
-        TestSessionDetailsDto dto = new TestSessionDetailsDto(session, test);
+        TestSessionDetailsDto dto = new TestSessionDetailsDto(session, test, questionDtos);
+        
         return dto;
     }
 

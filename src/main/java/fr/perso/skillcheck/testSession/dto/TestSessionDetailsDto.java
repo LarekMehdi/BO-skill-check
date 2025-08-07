@@ -37,6 +37,15 @@ public class TestSessionDetailsDto {
         this.testTitle = test.getTitle();
     }
 
+    public TestSessionDetailsDto(TestSession session, Test test, List<ResultQuestionDto> questionList) {
+        this.sessionId = session.getId();
+        this.createdAt = session.getCreatedAt();
+        this.testId = test.getId();
+        this.testTitle = test.getTitle();
+        this.questionList = questionList;
+    }
+
+
     /** SESSION ID **/
 
     public Long getSessionId() {

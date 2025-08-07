@@ -11,15 +11,17 @@ import fr.perso.skillcheck.utils.UtilEntity;
 public class TestSessionDetailsDto {
     private Long                        sessionId;
     private Long                        testId;
+    private Long                        userId;
     private String                      testTitle;
     private List<ResultQuestionDto>     questionList;
     private LocalDateTime               createdAt;
 
     public TestSessionDetailsDto() {}
 
-    public TestSessionDetailsDto(Long sessionId, Long testId, String testTitle, List<ResultQuestionDto> questionList, LocalDateTime createdAt) {
+    public TestSessionDetailsDto(Long sessionId, Long testId, Long userId, String testTitle, List<ResultQuestionDto> questionList, LocalDateTime createdAt) {
         this.sessionId = sessionId;
         this.testId = testId;
+        this.userId = userId;
         this.testTitle = testTitle;
         this.questionList = questionList;
         this.createdAt = createdAt;
@@ -72,6 +74,20 @@ public class TestSessionDetailsDto {
 
     public boolean hasTestId() {
         return !UtilEntity.isEmpty(this.testId);
+    }
+
+    /** USER ID **/
+
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public boolean hasUserId() {
+        return !UtilEntity.isEmpty(this.userId);
     }
 
     /** TEST TITLE **/

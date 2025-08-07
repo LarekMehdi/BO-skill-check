@@ -10,6 +10,12 @@ public class UserHasAnswerService {
 
     @Autowired
     private UserHasAnswerRepository     uhaRepository;
+
+    /** FIND ALL **/
+
+    public List<UserHasAnswer> findAllBySessionId(Long sessionId) {
+        return this.uhaRepository.findAllBySessionId(sessionId);
+    }
     
     /** CREATE **/
 

@@ -74,6 +74,12 @@ public class QuestionService {
         return this.questionRepository.findById(id).orElse(null);
     }
 
+    /** UPDATE **/
+
+    public List<Question> updateMany(List<Question> questionList) {
+        return this.questionRepository.saveAll(questionList);
+    }
+
     /** CREATE **/
     
     public Question create(QuestionDtoWithTagIds dto, UserPrincipal user) {

@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.question;
 
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.utils.UtilEntity;
@@ -209,6 +210,12 @@ public class Question {
         if (!this.hasDoneCount()) this.doneCount = 0;
         if (!this.hasCorrectCount()) this.correctCount = 0;
         if (!this.hasSuccessRate()) this.successRate = 0.0;
+    }
+
+    public void computeCounts(Answer answer) {
+        this.doneCount += 1;
+        this.correctCount += answer.isCorrectTrue() ? 1 : 0;
+        this.successRate = (double) this.correctCount / this.doneCount;
     }
 
 }

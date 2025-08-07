@@ -174,34 +174,60 @@ public class TestService {
 
     public TestSessionDto submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
 
+        // récup des réponses et des questions
         List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
+        List<Long> questionIds = dataDto.getAnswers().stream().map(SubmitQuestionDto::getQuestionId).collect(Collectors.toList());
+
         List<Answer> answerList = this.answerService.findAllByIds(answerIds);
+        List<Question> questionList = this.questionService.findAllByIds(questionIds);
+
+        // organisation des données
         Map<Long, Answer> answerById = answerList.stream().collect(Collectors.toMap(Answer::getId, Function.identity()));
+        Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
       
+        // instanciation des listes à créer/modifier
         List<UserHasAnswer> userAnswers = new ArrayList<>();
+        List<Question> questionsToUpdate = new ArrayList<>();
         User u = new User(user);
 
+        // sauvegarde de la session
         TestSession session = new TestSession();
         session.setTest(new Test(dataDto.getId()));
         session.setUser(u);
         this.tsService.create(session);
 
+        Set<Long> questionIdsDone = new HashSet<>();
+
 
         for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
             for (Long answerId : qDto.getSelectedAnswerIds()) {
                 if (answerById.containsKey(answerId)) {
-                    Answer currentAnswer = answerById.get(answerId);
-                    UserHasAnswer uha = new UserHasAnswer(currentAnswer);
-                    uha.setUser(u);
-                    uha.setQuestion(new Question(qDto.getQuestionId()));
-                    uha.setSession(session);
+                    if (questionById.containsKey(qDto.getQuestionId())) {
+                        Answer currentAnswer = answerById.get(answerId);
+                        Question currentQuestion = questionById.get(qDto.getQuestionId());
+                        UserHasAnswer uha = new UserHasAnswer(currentAnswer);
 
-                    userAnswers.add(uha);
+                        if (!questionIdsDone.contains(currentQuestion.getId())) {
+                            // maj des stats de la question
+                            currentQuestion.computeCounts(currentAnswer);
+                            questionsToUpdate.add(currentQuestion);
+
+                            questionIdsDone.add(currentQuestion.getId());
+                        }
+
+                        // création de la réponse de l'utilisateur
+                        uha.setUser(u);
+                        uha.setQuestion(new Question(qDto.getQuestionId()));
+                        uha.setSession(session);
+                        userAnswers.add(uha);
+                    }
                 }
             }
         }
 
+        // maj des données en base
         this.uhaService.createMany(userAnswers);
+        this.questionService.updateMany(questionsToUpdate);
 
         return new TestSessionDto(session);
     }

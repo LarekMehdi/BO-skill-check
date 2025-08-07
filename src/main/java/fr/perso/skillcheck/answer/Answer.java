@@ -1,5 +1,7 @@
 package fr.perso.skillcheck.answer;
 
+import java.util.Objects;
+
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
@@ -12,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Answer {
+public class Answer implements Comparable<Answer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,6 +110,26 @@ public class Answer {
 
     public boolean isCorrectTrue() {
         return this.hasIsCorrect() && Boolean.TRUE.equals(this.isCorrect);
+    }
+
+    /** METHODS **/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Answer a = (Answer) o;
+        return Objects.equals(this.id, a.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
+
+    @Override
+    public int compareTo(Answer o) {
+        return Long.compare(this.id, o.getId());
     }
 
 

@@ -1,5 +1,7 @@
 package fr.perso.skillcheck.question;
 
+import java.util.List;
+
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
@@ -212,10 +214,20 @@ public class Question {
         if (!this.hasSuccessRate()) this.successRate = 0.0;
     }
 
-    public void computeCounts(Answer answer) {
+    public void computeCounts(List<Answer> userAnswers, List<Answer> correctAnswers) {
+        boolean correct = this.areAnswersCorrect(userAnswers, correctAnswers);
         this.doneCount += 1;
-        this.correctCount += answer.isCorrectTrue() ? 1 : 0;
+        this.correctCount += correct ? 1 : 0;
         this.successRate = (double) this.correctCount / this.doneCount;
+    }
+
+    public boolean areAnswersCorrect(List<Answer> userAnswers, List<Answer> correctAnswers) {
+        List<Answer> sortedUserAnswers = userAnswers.stream().sorted().toList();
+        List<Answer> sortedCorrectAnswers = correctAnswers.stream().sorted().toList();
+        if (sortedUserAnswers.size() == sortedCorrectAnswers.size() && sortedUserAnswers.equals(sortedCorrectAnswers)) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -180,10 +180,13 @@ public class TestService {
 
         List<Answer> answerList = this.answerService.findAllByIds(answerIds);
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
+        List<Answer> correctAnswerList = this.answerService.findAllCorrectByQuestionIds(questionIds);
 
         // organisation des données
         Map<Long, Answer> answerById = answerList.stream().collect(Collectors.toMap(Answer::getId, Function.identity()));
         Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+        Map<Long, List<Answer>> userAnswersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId()));
+        Map<Long, List<Answer>> correctAnswersByQuestionId = correctAnswerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId()));
       
         // instanciation des listes à créer/modifier
         List<UserHasAnswer> userAnswers = new ArrayList<>();
@@ -200,26 +203,33 @@ public class TestService {
 
 
         for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
+            Long qId = qDto.getQuestionId();
             for (Long answerId : qDto.getSelectedAnswerIds()) {
                 if (answerById.containsKey(answerId)) {
-                    if (questionById.containsKey(qDto.getQuestionId())) {
-                        Answer currentAnswer = answerById.get(answerId);
-                        Question currentQuestion = questionById.get(qDto.getQuestionId());
-                        UserHasAnswer uha = new UserHasAnswer(currentAnswer);
+                    if (questionById.containsKey(qId)) {
+                        if (correctAnswersByQuestionId.containsKey(qId)) {
+                            if (userAnswersByQuestionId.containsKey(qId)) {
+                                Answer currentAnswer = answerById.get(answerId);
+                                Question currentQuestion = questionById.get(qDto.getQuestionId());
+                                List<Answer> currentUserAnswers = userAnswersByQuestionId.get(qId);
+                                List<Answer> currentCorrectAnswers = correctAnswersByQuestionId.get(qId);
+                                UserHasAnswer uha = new UserHasAnswer(currentAnswer);
 
-                        if (!questionIdsDone.contains(currentQuestion.getId())) {
-                            // maj des stats de la question
-                            currentQuestion.computeCounts(currentAnswer);
-                            questionsToUpdate.add(currentQuestion);
+                                if (!questionIdsDone.contains(currentQuestion.getId())) {
+                                    // maj des stats de la question
+                                    currentQuestion.computeCounts(currentUserAnswers, currentCorrectAnswers);
+                                    questionsToUpdate.add(currentQuestion);
 
-                            questionIdsDone.add(currentQuestion.getId());
+                                    questionIdsDone.add(currentQuestion.getId());
+                                }
+
+                                // création de la réponse de l'utilisateur
+                                uha.setUser(u);
+                                uha.setQuestion(new Question(qDto.getQuestionId()));
+                                uha.setSession(session);
+                                userAnswers.add(uha);
+                            }
                         }
-
-                        // création de la réponse de l'utilisateur
-                        uha.setUser(u);
-                        uha.setQuestion(new Question(qDto.getQuestionId()));
-                        uha.setSession(session);
-                        userAnswers.add(uha);
                     }
                 }
             }

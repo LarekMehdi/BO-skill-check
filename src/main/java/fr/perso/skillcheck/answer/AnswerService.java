@@ -20,5 +20,9 @@ public class AnswerService {
     public List<Answer> findAllByQuestionIds(List<Long> questionIds) {
         return this.answerRepository.findAllByQuestionIds(questionIds);
     }
+
+    public List<Answer> findAllCorrectByQuestionIds(List<Long> questionIds) {
+        return this.answerRepository.findAllCorrectByQuestionIds(questionIds);
+    }
     
 }

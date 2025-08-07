@@ -2,10 +2,9 @@ package fr.perso.skillcheck.userHasAnswer;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.question.Question;
-import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,47 +17,42 @@ public class UserHasAnswer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long        id;
+    private Long            id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User        user;
+    private User            user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "test_id", nullable = true)
-    private Test        test;
+    @JoinColumn(name = "session_id", nullable = true)
+    private TestSession     session;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question    question;
+    private Question        question;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "answer_id", nullable = false)
-    private Answer      answer;
-
-    @Column(nullable = false)
-    private Boolean     isCorrect;
-
-    @Column(nullable = true)
-    private Integer     responseTime;
+    private Answer          answer;
 
     public UserHasAnswer() {}
 
-    public UserHasAnswer(Long id, User user, Question question, Answer answer, Boolean isCorrect, Integer responseTime) {
+    public UserHasAnswer(Long id, User user, Question question, Answer answer) {
         this.id = id;
         this.user = user;
         this.question = question;
         this.answer = answer;
-        this.isCorrect = isCorrect;
-        this.responseTime = responseTime;
+
     }
 
-    public UserHasAnswer(User user, Question question, Answer answer, Boolean isCorrect, Integer responseTime) {
+    public UserHasAnswer(User user, Question question, Answer answer) {
         this.user = user;
         this.question = question;
         this.answer = answer;
-        this.isCorrect = isCorrect;
-        this.responseTime = responseTime;
+    }
+
+    public UserHasAnswer(Answer answer) {
+        this.answer = answer;
     }
 
     /** ID **/
@@ -89,18 +83,18 @@ public class UserHasAnswer {
         return !UtilEntity.isEmpty(this.user);
     }
 
-    /** TEST **/
+    /** SESSION **/
 
-    public Test getTest() {
-        return this.test;
+    public TestSession getSession() {
+        return this.session;
     }
 
-    public void setTest(Test test) {
-        this.test = test;
+    public void setSession(TestSession session) {
+        this.session = session;
     }
 
-    public boolean hasTest() {
-        return !UtilEntity.isEmpty(this.test);
+    public boolean hasSession() {
+        return !UtilEntity.isEmpty(this.session);
     }
 
     /** QUESTION **/
@@ -129,38 +123,6 @@ public class UserHasAnswer {
 
     public boolean hasAnswer() {
         return !UtilEntity.isEmpty(this.answer);
-    }
-
-    /** IS CORRECT **/
-
-    public Boolean getIsCorrect() {
-        return this.isCorrect;
-    }
-
-    public void setIsCorrect(Boolean isCorrect) {
-        this.isCorrect = isCorrect;
-    }
-
-    public boolean hasIsCorrect() {
-        return !UtilEntity.isEmpty(this.isCorrect);
-    }
-
-    public boolean isCoorectTrue() {
-        return this.hasIsCorrect() && Boolean.TRUE.equals(this.isCorrect);
-    }
-
-    /** RESPONSE TIME **/
-
-    public Integer getResponseTime() {
-        return this.responseTime;
-    }
-
-    public void setResponseTime(Integer responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public boolean hasResponseTime() {
-        return !UtilEntity.isEmpty(this.responseTime);
     }
        
 }

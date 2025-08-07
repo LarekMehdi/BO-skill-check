@@ -1,10 +1,15 @@
 package fr.perso.skillcheck.question;
 
+import java.util.List;
+
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,6 +39,7 @@ public class Question {
     @Column(nullable = false)
     private Integer timeLimit;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Difficulty difficulty;
 
@@ -206,6 +212,22 @@ public class Question {
         if (!this.hasDoneCount()) this.doneCount = 0;
         if (!this.hasCorrectCount()) this.correctCount = 0;
         if (!this.hasSuccessRate()) this.successRate = 0.0;
+    }
+
+    public void computeCounts(List<Answer> userAnswers, List<Answer> correctAnswers) {
+        boolean correct = this.areAnswersCorrect(userAnswers, correctAnswers);
+        this.doneCount += 1;
+        this.correctCount += correct ? 1 : 0;
+        this.successRate = (double) this.correctCount / this.doneCount;
+    }
+
+    public boolean areAnswersCorrect(List<Answer> userAnswers, List<Answer> correctAnswers) {
+        List<Answer> sortedUserAnswers = userAnswers.stream().sorted().toList();
+        List<Answer> sortedCorrectAnswers = correctAnswers.stream().sorted().toList();
+        if (sortedUserAnswers.size() == sortedCorrectAnswers.size() && sortedUserAnswers.equals(sortedCorrectAnswers)) {
+            return true;
+        }
+        return false;
     }
 
 }

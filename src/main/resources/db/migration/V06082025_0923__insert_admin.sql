@@ -1,0 +1,1 @@
+INSERT INTO app_user (pseudo, email, password, role) values ('admin', 'admin@mail.fr', '$2a$10$Ya1yCaJC3Y10A2YShnYAguf/VFrcTAzarzqnMCPqKYf6fXZXkTXcq', 'ADMIN');

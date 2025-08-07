@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
+import fr.perso.skillcheck.question.dto.SubmitQuestionDto;
 import fr.perso.skillcheck.question.dto.TakeQuestionDto;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
@@ -28,6 +31,12 @@ import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.testSession.TestSession;
+import fr.perso.skillcheck.testSession.TestSessionService;
+import fr.perso.skillcheck.testSession.dto.TestSessionDto;
+import fr.perso.skillcheck.user.User;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.UtilEntity;
 import fr.perso.skillcheck.utils.UtilMapper;
@@ -46,6 +55,12 @@ public class TestService {
 
     @Autowired
     private AnswerService           answerService;
+
+    @Autowired
+    private UserHasAnswerService    uhaService;
+
+    @Autowired
+    private TestSessionService      tsService;
 
     /** FIND ALL **/
 
@@ -155,6 +170,70 @@ public class TestService {
         Test test = new Test(dto);
         test.setCreatedBy(user.getId());
         return this.testRepository.save(test);
+    }
+
+    public TestSessionDto submitTestResult(SubmitTestDto dataDto, UserPrincipal user) {
+
+        // récup des réponses et des questions
+        List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
+        List<Long> questionIds = dataDto.getAnswers().stream().map(SubmitQuestionDto::getQuestionId).collect(Collectors.toList());
+
+        List<Answer> answerList = this.answerService.findAllByIds(answerIds);
+        List<Question> questionList = this.questionService.findAllByIds(questionIds);
+        List<Answer> correctAnswerList = this.answerService.findAllCorrectByQuestionIds(questionIds);
+
+        // organisation des données
+        Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+        Map<Long, List<Answer>> userAnswersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId()));
+        Map<Long, List<Answer>> correctAnswersByQuestionId = correctAnswerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId()));
+      
+        // instanciation des listes à créer/modifier
+        List<UserHasAnswer> userAnswers = new ArrayList<>();
+        List<Question> questionsToUpdate = new ArrayList<>();
+        User u = new User(user);
+
+        // sauvegarde de la session
+        TestSession session = new TestSession();
+        session.setTest(new Test(dataDto.getId()));
+        session.setUser(u);
+        this.tsService.create(session);
+
+        // inutile?
+        Set<Long> questionIdsDone = new HashSet<>();
+
+        for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
+            Long qId = qDto.getQuestionId();
+                
+            if (questionById.containsKey(qId) && correctAnswersByQuestionId.containsKey(qId) && userAnswersByQuestionId.containsKey(qId)) {
+                Question currentQuestion = questionById.get(qId);
+                List<Answer> currentUserAnswers = userAnswersByQuestionId.get(qId);
+                List<Answer> currentCorrectAnswers = correctAnswersByQuestionId.get(qId);
+
+                // création des réponses de l'utilisateur
+                for (Answer uAnswer : currentUserAnswers) {
+                    UserHasAnswer uha = new UserHasAnswer(uAnswer);
+                    uha.setUser(u);
+                    uha.setQuestion(new Question(qDto.getQuestionId()));
+                    uha.setSession(session);
+
+                    userAnswers.add(uha);
+                }
+
+                // maj des stats de la question
+                if (!questionIdsDone.contains(currentQuestion.getId())) {
+                    currentQuestion.computeCounts(currentUserAnswers, currentCorrectAnswers);
+                    questionsToUpdate.add(currentQuestion);
+
+                    questionIdsDone.add(currentQuestion.getId());
+                }
+            }
+        }
+
+        // maj des données en base
+        this.uhaService.createMany(userAnswers);
+        this.questionService.updateMany(questionsToUpdate);
+
+        return new TestSessionDto(session);
     }
     
 }

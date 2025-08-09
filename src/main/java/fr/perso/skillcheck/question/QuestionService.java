@@ -84,6 +84,7 @@ public class QuestionService {
     
     public Question create(QuestionDtoWithTagIds dto, UserPrincipal user) {
         Question question = new Question(dto);
+        question.computeIsMultipleAnswer(dto.getAnswers());
         question.setCreatedBy(user.getId());
 
         this.questionRepository.save(question);
@@ -96,7 +97,6 @@ public class QuestionService {
             QuestionHasTag tag = new QuestionHasTag(new Question(question.getId()), new Tag(tagId));
             tags.add(tag);
         }
-
 
         this.qhtService.createMany(tags);
 

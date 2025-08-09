@@ -22,7 +22,6 @@ public class QuestionDto {
     @NotBlank(message = "Le content ne doit pas être vide")
     protected String  content;
 
-    @NotNull(message = "Le champ isMultipleAnswer est requis")
     protected Boolean isMultipleAnswer;
     
     protected Double successRate;

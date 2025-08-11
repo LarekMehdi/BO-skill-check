@@ -9,13 +9,15 @@ import fr.perso.skillcheck.utils.UtilEntity;
 public class ResultQuestionDto {
     private Long                        id;
     private String                      content;
+    private String                      code;
     private List<ResultAnswerDto>       choices;
 
     public ResultQuestionDto() {}
 
-    public ResultQuestionDto(Long id, String content, List<ResultAnswerDto> choices) {
+    public ResultQuestionDto(Long id, String content, String code, List<ResultAnswerDto> choices) {
         this.id = id;
         this.content = content;
+        this.code = code;
         this.choices = choices;
     }
 
@@ -50,6 +52,20 @@ public class ResultQuestionDto {
 
     public boolean hasContent() {
         return !UtilEntity.isEmpty(this.content);
+    }
+
+    /** CODE **/
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean hasCode() {
+        return !UtilEntity.isEmpty(this.code);
     }
 
     /** CHOICES **/

@@ -3,6 +3,7 @@ package fr.perso.skillcheck.question;
 import java.util.List;
 
 import fr.perso.skillcheck.answer.Answer;
+import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
 import fr.perso.skillcheck.utils.UtilEntity;
@@ -228,6 +229,11 @@ public class Question {
             return true;
         }
         return false;
+    }
+
+    public void computeIsMultipleAnswer(List<AnswerDto> answerList) {
+        long correctCount = answerList.stream().filter(AnswerDto::isCorrectTrue).count();
+        this.setIsMultipleAnswer(correctCount > 1);
     }
 
 }

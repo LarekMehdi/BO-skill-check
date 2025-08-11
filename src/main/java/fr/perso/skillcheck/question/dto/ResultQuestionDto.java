@@ -24,6 +24,7 @@ public class ResultQuestionDto {
     public ResultQuestionDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
     }
 
     /** ID **/

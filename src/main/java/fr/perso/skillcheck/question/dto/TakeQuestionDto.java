@@ -28,6 +28,7 @@ public class TakeQuestionDto {
     public TakeQuestionDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.timeLimit = question.getTimeLimit();
         this.isMultipleAnswer = question.getIsMultipleAnswer();
     }

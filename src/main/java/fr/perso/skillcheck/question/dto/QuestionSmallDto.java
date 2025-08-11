@@ -28,6 +28,7 @@ public class QuestionSmallDto {
     public QuestionSmallDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.difficulty = question.getDifficulty();
     }
 

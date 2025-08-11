@@ -57,6 +57,7 @@ public class QuestionDto {
     public QuestionDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.isMultipleAnswer = question.getIsMultipleAnswer();
         this.timeLimit = question.getTimeLimit();
         this.successRate = question.getSuccessRate();

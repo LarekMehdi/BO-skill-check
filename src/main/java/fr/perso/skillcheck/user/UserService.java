@@ -57,16 +57,19 @@ public class UserService {
 
         // mise en ordre des données
         Map<Long, Test> testById = new HashMap<>();
-        Map<Long, List<Test>> testsBySessionId = new HashMap<>();
+  
         testById = tests.stream().collect(Collectors.toMap(Test::getId, Function.identity()));
 
-        for (TestSession session : sessions) {
-            testsBySessionId.computeIfAbsent(session.getId(), k -> new ArrayList<>())
-                .add(testById.get(session.getTest().getId()));
-        }
+        //TODO: récup des userHasAnswer by sessionId
+        // => récup des questions by ids
+        // => récup des bonnes réponses
+        // => compute sucessRate avec question.isCorrect et toutes les bonnes réponse
+        // OU
+        // ajouter isCorrect dans userHasAnswer
+        // => économise pas mal de requetes sql
 
         // construction des dtos
-        List<UserTestSessionDto> sessionDtos = UtilMapper.mapTestSessionListToUserTestSessionDtos(sessions, testsBySessionId);
+        List<UserTestSessionDto> sessionDtos = UtilMapper.mapTestSessionListToUserTestSessionDtos(sessions, testById);
         dto.setSessionList(sessionDtos);
 
         return dto;

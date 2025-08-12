@@ -2,6 +2,7 @@ package fr.perso.skillcheck.testSession.dto;
 
 import java.time.LocalDateTime;
 
+import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class UserTestSessionDto {
@@ -19,6 +20,12 @@ public class UserTestSessionDto {
         this.testTitle = testTitle;
         this.createdAt = createdAt;
         this.successRate = successRate;
+    }
+
+    public UserTestSessionDto(TestSession session) {
+        this.sessionId = session.getId();
+        this.testId = session.getTest().getId();
+        this.createdAt = session.getCreatedAt();
     }
 
     /** SESSION ID **/
@@ -55,7 +62,7 @@ public class UserTestSessionDto {
         return this.testTitle;
     }
 
-    public void setTestId(String testTitle) {
+    public void setTestTitle(String testTitle) {
         this.testTitle = testTitle;
     }
 

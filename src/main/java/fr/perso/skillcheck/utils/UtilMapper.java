@@ -65,14 +65,15 @@ public abstract class UtilMapper {
 
     /** SESSIONS **/
 
-    public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, List<Test>> testsBySessionId) {
+    public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, Test> testById) {
         List<UserTestSessionDto> dtos = new ArrayList<>();
         for (TestSession session : sessions) {
-            UserTestSessionDto dto = new UserTestSessionDto();
+            UserTestSessionDto dto = new UserTestSessionDto(session);
+            Test test = testById.get(session.getTest().getId());
+            dto.setTestTitle(test.getTitle());
 
             dtos.add(dto);
         }
-
         return dtos;
     }
 

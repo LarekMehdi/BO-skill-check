@@ -1,7 +1,9 @@
 package fr.perso.skillcheck.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
@@ -21,7 +23,8 @@ public class UserService {
     }
 
     public UserDetailsDto findDetailsById(Long id, UserPrincipal user) {
-        if (!UtilEntity.isMyId(id, user)) return null;
+        //TODO: && !isAdmin()
+        //if (!UtilEntity.isMyId(id, user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're a not allowed to access this resource");
  
 
         UserDetailsDto dto = new UserDetailsDto();

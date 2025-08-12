@@ -37,7 +37,6 @@ public abstract class UtilEntity {
 
     /** USER **/
 
-    // TODO: throw forbidden exception (boolean -> void)
     public static boolean isMyId(Long id, UserPrincipal user) {
         if (Objects.equals(id, user.getId())) return true;
         return false;

@@ -4,10 +4,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import fr.perso.skillcheck.question.Question;
-import fr.perso.skillcheck.security.UserPrincipal;
 
 public abstract class UtilEntity {
 
@@ -32,13 +30,6 @@ public abstract class UtilEntity {
             return Array.getLength(obj) == 0;
         }
 
-        return false;
-    }
-
-    /** USER **/
-
-    public static boolean isMyId(Long id, UserPrincipal user) {
-        if (Objects.equals(id, user.getId())) return true;
         return false;
     }
 

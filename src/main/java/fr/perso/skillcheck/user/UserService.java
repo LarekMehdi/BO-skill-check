@@ -7,7 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
-import fr.perso.skillcheck.utils.UtilEntity;
+import fr.perso.skillcheck.utils.UtilAuth;
 
 
 @Service
@@ -23,8 +23,8 @@ public class UserService {
     }
 
     public UserDetailsDto findDetailsById(Long id, UserPrincipal user) {
-        //TODO: && !isAdmin()
-        //if (!UtilEntity.isMyId(id, user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're a not allowed to access this resource");
+        //TODO: nombre de test passé + successrate moyen + profil created at?
+        if (!UtilAuth.isMyId(id, user) && !UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're a not allowed to access this resource");
  
 
         UserDetailsDto dto = new UserDetailsDto();

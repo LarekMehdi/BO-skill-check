@@ -10,6 +10,9 @@ import fr.perso.skillcheck.answer.dto.ResultAnswerDto;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.dto.QuestionSmallDto;
 import fr.perso.skillcheck.question.dto.ResultQuestionDto;
+import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.testSession.TestSession;
+import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
 
 public abstract class UtilMapper {
 
@@ -57,6 +60,19 @@ public abstract class UtilMapper {
 
             dtos.add(dto);
         }
+        return dtos;
+    }
+
+    /** SESSIONS **/
+
+    public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, List<Test>> testsBySessionId) {
+        List<UserTestSessionDto> dtos = new ArrayList<>();
+        for (TestSession session : sessions) {
+            UserTestSessionDto dto = new UserTestSessionDto();
+
+            dtos.add(dto);
+        }
+
         return dtos;
     }
 

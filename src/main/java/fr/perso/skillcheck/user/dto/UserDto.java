@@ -1,6 +1,8 @@
 package fr.perso.skillcheck.user.dto;
 
 import fr.perso.skillcheck.constants.Role;
+import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -46,6 +48,19 @@ public class UserDto {
         this.pseudo = pseudo;
         this.email = email;
         this.password = password;
+    }
+
+    public UserDto(UserPrincipal user) {
+        this.id = user.getId();
+        this.pseudo = user.getUsername();
+        this.role = user.getAuthorities().stream().findFirst().map(auth -> Role.valueOf(auth.getAuthority())).orElse(null);
+    }
+
+    public UserDto(User user) {
+        this.id = user.getId();
+        this.pseudo = user.getPseudo();
+        this.email = user.getEmail();
+        this.role = user.getRole();
     }
 
     /** ID **/

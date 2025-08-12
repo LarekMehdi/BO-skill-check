@@ -20,6 +20,9 @@ public interface TestRepository extends JpaRepository<Test, Long>{
 
     @Query("SELECT t from Test t")
     public Page<Test> findAllWithPagination(Pageable pageable);
+
+    @Query("SELECT t FROM Test t WHERE t.id IN (:ids)")
+    public List<Test> findAllByIds(@Param("ids") List<Long> ids);
     
     
 }

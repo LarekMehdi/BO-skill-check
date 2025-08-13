@@ -38,7 +38,9 @@ public class TestSession {
     @Column(nullable = false)
     private Double          successRate;
 
-    public TestSession() {}
+    public TestSession() {
+        this.successRate = 0.0;
+    }
 
     public TestSession(Long id, Test test, User user, LocalDateTime createdAt, Double successRate) {
         this.id = id;

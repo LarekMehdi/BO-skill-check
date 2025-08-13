@@ -1,0 +1,1 @@
+ALTER TABLE test_session ADD success_rate DOUBLE PRECISION NOT NULL DEFAULT 0;

@@ -17,30 +17,33 @@ import jakarta.validation.constraints.Positive;
 
 public class QuestionDto {
 
-    protected Long id;
+    protected Long                      id;
 
     @NotBlank(message = "Le content ne doit pas être vide")
-    protected String  content;
+    protected String                    content;
 
-    protected Boolean isMultipleAnswer;
+    protected String                    code;
+
+    protected Boolean                   isMultipleAnswer;
     
-    protected Double successRate;
+    protected Double                    successRate;
 
     @NotNull(message = "Le champ timeLimit est requis")
     @Positive(message = "Le champ timeLimit doit être supérieur à 0")
-    protected Integer timeLimit;
+    protected Integer                   timeLimit;
 
     @NotNull(message = "Le champ difficulty est requis")
-    protected Difficulty difficulty;
+    protected Difficulty                difficulty;
 
     @NotEmpty(message = "La liste des réponses ne peut pas être vide")
-    protected List<@Valid AnswerDto> answers;
+    protected List<@Valid AnswerDto>    answers;
 
     public QuestionDto() {}
 
-    public QuestionDto(Long id,String content, Boolean isMultipleAnswer, Integer timeLimit) {
+    public QuestionDto(Long id,String content, String code, Boolean isMultipleAnswer, Integer timeLimit) {
         this.id = id;
         this.content = content;
+        this.code = code;
         this.isMultipleAnswer = isMultipleAnswer;
         this.timeLimit = timeLimit;
     }
@@ -54,6 +57,7 @@ public class QuestionDto {
     public QuestionDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.isMultipleAnswer = question.getIsMultipleAnswer();
         this.timeLimit = question.getTimeLimit();
         this.successRate = question.getSuccessRate();
@@ -86,6 +90,20 @@ public class QuestionDto {
 
     public boolean hasContent() {
         return !UtilEntity.isEmpty(this.content);
+    }
+
+    /** CODE **/
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean hasCode() {
+        return !UtilEntity.isEmpty(this.code);
     }
 
     /** IS MULTIPLE ANSWER **/

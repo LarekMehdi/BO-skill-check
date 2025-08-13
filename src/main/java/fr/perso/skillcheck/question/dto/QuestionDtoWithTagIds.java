@@ -10,8 +10,8 @@ public class QuestionDtoWithTagIds extends QuestionDto {
 
     public QuestionDtoWithTagIds() {}
 
-    public QuestionDtoWithTagIds(Long id,String content, Boolean isMultipleAnswer, Integer timeLimit) {
-        super(id, content, isMultipleAnswer, timeLimit);
+    public QuestionDtoWithTagIds(Long id,String content, String code, Boolean isMultipleAnswer, Integer timeLimit) {
+        super(id, content, code, isMultipleAnswer, timeLimit);
     }
 
     public QuestionDtoWithTagIds(String content, Boolean isMultipleAnswer, Integer timeLimit) {

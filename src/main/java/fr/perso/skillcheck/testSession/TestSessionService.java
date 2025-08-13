@@ -27,7 +27,7 @@ import fr.perso.skillcheck.utils.UtilMapper;
 public class TestSessionService {
 
     @Autowired
-    private TestSessionRepository       sessionRepository;
+    private TestSessionRepository       tsRepository;
 
     @Autowired
     private TestQueryService            testQueryService;
@@ -47,7 +47,7 @@ public class TestSessionService {
     /** FIND **/
 
     public TestSession findById(Long id) {
-        return this.sessionRepository.findById(id).orElseThrow(() -> new NotFoundException("No test session found with id " + id));
+        return this.tsRepository.findById(id).orElseThrow(() -> new NotFoundException("No test session found with id " + id));
     }
 
     public TestSessionDetailsDto findTestSessionDetails(Long id, UserPrincipal user) {
@@ -73,10 +73,16 @@ public class TestSessionService {
         return dto;
     }
 
+    /** FIND ALL **/
+
+    public List<TestSession> findAllByUserId(Long userId) {
+        return this.tsRepository.findAllByUserId(userId);
+    }
+
     /** CREATE **/
 
     public TestSession create(TestSession ts) {
-        return this.sessionRepository.save(ts);
+        return this.tsRepository.save(ts);
     }
 
 

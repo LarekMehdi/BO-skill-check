@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import fr.perso.skillcheck.question.Question;
 
 public abstract class UtilEntity {

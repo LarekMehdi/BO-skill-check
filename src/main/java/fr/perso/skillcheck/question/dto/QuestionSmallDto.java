@@ -8,13 +8,15 @@ public class QuestionSmallDto {
     
     private Long        id;
     private String      content;
+    private String      code;
     private Difficulty  difficulty;
 
     public QuestionSmallDto() {}
 
-    public QuestionSmallDto(Long id, String content, Difficulty difficulty) {
+    public QuestionSmallDto(Long id, String content, String code, Difficulty difficulty) {
         this.id = id;
         this.content = content;
+        this.code = code;
         this.difficulty = difficulty;
     }
 
@@ -26,6 +28,7 @@ public class QuestionSmallDto {
     public QuestionSmallDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.difficulty = question.getDifficulty();
     }
 
@@ -55,6 +58,20 @@ public class QuestionSmallDto {
 
     public boolean hasContent() {
         return !UtilEntity.isEmpty(this.content);
+    }
+
+    /** CODE **/
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean hasCode() {
+        return !UtilEntity.isEmpty(this.code);
     }
 
     /** DIFFICULTY **/

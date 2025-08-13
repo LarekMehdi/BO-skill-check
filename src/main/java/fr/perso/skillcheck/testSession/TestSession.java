@@ -9,6 +9,7 @@ import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,11 +23,11 @@ public class TestSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long            id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id", nullable = false)
     private Test            test;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User            user;
 
@@ -34,19 +35,24 @@ public class TestSession {
     @CreationTimestamp
     private LocalDateTime   createdAt;
 
+    @Column(nullable = false)
+    private Double          successRate;
+
     public TestSession() {}
 
-    public TestSession(Long id, Test test, User user, LocalDateTime createdAt) {
+    public TestSession(Long id, Test test, User user, LocalDateTime createdAt, Double successRate) {
         this.id = id;
         this.test = test;
         this.user = user;
         this.createdAt = createdAt;
+        this.successRate = successRate;
     }
 
-    public TestSession(Test test, User user, LocalDateTime createdAt) {
+    public TestSession(Test test, User user, LocalDateTime createdAt, Double successRate) {
         this.test = test;
         this.user = user;
         this.createdAt = createdAt;
+        this.successRate = successRate;
     }
 
     public TestSession(Test test, User user) {
@@ -108,5 +114,19 @@ public class TestSession {
 
     public boolean hasCreatedAt() {
         return !UtilEntity.isEmpty(this.createdAt);
+    }
+
+    /** SUCCESS RATE **/
+
+    public Double getSuccessRate() {
+        return this.successRate;
+    }
+
+    public void setSuccessRate(Double successRate) {
+        this.successRate = successRate;
+    }
+
+    public boolean hasSuccessRate() {
+        return !UtilEntity.isEmpty(this.successRate);
     }
 }

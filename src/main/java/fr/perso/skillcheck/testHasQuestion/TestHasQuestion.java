@@ -4,6 +4,7 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,11 +18,11 @@ public class TestHasQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long        id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id", nullable = false)
     private Test        test;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question    question;
 

@@ -10,13 +10,14 @@ public class TakeQuestionDto {
     
     private Long                id;
     private String              content;
+    private String              code;
     private Integer             timeLimit;
     private Boolean             isMultipleAnswer;
     private List<AnswerDto>     choices;
 
     public TakeQuestionDto() {}
 
-    public TakeQuestionDto(Long id, String content, Integer timeLimit, Boolean isMultipleAnswer, List<AnswerDto> choices) {
+    public TakeQuestionDto(Long id, String content, String code, Integer timeLimit, Boolean isMultipleAnswer, List<AnswerDto> choices) {
         this.id = id;
         this.content = content;
         this.timeLimit = timeLimit;
@@ -27,6 +28,7 @@ public class TakeQuestionDto {
     public TakeQuestionDto(Question question) {
         this.id = question.getId();
         this.content = question.getContent();
+        this.code = question.getCode();
         this.timeLimit = question.getTimeLimit();
         this.isMultipleAnswer = question.getIsMultipleAnswer();
     }
@@ -57,6 +59,20 @@ public class TakeQuestionDto {
 
     public boolean hasContent() {
         return !UtilEntity.isEmpty(content);
+    }
+
+    /** CODE **/
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean hasCode() {
+        return !UtilEntity.isEmpty(this.code);
     }
 
     /** TIME LIMIT **/

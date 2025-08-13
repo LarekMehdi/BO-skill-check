@@ -71,6 +71,10 @@ public class TestService {
         return this.testRepository.findAllWithPagination(pageable);
     }
 
+    public List<Test> findAllByIds(List<Long> ids) {
+        return this.testRepository.findAllByIds(ids);
+    }
+
     /** FIND **/
 
     public Test findById(Long id) {

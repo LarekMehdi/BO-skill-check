@@ -25,6 +25,9 @@ public class Question {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String  content;
 
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String  code;
+
     @Column(nullable = false)
     private Boolean isMultipleAnswer;
 
@@ -53,6 +56,15 @@ public class Question {
         this.id = id;
     }
 
+    public Question(Long id, String content, String code, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
+        this.id = id;
+        this.content = content;
+        this.code = code;
+        this.isMultipleAnswer = isMultipleAnswer;
+        this.successRate = successRate;
+        this.timeLimit = timeLimit;
+    }
+
     public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
         this.id = id;
         this.content = content;
@@ -70,6 +82,7 @@ public class Question {
 
     public Question(QuestionDto dto) {
         this.content = dto.getContent();
+        this.code = dto.getCode();
         this.isMultipleAnswer = dto.getIsMultipleAnswer();
         this.successRate = dto.getSuccessRate();
         this.timeLimit = dto.getTimeLimit();
@@ -103,6 +116,20 @@ public class Question {
 
     public boolean hasContent() {
         return !UtilEntity.isEmpty(this.content);
+    }
+
+    /** CODE **/
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean hasCode() {
+        return !UtilEntity.isEmpty(this.code);
     }
 
     /** IS MULTIPLE ANSWER **/

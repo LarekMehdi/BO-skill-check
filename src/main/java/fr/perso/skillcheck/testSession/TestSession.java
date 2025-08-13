@@ -118,7 +118,7 @@ public class TestSession {
 
     /** SUCCESS RATE **/
 
-    public Double successRate() {
+    public Double getSuccessRate() {
         return this.successRate;
     }
 

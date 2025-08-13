@@ -26,6 +26,7 @@ public class UserTestSessionDto {
         this.sessionId = session.getId();
         this.testId = session.getTest().getId();
         this.createdAt = session.getCreatedAt();
+        this.successRate = session.getSuccessRate();
     }
 
     /** SESSION ID **/

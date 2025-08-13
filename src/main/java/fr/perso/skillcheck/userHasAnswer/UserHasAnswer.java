@@ -6,6 +6,7 @@ import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,19 +20,19 @@ public class UserHasAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long            id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User            user;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id", nullable = true)
     private TestSession     session;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question        question;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer          answer;
 

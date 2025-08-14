@@ -13,6 +13,8 @@ import fr.perso.skillcheck.question.dto.ResultQuestionDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
+import fr.perso.skillcheck.user.User;
+import fr.perso.skillcheck.user.dto.SmallUserDto;
 
 public abstract class UtilMapper {
 
@@ -72,6 +74,17 @@ public abstract class UtilMapper {
             Test test = testById.get(session.getTest().getId());
             dto.setTestTitle(test.getTitle());
 
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    /** USER **/
+
+    public static List<SmallUserDto> mapUserListToSmallUserDtos(List<User> users) {
+        List<SmallUserDto> dtos = new ArrayList<>();
+        for (User user : users) {
+            SmallUserDto dto = new SmallUserDto(user);
             dtos.add(dto);
         }
         return dtos;

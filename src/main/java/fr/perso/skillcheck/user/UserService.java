@@ -20,6 +20,7 @@ import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
+import fr.perso.skillcheck.user.dto.UserRoleDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
 import fr.perso.skillcheck.utils.UtilAuth;
@@ -41,7 +42,7 @@ public class UserService {
     /** FIND **/
 
     public User findById(Long id) {
-        return this.userRepository.findById(id).orElse(null);
+        return this.userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with id " + id));
     }
 
     public UserDetailsDto findDetailsById(Long id, UserPrincipal currentUser) {
@@ -81,6 +82,16 @@ public class UserService {
         PageDto<SmallUserDto> result= new PageDto<>(dtos, users.getTotalElements());
 
         return result;
+    }
+
+    /** UPDATE **/
+
+    public User changeUserRole(UserRoleDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to modify this ressource");
+        User u = this.findById(dto.getId());
+        u.setRole(dto.getRole());
+        this.userRepository.save(u);
+        return u;
     }
     
 }

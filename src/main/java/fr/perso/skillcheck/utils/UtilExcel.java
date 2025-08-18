@@ -19,8 +19,6 @@ public abstract class UtilExcel {
 
         Workbook workbook = null;
         ByteArrayOutputStream out = null;
-        
-        
 
         try {
             workbook = new XSSFWorkbook();
@@ -35,11 +33,12 @@ public abstract class UtilExcel {
 
             headerRow.createCell(4).setCellValue("QuestionId");
             headerRow.createCell(5).setCellValue("QuestionContent");
-            headerRow.createCell(6).setCellValue("IsMultipleAnswer");
-            headerRow.createCell(7).setCellValue("TimeLimit");
-            headerRow.createCell(8).setCellValue("Difficulty");
-            headerRow.createCell(9).setCellValue("CreatedBy");
-            headerRow.createCell(10).setCellValue("Code");
+            headerRow.createCell(6).setCellValue("Code");
+            headerRow.createCell(7).setCellValue("IsMultipleAnswer");
+            headerRow.createCell(8).setCellValue("TimeLimit");
+            headerRow.createCell(9).setCellValue("Difficulty");
+            headerRow.createCell(10).setCellValue("QuestionCreatedBy");
+            
             headerRow.createCell(11).setCellValue("Answer 1");
             headerRow.createCell(12).setCellValue("IsCorrect 1");
             headerRow.createCell(13).setCellValue("Answer 2");
@@ -56,24 +55,23 @@ public abstract class UtilExcel {
 
                     Row row = sheet.createRow(rowId++);
                     row.createCell(0).setCellValue(dto.getId());
-                    row.createCell(1).setCellValue("");
-                    row.createCell(2).setCellValue("");
-                    row.createCell(3).setCellValue("");
-
+                    row.createCell(1).setCellValue(dto.getTitle());
+                    row.createCell(2).setCellValue(dto.getDescription());
+                    row.createCell(3).setCellValue(dto.getCreatedBy());
                     
-                    row.createCell(4).setCellValue("");
-                    row.createCell(5).setCellValue("");
-                    row.createCell(6).setCellValue("");
-                    row.createCell(7).setCellValue("");
-                    row.createCell(8).setCellValue("");
-                    row.createCell(9).setCellValue("");
-                    row.createCell(10).setCellValue("");
+                    row.createCell(4).setCellValue(question.getId());
+                    row.createCell(5).setCellValue(question.getContent());
+                    row.createCell(6).setCellValue(question.getCode());
+                    row.createCell(7).setCellValue(question.getIsMultipleAnswer());
+                    row.createCell(8).setCellValue(question.getTimeLimit());
+                    row.createCell(9).setCellValue(question.getDifficulty().toString());
+                    row.createCell(10).setCellValue(question.getCreatedBy());
 
                     for(int i=0; i<answerMax; i++) {
                         if (i < question.getAnswers().size()) {
                             SmallAnswerDto a = question.getAnswers().get(i);
-                            row.createCell(11 + i*2).setCellValue("");
-                            row.createCell(12 + i*2).setCellValue("");
+                            row.createCell(11 + i*2).setCellValue(a.getContent());
+                            row.createCell(12 + i*2).setCellValue(a.getIsCorrect());
                         } else {
                             row.createCell(11 + i*2).setCellValue("");
                             row.createCell(12 + i*2).setCellValue("");
@@ -86,7 +84,7 @@ public abstract class UtilExcel {
             return out.toByteArray();
 
         } catch(IOException e) {
-            throw new RuntimeException("An error occured while generating excel file for test list");
+            throw new RuntimeException("An error occured while generating excel file for test list", e);
         } finally {
             try {
                 if (workbook != null) workbook.close();

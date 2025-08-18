@@ -73,7 +73,7 @@ public class QuestionExportDto {
 
     /** IS MULTIPLE ANSWER **/
 
-    public Boolean isMultipleAnswer() {
+    public Boolean getIsMultipleAnswer() {
         return this.isMultipleAnswer;
     }
 

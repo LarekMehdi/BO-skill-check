@@ -181,6 +181,7 @@ public class TestService {
         // récup des réponses et des questions
         List<Long> answerIds = dataDto.getAnswers().stream().filter(SubmitQuestionDto::hasSelectedAnswerIds).flatMap(q -> q.getSelectedAnswerIds().stream()).collect(Collectors.toList());
         List<Long> questionIds = dataDto.getAnswers().stream().map(SubmitQuestionDto::getQuestionId).collect(Collectors.toList());
+        Set<Long> questionIdsSet = new HashSet<>(questionIds);
 
         List<Answer> answerList = this.answerService.findAllByIds(answerIds);
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
@@ -205,6 +206,8 @@ public class TestService {
         // inutile?
         Set<Long> questionIdsDone = new HashSet<>();
 
+        int correctQuestionCount = 0;
+
         for (SubmitQuestionDto qDto : dataDto.getAnswers()) {
             Long qId = qDto.getQuestionId();
                 
@@ -212,6 +215,9 @@ public class TestService {
                 Question currentQuestion = questionById.get(qId);
                 List<Answer> currentUserAnswers = userAnswersByQuestionId.get(qId);
                 List<Answer> currentCorrectAnswers = correctAnswersByQuestionId.get(qId);
+
+                boolean isAnswerCorrect = currentQuestion.areAnswersCorrect(currentUserAnswers, currentCorrectAnswers);
+                if (isAnswerCorrect) correctQuestionCount++;
 
                 // création des réponses de l'utilisateur
                 for (Answer uAnswer : currentUserAnswers) {
@@ -233,7 +239,12 @@ public class TestService {
             }
         }
 
+        double sessionSuccessRate = ((double) correctQuestionCount / questionIdsSet.size()) * 100;
+        session.setSuccessRate(sessionSuccessRate);
+
+
         // maj des données en base
+        this.tsService.update(session);
         this.uhaService.createMany(userAnswers);
         this.questionService.updateMany(questionsToUpdate);
 

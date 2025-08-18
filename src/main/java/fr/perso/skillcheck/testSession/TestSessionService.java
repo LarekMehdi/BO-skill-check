@@ -85,6 +85,12 @@ public class TestSessionService {
         return this.tsRepository.save(ts);
     }
 
+    /** UPDATE **/
+
+    public TestSession update(TestSession ts) {
+        return this.tsRepository.save(ts);
+    }
+
 
     
 }

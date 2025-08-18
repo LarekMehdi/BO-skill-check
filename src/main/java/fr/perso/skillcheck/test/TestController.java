@@ -1,7 +1,5 @@
 package fr.perso.skillcheck.test;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +18,7 @@ import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
+import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import fr.perso.skillcheck.utils.GenericFilter;
@@ -28,15 +27,20 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/tests")
 public class TestController {
-    
+
     @Autowired
-    private TestService     testService;
+    private TestService testService;
 
     /** FIND ALL **/
 
     @GetMapping()
     public Page<Test> findAllWithPagination(@ModelAttribute @Valid GenericFilter filter) {
         return this.testService.findAllWithPagination(filter);
+    }
+
+    @GetMapping("/export") 
+    public byte[] exportTestList(@ModelAttribute @Valid TestFilter filter, @CurrentUser UserPrincipal user) {
+        return this.testService.exportTestList(filter, user);
     }
 
     /** FIND **/

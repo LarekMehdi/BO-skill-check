@@ -11,7 +11,6 @@ import fr.perso.skillcheck.utils.UtilExcel;
 public class TestExportService {
     
     public byte[] exportListToExcel(List<TestExportDto> dtos) {
-
         return UtilExcel.exportTestList(dtos);
     }
 }

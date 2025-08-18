@@ -19,6 +19,10 @@ public class TestHasQuestionService {
         return this.thqRepository.findAllByTestId(testId);
     }
 
+    public List<TestHasQuestion> findAllByTestIds(List<Long> testIds) {
+        return this.thqRepository.findAllByTestIds(testIds);
+    } 
+
     /** CREATE **/
 
     public List<TestHasQuestion> createMany(List<TestHasQuestion> thqList) {

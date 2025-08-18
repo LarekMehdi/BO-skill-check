@@ -3,6 +3,7 @@ package fr.perso.skillcheck.user;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -86,8 +87,10 @@ public class UserService {
 
     /** UPDATE **/
 
-    public User changeUserRole(UserRoleDto dto, UserPrincipal user) {
+    public User changeUserRole(UserRoleDto dto, Long id, UserPrincipal user) {
         if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to modify this ressource");
+        if (!Objects.equals(dto.getId(), id)) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Id mismatch");
+        
         User u = this.findById(dto.getId());
         u.setRole(dto.getRole());
         this.userRepository.save(u);

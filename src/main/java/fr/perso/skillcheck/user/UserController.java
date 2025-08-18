@@ -42,8 +42,8 @@ public class UserController {
     /** UPDATE **/
 
     @PatchMapping("/{id}/role")
-    public User changeUserRole(@RequestBody @Valid UserRoleDto dto, @CurrentUser UserPrincipal user) {
-        return this.userService.changeUserRole(dto, user);
+    public User changeUserRole(@RequestBody @Valid UserRoleDto dto, @PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+        return this.userService.changeUserRole(dto, id, user);
     }
    
 }

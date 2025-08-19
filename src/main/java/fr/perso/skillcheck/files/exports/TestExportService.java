@@ -1,4 +1,4 @@
-package fr.perso.skillcheck.files.export;
+package fr.perso.skillcheck.files.exports;
 
 import java.util.List;
 

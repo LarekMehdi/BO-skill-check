@@ -2,6 +2,8 @@ package fr.perso.skillcheck.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -11,9 +13,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
+import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 
 public abstract class UtilExcel {
+
+    /** EXPORT **/
     
     public static byte[] exportTestList(List<TestExportDto> dtos) {
 
@@ -94,5 +99,13 @@ public abstract class UtilExcel {
             }
             
         }
+    }
+
+    /** IMPORT **/
+
+    public static List<Test> importExcel(InputStream inputStream) {
+        List<Test> testList = new ArrayList<>();
+
+        return testList;
     }
 }

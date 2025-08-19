@@ -3,6 +3,7 @@ package fr.perso.skillcheck.test.dto;
 import java.util.List;
 
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
+import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class TestExportDto {
@@ -20,6 +21,13 @@ public class TestExportDto {
         this.description = description;
         this.createdBy = createdBy;
         this.questions = questions;
+    }
+
+    public TestExportDto(Test test) {
+        this.id = test.getId();
+        this.title = test.getTitle();
+        this.description = test.getDescription();
+        this.createdBy = test.getCreatedBy();
     }
 
     /** ID **/

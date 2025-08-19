@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.answer.dto;
 
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class SmallAnswerDto {
@@ -13,6 +14,12 @@ public class SmallAnswerDto {
         this.id = id;
         this.content = content;
         this.isCorrect = isCorrect;
+    }
+
+    public SmallAnswerDto(Answer answer) {
+        this.id = answer.getId();
+        this.content = answer.getContent();
+        this.isCorrect = answer.getIsCorrect();
     }
 
     /** ID **/

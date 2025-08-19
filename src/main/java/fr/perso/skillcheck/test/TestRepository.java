@@ -15,7 +15,7 @@ public interface TestRepository extends JpaRepository<Test, Long>{
     /** FIND ALL **/
 
     //TODO prendre en compte le filter
-    @Query(value = "SELECT t FROM Test t", nativeQuery = true)
+    @Query(value = "SELECT t FROM Test t")
     public List<Test> findAllWithFilter();
 
     @Query("SELECT t from Test t")

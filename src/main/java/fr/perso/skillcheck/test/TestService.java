@@ -102,9 +102,9 @@ public class TestService {
         Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
         Map<Long, List<Question>> questionsByTestId = thqList.stream().collect(Collectors.groupingBy(thq -> thq.getTest().getId(), Collectors.mapping(thq -> questionById.get(thq.getQuestion().getId()), Collectors.toList())));
 
-        
+        // création des dtos
+        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId);
 
-        List<TestExportDto> dtos = new ArrayList<>();
 
         return UtilExcel.exportTestList(dtos);
     }

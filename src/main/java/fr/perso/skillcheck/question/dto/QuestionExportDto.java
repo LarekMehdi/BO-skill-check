@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class QuestionExportDto {
@@ -27,6 +28,16 @@ public class QuestionExportDto {
         this.difficulty = difficulty;
         this.createdBy = createdBy;
         this.answers = answers;
+    }
+
+    public QuestionExportDto(Question question) {
+        this.id = question.getId();
+        this.content = question.getContent();
+        this.code = question.getCode();
+        this.isMultipleAnswer = question.getIsMultipleAnswer();
+        this.timeLimit = question.getTimeLimit();
+        this.difficulty = question.getDifficulty();
+        this.createdBy = question.getCreatedBy();
     }
 
     /** ID **/

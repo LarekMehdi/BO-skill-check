@@ -81,8 +81,8 @@ public class TestController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<List<Test>> importTestList(@RequestParam("file") MultipartFile file) {
-        List<Test> tests = this.testService.importTestList(file);
+    public ResponseEntity<List<Test>> importTestList(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal user) {
+        List<Test> tests = this.testService.importTestList(file, user);
         return ResponseEntity.ok(tests);
     }
 }

@@ -6,13 +6,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
+import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
+import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 
@@ -103,9 +107,114 @@ public abstract class UtilExcel {
 
     /** IMPORT **/
 
-    public static List<Test> importExcel(InputStream inputStream) {
+    public static List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
         List<Test> testList = new ArrayList<>();
 
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue;
+
+                Long testId = (long) row.getCell(0).getNumericCellValue();
+                String testTitle = row.getCell(1).getStringCellValue();
+                String testDescription = row.getCell(2).getStringCellValue();
+                Long testCreatedBy = user.getId();
+
+                Long questionId = (long) row.getCell(4).getNumericCellValue();
+                String questionContent = row.getCell(5).getStringCellValue();
+                String questionCode = row.getCell(6).getStringCellValue();
+                Boolean questionIsMultipleAnswer = row.getCell(7).getBooleanCellValue();
+                Double questionTimeLimit = row.getCell(8).getNumericCellValue();
+                Difficulty questionDifficulty = Difficulty.valueOf(row.getCell(9).getStringCellValue());
+                Long questionCreatedBy = user.getId();
+
+                String answer1Content = row.getCell(11).getStringCellValue();
+                Boolean answer1IsCorrect = row.getCell(12).getBooleanCellValue();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("An error occured while reading file", e);
+        }
+
         return testList;
+    }
+
+    /** PRIVATES **/
+
+    private static String getString(Cell cell) {
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.STRING) {
+            String v = cell.getStringCellValue();
+            return v.isBlank() ? null : v;
+        }
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return String.valueOf(cell.getNumericCellValue());
+        }
+        return null;
+    }
+
+    private static Boolean getBoolean(Cell cell) {
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.BOOLEAN) {
+            return cell.getBooleanCellValue();
+        }
+        if (cell.getCellType() == CellType.STRING) {
+            String v = cell.getStringCellValue().trim().toLowerCase();
+            if (v.equals("true") || v.equals("1") || v.equals("yes") || v.equals("y") || v.equals("vrai")) return true;
+            if (v.equals("false") || v.equals("0") || v.equals("no") || v.equals("n") || v.equals("faux")) return false;
+        }
+        return null;
+    }
+
+    private static Long getLong(Cell cell) {
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return (long) cell.getNumericCellValue();
+        }
+        if (cell.getCellType() == CellType.STRING) {
+            String v = cell.getStringCellValue();
+            if (v.isEmpty()) return null;
+            try {
+                return Long.parseLong(v);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private static Double getDouble(Cell cell) {
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        }
+        if (cell.getCellType() == CellType.STRING) {
+            String v = cell.getStringCellValue();
+            if (v.isEmpty()) return null;
+            try {
+                return Double.parseDouble(v);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private static Integer getInteger(Cell cell) {
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return (int) cell.getNumericCellValue();
+        }
+        if (cell.getCellType() == CellType.STRING) {
+            String v = cell.getStringCellValue();
+            if (v.isEmpty()) return null;
+            try {
+                return Integer.parseInt(v);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 }

@@ -10,9 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TestHasQuestionRepository extends JpaRepository<TestHasQuestion, Long> {
+
+    /** FIND ALL **/
     
     @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.test.id = :testId")
     public List<TestHasQuestion> findAllByTestId(@Param("testId") Long testId);
+
+    @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.test.id IN :testIds")
+    public List<TestHasQuestion> findAllByTestIds(@Param("testIds") List<Long> testIds);
+
+    /** DELETE **/
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TestHasQuestion thq WHERE thq.test.id = :testId AND thq.question.id in :questionIds")

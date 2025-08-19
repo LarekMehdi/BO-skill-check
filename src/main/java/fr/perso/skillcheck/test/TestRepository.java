@@ -14,9 +14,9 @@ public interface TestRepository extends JpaRepository<Test, Long>{
 
     /** FIND ALL **/
 
-    @Deprecated
-    @Query(value = "SELECT t FROM Test t LIMIT :limit OFFSET :offset", nativeQuery = true)
-    public List<Test> findAllWithFilter(@Param("limit") Integer limit, @Param("offset") Integer offset);
+    //TODO prendre en compte le filter
+    @Query(value = "SELECT t FROM Test t")
+    public List<Test> findAllWithFilter();
 
     @Query("SELECT t from Test t")
     public Page<Test> findAllWithPagination(Pageable pageable);

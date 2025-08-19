@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,12 +13,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
+import fr.perso.skillcheck.files.imports.TestImportService;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.SubmitQuestionDto;
@@ -27,7 +32,9 @@ import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
+import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
+import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
@@ -38,7 +45,9 @@ import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
+import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilEntity;
+import fr.perso.skillcheck.utils.UtilExcel;
 import fr.perso.skillcheck.utils.UtilMapper;
 
 @Service
@@ -62,6 +71,9 @@ public class TestService {
     @Autowired
     private TestSessionService      tsService;
 
+    @Autowired
+    private TestImportService       testImportService;
+
     /** FIND ALL **/
 
     // TODO: recuperer les tags en meme temps
@@ -73,6 +85,36 @@ public class TestService {
 
     public List<Test> findAllByIds(List<Long> ids) {
         return this.testRepository.findAllByIds(ids);
+    }
+
+    public byte[] exportTestList(TestFilter filter, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot export datas");
+
+        //TODO: utiliser le filter
+        filter.initForExportIfNeeded();
+
+        // récupération des données
+        List<Test> testList = this.testRepository.findAllWithFilter();
+        List<Long> testIds = testList.stream().map(Test::getId).collect(Collectors.toList());
+
+        List<TestHasQuestion> thqList = this.thqService.findAllByTestIds(testIds);
+        List<Long> questionIds = thqList.stream().map(thq -> thq.getQuestion().getId()).collect(Collectors.toList());
+
+        List<Question> questionList = this.questionService.findAllByIds(questionIds);
+        List<Answer> answerList = this.answerService.findAllByQuestionIds(questionIds);
+
+        //TODO: questionHasTag
+
+        // regroupement des données
+        Map<Long, List<Answer>> answersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId(), Collectors.toList()));
+        Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+        Map<Long, List<Question>> questionsByTestId = thqList.stream().collect(Collectors.groupingBy(thq -> thq.getTest().getId(), Collectors.mapping(thq -> questionById.get(thq.getQuestion().getId()), Collectors.toList())));
+
+        // création des dtos
+        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId);
+
+
+        return UtilExcel.exportTestList(dtos);
     }
 
     /** FIND **/
@@ -249,6 +291,14 @@ public class TestService {
         this.questionService.updateMany(questionsToUpdate);
 
         return new TestSessionDto(session);
+    }
+
+    public List<Test> importTestList(MultipartFile file) {
+        try {
+            return this.testImportService.importExcel(file.getInputStream());
+        } catch(IOException e) {
+            throw new RuntimeException("An error occured while importing file", e);
+        }
     }
     
 }

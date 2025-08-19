@@ -104,6 +104,11 @@ public class GenericFilter {
         if (!this.hasOffset()) this.offset = 0;
     }
 
+    public void initForExportIfNeeded() {
+        if (this.hasLimit()) this.limit = null;
+        if (this.hasOffset()) this.offset = null;
+    }
+
     public Pageable toPageable() {
         Sort sort = Sort.unsorted();
         if (this.hasSortBy()) {

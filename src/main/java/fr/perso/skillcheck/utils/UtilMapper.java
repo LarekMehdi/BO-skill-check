@@ -7,10 +7,13 @@ import java.util.Map;
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.answer.dto.ResultAnswerDto;
+import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.question.Question;
+import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.question.dto.QuestionSmallDto;
 import fr.perso.skillcheck.question.dto.ResultQuestionDto;
 import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
 import fr.perso.skillcheck.user.User;
@@ -44,6 +47,22 @@ public abstract class UtilMapper {
         return dtos;
     }
 
+    public static List<QuestionExportDto> mapQuestionListToQuestionExportDtos(List<Question> questionList, Map<Long, List<Answer>> answersByQuestionId) {
+        List<QuestionExportDto> dtos = new ArrayList<>();
+        for (Question question : questionList) {
+            if (answersByQuestionId.containsKey(question.getId())) {
+                List<Answer> answerList = answersByQuestionId.get(question.getId());
+                QuestionExportDto dto = new QuestionExportDto(question);
+                List<SmallAnswerDto> aList = mapAnswerListToSmallAnswerDtos(answerList);
+                dto.setAnswers(aList);
+
+                dtos.add(dto);
+            }
+        }
+        
+        return dtos;
+    }
+
     /** ANSWER **/
 
     public static List<AnswerDto> mapAnswerListToAnswerDtos(List<Answer> answers) {
@@ -65,6 +84,17 @@ public abstract class UtilMapper {
         return dtos;
     }
 
+    public static List<SmallAnswerDto> mapAnswerListToSmallAnswerDtos(List<Answer> answerList) {
+        List<SmallAnswerDto> dtos = new ArrayList<>();
+        for (Answer answer : answerList) {
+            SmallAnswerDto dto = new SmallAnswerDto(answer);
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
     /** SESSIONS **/
 
     public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, Test> testById) {
@@ -76,6 +106,24 @@ public abstract class UtilMapper {
 
             dtos.add(dto);
         }
+        return dtos;
+    }
+
+    /** TEST **/
+
+    public static List<TestExportDto> mapTestListToTestExportDtos(List<Test> testList, Map<Long, List<Question>> questionsByTestId, Map<Long, List<Answer>> answersByQuestionId) {
+        List<TestExportDto> dtos = new ArrayList<>();
+        for (Test test : testList) {
+            TestExportDto dto = new TestExportDto(test);
+            if (questionsByTestId.containsKey(test.getId())) {
+                List<Question> questionList = questionsByTestId.get(test.getId());
+                List<QuestionExportDto> questions = mapQuestionListToQuestionExportDtos(questionList, answersByQuestionId);
+                dto.setQuestions(questions);
+
+                dtos.add(dto);
+            }
+        }
+
         return dtos;
     }
 

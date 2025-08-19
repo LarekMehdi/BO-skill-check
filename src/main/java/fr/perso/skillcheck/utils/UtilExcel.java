@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -13,8 +15,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.Test;
@@ -109,28 +113,79 @@ public abstract class UtilExcel {
 
     public static List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
         List<Test> testList = new ArrayList<>();
+        List<Question> questionList = new ArrayList<>();
 
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
 
+            Set<Long> testIds = new HashSet<>();
+
+            
+
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
 
-                Long testId = (long) row.getCell(0).getNumericCellValue();
-                String testTitle = row.getCell(1).getStringCellValue();
-                String testDescription = row.getCell(2).getStringCellValue();
+                Long testId = getLong(row.getCell(0));
+                String testTitle = getString(row.getCell(1));
+                String testDescription = getString(row.getCell(2));
                 Long testCreatedBy = user.getId();
 
-                Long questionId = (long) row.getCell(4).getNumericCellValue();
-                String questionContent = row.getCell(5).getStringCellValue();
-                String questionCode = row.getCell(6).getStringCellValue();
-                Boolean questionIsMultipleAnswer = row.getCell(7).getBooleanCellValue();
-                Double questionTimeLimit = row.getCell(8).getNumericCellValue();
+                Long questionId = getLong(row.getCell(4));
+                String questionContent = getString(row.getCell(5));
+                String questionCode = getString(row.getCell(6));
+                Boolean questionIsMultipleAnswer = getBoolean(row.getCell(7));
+                Integer questionTimeLimit = getInteger(row.getCell(8));
                 Difficulty questionDifficulty = Difficulty.valueOf(row.getCell(9).getStringCellValue());
                 Long questionCreatedBy = user.getId();
 
-                String answer1Content = row.getCell(11).getStringCellValue();
-                Boolean answer1IsCorrect = row.getCell(12).getBooleanCellValue();
+                String answer1Content = getString(row.getCell(11));
+                Boolean answer1IsCorrect = getBoolean(row.getCell(12));
+                String answer2Content = getString(row.getCell(13));
+                Boolean answer2IsCorrect = getBoolean(row.getCell(14));
+                String answer3Content = getString(row.getCell(15));
+                Boolean answer3IsCorrect = getBoolean(row.getCell(16));
+                String answer4Content = getString(row.getCell(17));
+                Boolean answer4IsCorrect = getBoolean(row.getCell(18));
+
+                Test test = testList.stream().filter(t -> t.getId().equals(testId)).findFirst().orElse(null);
+
+                if (test == null) {
+                    test = new Test(testId, testTitle, testDescription, testCreatedBy);
+                    testList.add(test);
+                    testIds.add(testId);
+                    //save du test en base
+                }
+
+                Question question = new Question(questionId, questionContent, questionCode, questionIsMultipleAnswer, 0.0, questionTimeLimit, questionDifficulty, questionCreatedBy);
+                // save de la question en base
+
+
+
+                // aprés avoir recup le vrai questionId
+                List<Answer> answerList = new ArrayList<>();
+                if (answer1Content != null) {
+                    Answer a = new Answer(questionId, answer1Content, answer1IsCorrect);
+                    answerList.add(a);
+                }
+                if (answer2Content != null) {
+                    Answer a = new Answer(questionId, answer2Content, answer2IsCorrect);
+                    answerList.add(a);
+                }
+                if (answer3Content != null) {
+                    Answer a = new Answer(questionId, answer3Content, answer3IsCorrect);
+                    answerList.add(a);
+                }
+                if (answer4Content != null) {
+                    Answer a = new Answer(questionId, answer4Content, answer4IsCorrect);
+                    answerList.add(a);
+                }
+
+                // saveAll des answers
+
+                // creation des TestHasQuestion
+                
+         
+                
             }
 
         } catch (IOException e) {
@@ -140,9 +195,9 @@ public abstract class UtilExcel {
         return testList;
     }
 
-    /** PRIVATES **/
+    /** GETTERS **/
 
-    private static String getString(Cell cell) {
+    public static String getString(Cell cell) {
         if (cell == null) return null;
         if (cell.getCellType() == CellType.STRING) {
             String v = cell.getStringCellValue();
@@ -154,7 +209,7 @@ public abstract class UtilExcel {
         return null;
     }
 
-    private static Boolean getBoolean(Cell cell) {
+    public static Boolean getBoolean(Cell cell) {
         if (cell == null) return null;
         if (cell.getCellType() == CellType.BOOLEAN) {
             return cell.getBooleanCellValue();
@@ -167,7 +222,7 @@ public abstract class UtilExcel {
         return null;
     }
 
-    private static Long getLong(Cell cell) {
+    public static Long getLong(Cell cell) {
         if (cell == null) return null;
         if (cell.getCellType() == CellType.NUMERIC) {
             return (long) cell.getNumericCellValue();
@@ -184,7 +239,7 @@ public abstract class UtilExcel {
         return null;
     }
 
-    private static Double getDouble(Cell cell) {
+    public static Double getDouble(Cell cell) {
         if (cell == null) return null;
         if (cell.getCellType() == CellType.NUMERIC) {
             return cell.getNumericCellValue();
@@ -201,7 +256,7 @@ public abstract class UtilExcel {
         return null;
     }
 
-    private static Integer getInteger(Cell cell) {
+    public static Integer getInteger(Cell cell) {
         if (cell == null) return null;
         if (cell.getCellType() == CellType.NUMERIC) {
             return (int) cell.getNumericCellValue();

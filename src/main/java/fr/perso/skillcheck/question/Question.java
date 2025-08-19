@@ -56,13 +56,15 @@ public class Question {
         this.id = id;
     }
 
-    public Question(Long id, String content, String code, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
+    public Question(Long id, String content, String code, Boolean isMultipleAnswer, Double successRate, Integer timeLimit, Difficulty difficulty, Long createdBy) {
         this.id = id;
         this.content = content;
         this.code = code;
         this.isMultipleAnswer = isMultipleAnswer;
         this.successRate = successRate;
         this.timeLimit = timeLimit;
+        this.difficulty = difficulty;
+        this.createdBy = createdBy;
     }
 
     public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {

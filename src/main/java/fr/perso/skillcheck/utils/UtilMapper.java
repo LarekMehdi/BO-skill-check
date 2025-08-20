@@ -103,6 +103,16 @@ public abstract class UtilMapper {
         return dtos;
     }
 
+    public static List<Answer> mapSmallAnswerListToAnswers(List<SmallAnswerDto> dtos) {
+        List<Answer> answers = new ArrayList<>();
+        for (SmallAnswerDto dto : dtos) {
+            Answer answer = new Answer(dto);
+
+            answers.add(answer);
+        }
+        return answers;
+    }
+
     /** SESSIONS **/
 
     public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, Test> testById) {

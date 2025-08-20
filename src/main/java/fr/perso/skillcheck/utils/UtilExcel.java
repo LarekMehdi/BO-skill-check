@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -111,7 +112,9 @@ public abstract class UtilExcel {
 
     /** IMPORT **/
 
-    public static List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
+    public static List<TestExportDto> importExcel(InputStream inputStream, UserPrincipal user) {
+        List<TestExportDto> dtos = new ArrayList<>();
+
         List<Test> testList = new ArrayList<>();
         List<Question> questionList = new ArrayList<>();
 
@@ -119,8 +122,6 @@ public abstract class UtilExcel {
             Sheet sheet = workbook.getSheetAt(0);
 
             Set<Long> testIds = new HashSet<>();
-
-            
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
@@ -147,52 +148,52 @@ public abstract class UtilExcel {
                 String answer4Content = getString(row.getCell(17));
                 Boolean answer4IsCorrect = getBoolean(row.getCell(18));
 
-                Test test = testList.stream().filter(t -> t.getId().equals(testId)).findFirst().orElse(null);
+                Test test = testList.stream().filter(t -> Objects.equals(t.getId(), testId)).findFirst().orElse(null);
+                TestExportDto dto = dtos.stream().filter(d ->Objects.equals(d.getId(), testId)).findFirst().orElse(null);
 
                 if (test == null) {
                     test = new Test(testId, testTitle, testDescription, testCreatedBy);
                     testList.add(test);
                     testIds.add(testId);
-                    //save du test en base
+
+                    dto = new TestExportDto(test);
+                    dtos.add(dto);
                 }
 
                 Question question = new Question(questionId, questionContent, questionCode, questionIsMultipleAnswer, 0.0, questionTimeLimit, questionDifficulty, questionCreatedBy);
-                // save de la question en base
+                QuestionExportDto qDto = new QuestionExportDto(question);
 
-
-
-                // aprés avoir recup le vrai questionId
-                List<Answer> answerList = new ArrayList<>();
+                List<SmallAnswerDto> answerList = new ArrayList<>();
                 if (answer1Content != null) {
-                    Answer a = new Answer(questionId, answer1Content, answer1IsCorrect);
+                    SmallAnswerDto a = new SmallAnswerDto(answer1Content, answer1IsCorrect);
                     answerList.add(a);
                 }
                 if (answer2Content != null) {
-                    Answer a = new Answer(questionId, answer2Content, answer2IsCorrect);
+                    SmallAnswerDto a = new SmallAnswerDto(answer2Content, answer2IsCorrect);
                     answerList.add(a);
                 }
                 if (answer3Content != null) {
-                    Answer a = new Answer(questionId, answer3Content, answer3IsCorrect);
+                    SmallAnswerDto a = new SmallAnswerDto(answer3Content, answer3IsCorrect);
                     answerList.add(a);
                 }
                 if (answer4Content != null) {
-                    Answer a = new Answer(questionId, answer4Content, answer4IsCorrect);
+                    SmallAnswerDto a = new SmallAnswerDto(answer4Content, answer4IsCorrect);
                     answerList.add(a);
                 }
+                qDto.setAnswers(answerList);
 
-                // saveAll des answers
+                List<QuestionExportDto> currentQuestions = new ArrayList<>();
+                currentQuestions.addAll(dto.getQuestions());
+                currentQuestions.add(qDto);
+                dto.setQuestions(currentQuestions);
 
-                // creation des TestHasQuestion
-                
-         
-                
             }
 
         } catch (IOException e) {
             throw new RuntimeException("An error occured while reading file", e);
         }
 
-        return testList;
+        return dtos;
     }
 
     /** GETTERS **/

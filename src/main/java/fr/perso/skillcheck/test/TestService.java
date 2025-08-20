@@ -293,9 +293,9 @@ public class TestService {
         return new TestSessionDto(session);
     }
 
-    public List<Test> importTestList(MultipartFile file) {
+    public List<Test> importTestList(MultipartFile file, UserPrincipal user) {
         try {
-            return this.testImportService.importExcel(file.getInputStream());
+            return this.testImportService.importExcel(file.getInputStream(), user);
         } catch(IOException e) {
             throw new RuntimeException("An error occured while importing file", e);
         }

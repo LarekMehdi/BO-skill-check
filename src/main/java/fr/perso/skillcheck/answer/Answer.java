@@ -3,6 +3,7 @@ package fr.perso.skillcheck.answer;
 import java.util.Objects;
 
 import fr.perso.skillcheck.answer.dto.AnswerDto;
+import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
@@ -51,6 +52,12 @@ public class Answer implements Comparable<Answer>{
         this.question = new Question(questionId);
         this.content = content;
         this.isCorrect = isCorrect;
+    }
+
+    public Answer(SmallAnswerDto dto) {
+        this.id = dto.getId();
+        this.content = dto.getContent();
+        this.isCorrect = dto.getIsCorrect();
     }
 
     /** ID **/

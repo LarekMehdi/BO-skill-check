@@ -103,6 +103,10 @@ public class QuestionService {
         return question;
     }
 
+    public List<Question> createMany(List<Question> questionList) {
+        return this.questionRepository.saveAll(questionList);
+    }
+
     /** PRIVATE **/
 
     private List<QuestionDtoWithTags> __mapQuestionToDtosWithTags(List<Question> questions, List<Tag> tagList, Map<Long, List<Long>> tagsByQuestionId) {

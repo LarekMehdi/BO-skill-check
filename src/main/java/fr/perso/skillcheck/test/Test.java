@@ -1,6 +1,7 @@
 package fr.perso.skillcheck.test;
 
 import fr.perso.skillcheck.test.dto.TestDto;
+import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +49,12 @@ public class Test {
 
     public Test(Long id) {
         this.id = id;
+    }
+
+    public Test(TestExportDto dto) {
+        this.title = dto.getTitle();
+        this.description = dto.getDescription();
+        this.createdBy = dto.getCreatedBy();
     }
 
     /** ID **/

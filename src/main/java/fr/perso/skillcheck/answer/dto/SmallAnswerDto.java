@@ -16,6 +16,11 @@ public class SmallAnswerDto {
         this.isCorrect = isCorrect;
     }
 
+    public SmallAnswerDto(String content, Boolean isCorrect) {
+        this.content = content;
+        this.isCorrect = isCorrect;
+    }
+
     public SmallAnswerDto(Answer answer) {
         this.id = answer.getId();
         this.content = answer.getContent();

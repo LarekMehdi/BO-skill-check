@@ -1,5 +1,7 @@
 package fr.perso.skillcheck.queryServices;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,12 @@ public class TestQueryService {
 
     public Test findById(Long id) {
         return this.testRepository.findById(id).orElseThrow(() -> new NotFoundException("No test found with id " + id));
+    }
+
+    /** CREATE **/
+
+    public List<Test> createMany(List<Test> tests) {
+        return this.testRepository.saveAll(tests);
     }
 
     

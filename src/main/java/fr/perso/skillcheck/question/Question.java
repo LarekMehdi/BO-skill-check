@@ -6,6 +6,7 @@ import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
+import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,13 +57,15 @@ public class Question {
         this.id = id;
     }
 
-    public Question(Long id, String content, String code, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
+    public Question(Long id, String content, String code, Boolean isMultipleAnswer, Double successRate, Integer timeLimit, Difficulty difficulty, Long createdBy) {
         this.id = id;
         this.content = content;
         this.code = code;
         this.isMultipleAnswer = isMultipleAnswer;
         this.successRate = successRate;
         this.timeLimit = timeLimit;
+        this.difficulty = difficulty;
+        this.createdBy = createdBy;
     }
 
     public Question(Long id, String content, Boolean isMultipleAnswer, Double successRate, Integer timeLimit) {
@@ -88,6 +91,18 @@ public class Question {
         this.timeLimit = dto.getTimeLimit();
         this.difficulty = dto.getDifficulty();
         this.__initCountsIfNeeded();
+    }
+
+    public Question(QuestionExportDto dto) {
+        this.content = dto.getContent();
+        this.code = dto.getCode();
+        this.isMultipleAnswer = dto.getIsMultipleAnswer();
+        this.successRate = 0.0;
+        this.doneCount = 0;
+        this.correctCount = 0;
+        this.timeLimit = dto.getTimeLimit();
+        this.difficulty = dto.getDifficulty();
+        this.createdBy = dto.getCreatedBy();
     }
 
     /** ID **/

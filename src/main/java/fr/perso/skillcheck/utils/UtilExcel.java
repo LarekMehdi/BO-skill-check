@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.Question;
@@ -116,7 +115,6 @@ public abstract class UtilExcel {
         List<TestExportDto> dtos = new ArrayList<>();
 
         List<Test> testList = new ArrayList<>();
-        List<Question> questionList = new ArrayList<>();
 
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);

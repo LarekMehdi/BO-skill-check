@@ -47,6 +47,16 @@ public abstract class UtilMapper {
         return dtos;
     }
 
+    public static List<Question> mapQuestionExportListToQuestions(List<QuestionExportDto> dtos) {
+        List<Question> questions = new ArrayList<>();
+        for (QuestionExportDto dto : dtos) {
+            Question question = new Question(dto);
+
+            questions.add(question);
+        }
+        return questions;
+    }
+
     public static List<QuestionExportDto> mapQuestionListToQuestionExportDtos(List<Question> questionList, Map<Long, List<Answer>> answersByQuestionId) {
         List<QuestionExportDto> dtos = new ArrayList<>();
         for (Question question : questionList) {
@@ -59,7 +69,6 @@ public abstract class UtilMapper {
                 dtos.add(dto);
             }
         }
-        
         return dtos;
     }
 
@@ -91,7 +100,6 @@ public abstract class UtilMapper {
 
             dtos.add(dto);
         }
-
         return dtos;
     }
 
@@ -125,6 +133,17 @@ public abstract class UtilMapper {
         }
 
         return dtos;
+    }
+
+    public static List<Test> mapTestExportListToTests(List<TestExportDto> dtos) {
+        List<Test> tests = new ArrayList<>();
+        for (TestExportDto dto : dtos) {
+            Test test = new Test(dto);
+
+            tests.add(test);
+        }
+
+        return tests;
     }
 
     /** USER **/

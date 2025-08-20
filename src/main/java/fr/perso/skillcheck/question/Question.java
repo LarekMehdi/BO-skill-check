@@ -6,6 +6,7 @@ import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.dto.QuestionDto;
+import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -90,6 +91,18 @@ public class Question {
         this.timeLimit = dto.getTimeLimit();
         this.difficulty = dto.getDifficulty();
         this.__initCountsIfNeeded();
+    }
+
+    public Question(QuestionExportDto dto) {
+        this.content = dto.getContent();
+        this.code = dto.getCode();
+        this.isMultipleAnswer = dto.getIsMultipleAnswer();
+        this.successRate = 0.0;
+        this.doneCount = 0;
+        this.correctCount = 0;
+        this.timeLimit = dto.getTimeLimit();
+        this.difficulty = dto.getDifficulty();
+        this.createdBy = dto.getCreatedBy();
     }
 
     /** ID **/

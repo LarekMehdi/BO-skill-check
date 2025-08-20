@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,8 @@ import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
+import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
+import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.utils.UtilExcel;
 import fr.perso.skillcheck.utils.UtilMapper;
 
@@ -28,26 +29,32 @@ import fr.perso.skillcheck.utils.UtilMapper;
 public class TestImportService {
 
     @Autowired
-    private TestQueryService    testQueryService;
+    private TestQueryService            testQueryService;
 
     @Autowired
-    private QuestionService     questionService;
+    private QuestionService             questionService;
 
     @Autowired
-    private AnswerService       answerService;
+    private AnswerService               answerService;
+
+    @Autowired
+    private TestHasQuestionService      thqService;
+
 
     public List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
+
+        // lecture du fichier
         List<TestExportDto> dtos = UtilExcel.importExcel(inputStream, user);
 
         // initialisation des listes à créer en base
         List<Test> testList = new ArrayList<>();
         List<Question> questionList = new ArrayList<>();
         List<Answer> answerList = new ArrayList<>();
+        List<TestHasQuestion> thqList = new ArrayList<>();
 
         // regroupement des données
         Map<Long, Long> testBaseIdByImportId = new HashMap<>();
         Map<Long, Long> questionBaseIdByImportId = new HashMap<>();
-        Map<Long, List<Answer>> answersByQuestionId = new HashMap<>();
 
         // sauvegarde des Tests en base
         testList = dtos.stream().map(d -> new Test(d)).collect(Collectors.toList());
@@ -60,15 +67,9 @@ public class TestImportService {
 
         // création des questions
         for (TestExportDto dto : dtos) {
-            Long testBaseId = testBaseIdByImportId.get(dto.getId());
-
             for (QuestionExportDto qDto : dto.getQuestions()) {
                 Question q = new Question(qDto);
                 questionList.add(q);
-
-                // TestHasQuestion
-
-
             }
         }
 
@@ -95,7 +96,18 @@ public class TestImportService {
         // sauvegarde des answers en base
         answerList = this.answerService.createMany(answerList);
 
+        // création des liens TestHasQuestion
+        for (TestExportDto dto : dtos) {
+            Long testBaseId = testBaseIdByImportId.get(dto.getId());
+            for (QuestionExportDto qDto : dto.getQuestions()) {
+                Long questionBaseId = questionBaseIdByImportId.get(qDto.getId());
+                TestHasQuestion thq = new TestHasQuestion(new Test(testBaseId), new Question(questionBaseId));
+                thqList.add(thq);
+            }
+        }
+
+        thqList = this.thqService.createMany(thqList);
+
         return testList;
     }
-    
 }

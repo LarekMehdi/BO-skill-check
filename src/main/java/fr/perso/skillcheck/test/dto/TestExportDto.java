@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.test.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
@@ -28,6 +29,7 @@ public class TestExportDto {
         this.title = test.getTitle();
         this.description = test.getDescription();
         this.createdBy = test.getCreatedBy();
+        this.questions = new ArrayList<>();
     }
 
     /** ID **/

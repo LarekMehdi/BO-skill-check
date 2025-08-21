@@ -11,6 +11,7 @@ public class ResultQuestionDto {
     private String                      content;
     private String                      code;
     private List<ResultAnswerDto>       choices;
+    private Boolean                     isCorrect;
 
     public ResultQuestionDto() {}
 
@@ -81,6 +82,24 @@ public class ResultQuestionDto {
 
     public boolean hasChoices() {
         return !UtilEntity.isEmpty(this.choices);
+    }
+
+    /** IS CORRECT **/
+
+    public Boolean getIsCorrect() {
+        return this.isCorrect;
+    }
+
+    public void setIsCorrect(Boolean isCorrect) {
+        this.isCorrect = isCorrect;
+    }
+
+    public boolean hasIsCorrect() {
+        return !UtilEntity.isEmpty(this.isCorrect);
+    }
+
+    public boolean isCorrectTrue() {
+        return this.hasIsCorrect() && Boolean.TRUE.equals(this.isCorrect);
     }
 
 }

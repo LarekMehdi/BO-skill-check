@@ -68,6 +68,7 @@ public class TestSessionService {
         Map<Long, List<Answer>> answersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId(), Collectors.toList()));
         List<ResultQuestionDto> questionDtos = UtilMapper.mapQuestionListToResultQuestionDtos(questionList, answersByQuestionId, userAnswerIds);
         TestSessionDetailsDto dto = new TestSessionDetailsDto(session, test, questionDtos);
+        
         dto.setUserId(user.getId());
 
         return dto;

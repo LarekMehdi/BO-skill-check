@@ -1,4 +1,4 @@
-# SkillCheck
+# 🐺 SkillCheck
 SkillCheck est une application web de gestion et de passation de tests de type QCM. Elle permet de créer, organiser et évaluer des tests, de gérer les questions et réponses, et de suivre les résultats des utilisateurs. 
 
 L’application est développée avec Spring Boot pour le backend et utilise PostgreSQL comme base de données. Celle ci est fournie sous la forme d'un containeur Docker prêt à l'emploi.
@@ -56,6 +56,14 @@ docker exec -it <nom_du_conteneur_db> psql -U <POSTGRES_USER> -d <POSTGRES_DB>
 Une fois le containeur Docker monté, il suffit de lancer le fichier SkillCheckApplication afin de démarrer l'application.
 
 Cette Api est faite pour fonctionner avec une IHM précise, qu'il faut aussi cloner:
-- ssh: git@github.com:LarekMehdi/FO-skill-check.git
-- https: https://github.com/LarekMehdi/FO-skill-check.git
+- repo: https://github.com/LarekMehdi/FO-skill-check
+  - cloner en ssh: git@github.com:LarekMehdi/FO-skill-check.git
+  - cloner en https: https://github.com/LarekMehdi/FO-skill-check.git
 
+# Structure du projet
+
+### backend:
+Spring Boot avec services, controllers et entités pour gérer les tests, questions, réponses et utilisateurs.
+
+### database:
+PostgreSQL avec Flyway pour les migrations.

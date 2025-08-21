@@ -3,6 +3,8 @@ package fr.perso.skillcheck.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.dto.AnswerDto;
@@ -35,11 +37,17 @@ public abstract class UtilMapper {
         List<ResultQuestionDto> dtos = new ArrayList<>();
         for (Question q : questions) {
             ResultQuestionDto dto = new ResultQuestionDto(q);
+            
 
             if (answersByQuestionId.containsKey(q.getId())) {
                 List<Answer> answerList = answersByQuestionId.get(q.getId());
                 List<ResultAnswerDto> answerDtos = mapAnswerListToResultAnswerDtos(answerList, userAnswerIds);
                 dto.setChoices(answerDtos);
+
+                List<Answer> correctAnswers = answerList.stream().filter(Answer::isCorrectTrue).collect(Collectors.toList());
+                List<Answer> userAnswers = answerList.stream().filter(a ->userAnswerIds.contains(a.getId())).collect(Collectors.toList());
+                boolean isQuestionCorrect = q.areAnswersCorrect(userAnswers, correctAnswers);
+                dto.setIsCorrect(isQuestionCorrect);
             }
 
             dtos.add(dto);

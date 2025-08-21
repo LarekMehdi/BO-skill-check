@@ -2,8 +2,6 @@ package fr.perso.skillcheck.question;
 
 import fr.perso.skillcheck.security.UserPrincipal;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +14,7 @@ import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
 import fr.perso.skillcheck.utils.GenericFilter;
+import fr.perso.skillcheck.utils.PageDto;
 import jakarta.validation.Valid;
 
 @RestController
@@ -35,7 +34,7 @@ public class QuestionController {
   /** FIND ALL **/
 
   @GetMapping()
-  public List<QuestionDtoWithTags> findAll(@ModelAttribute @Valid GenericFilter filter) {
+  public PageDto<QuestionDtoWithTags> findAll(@ModelAttribute @Valid GenericFilter filter) {
     return this.questionService.findAll(filter);
   }
 

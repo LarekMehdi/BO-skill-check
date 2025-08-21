@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,12 @@ public interface TestRepository extends JpaRepository<Test, Long>{
 
     @Query("SELECT t FROM Test t WHERE t.id IN (:ids)")
     public List<Test> findAllByIds(@Param("ids") List<Long> ids);
+
+    /** DELETE **/
+
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM Test t WHERE t.id = :id")
+    public Integer deleteTestById(@Param("id") Long id);
     
     
 }

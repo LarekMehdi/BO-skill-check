@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class TestHasQuestionService {
     
@@ -31,8 +29,11 @@ public class TestHasQuestionService {
 
     /** DELETE **/
 
-    @Transactional
     public Integer deleteAllByTestIdAndQuestionIds(Long testId, List<Long> questionIds) {
         return this.thqRepository.deleteAllByTestIdAndQuestionIds(testId, questionIds);
+    }
+
+    public Integer deleteAllByTestId(Long testId) {
+        return this.thqRepository.deleteAllByTestId(testId);
     }
 }

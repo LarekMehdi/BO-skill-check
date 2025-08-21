@@ -80,6 +80,10 @@ public class TestSessionService {
         return this.tsRepository.findAllByUserId(userId);
     }
 
+    public List<TestSession> findAllByTestId(Long testId) {
+        return this.tsRepository.findAllByTestId(testId);
+    }
+
     /** CREATE **/
 
     public TestSession create(TestSession ts) {
@@ -90,6 +94,12 @@ public class TestSessionService {
 
     public TestSession update(TestSession ts) {
         return this.tsRepository.save(ts);
+    }
+
+    /** DELETE **/
+
+    public Integer deleteAllByIds(List<Long> ids) {
+        return this.tsRepository.deleteAllByIds(ids);
     }
 
 

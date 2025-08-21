@@ -3,6 +3,7 @@ package fr.perso.skillcheck.testSession;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,14 @@ public interface TestSessionRepository extends JpaRepository<TestSession, Long>{
 
     @Query("SELECT ts FROM TestSession ts WHERE ts.user.id = :userId")
     public List<TestSession> findAllByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT ts FROM TestSession ts WHERE ts.test.id = :testId")
+    public List<TestSession> findAllByTestId(@Param("testId") Long testId);
+
+    /** DELETE **/
+
+    @Modifying( clearAutomatically = true)
+    @Query("DELETE FROM TestSession ts WHERE ts.id in :ids")
+    public Integer deleteAllByIds(@Param("ids") List<Long> ids);
     
 }

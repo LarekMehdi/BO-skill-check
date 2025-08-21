@@ -22,4 +22,10 @@ public class UserHasAnswerService {
     public List<UserHasAnswer> createMany(List<UserHasAnswer> uhaList) {
         return this.uhaRepository.saveAll(uhaList);
     }
+
+    /** DELETE **/
+
+    public Integer deleteAllBySessionIds(List<Long> sessionIds) {
+        return this.uhaRepository.deleteAllBySessionIds(sessionIds);
+    }
 }

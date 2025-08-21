@@ -80,6 +80,10 @@ public class TestSessionService {
         return this.tsRepository.findAllByUserId(userId);
     }
 
+    public List<TestSession> findAllByTestId(Long testId) {
+        return this.tsRepository.findAllByTestId(testId);
+    }
+
     /** CREATE **/
 
     public TestSession create(TestSession ts) {

@@ -300,5 +300,24 @@ public class TestService {
             throw new RuntimeException("An error occured while importing file", e);
         }
     }
+
+    /** DELETE **/
+
+    public Integer deleteTest(Long id, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        // récupération des sessions liées au test
+        List<TestSession> sessionList = this.tsService.findAllByTestId(id);
+        List<Long> sessionIds = sessionList.stream().map(TestSession::getId).collect(Collectors.toList());
+
+        // supprimer les TestHasQuestion
+        this.thqService.deleteAllByTestId(id);
+
+        // supprimer les UserHasAnswer
+        this.uhaService.deleteAllBySessionIds(sessionIds);
+
+        // supprimer le Test
+        return this.testRepository.deleteTestById(id);
+    }
     
 }

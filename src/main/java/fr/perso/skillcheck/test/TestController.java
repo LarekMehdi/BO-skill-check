@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,5 +85,12 @@ public class TestController {
     public ResponseEntity<List<Test>> importTestList(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal user) {
         List<Test> tests = this.testService.importTestList(file, user);
         return ResponseEntity.ok(tests);
+    }
+
+    /** DELETE **/
+
+    @DeleteMapping("/{id}")
+    public int deleteTest(@PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+        return this.testService.deleteTest(id, user);
     }
 }

@@ -14,5 +14,8 @@ public interface TestSessionRepository extends JpaRepository<TestSession, Long>{
 
     @Query("SELECT ts FROM TestSession ts WHERE ts.user.id = :userId")
     public List<TestSession> findAllByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT ts FROM TestSession ts WHERE ts.test.id = :testId")
+    public List<TestSession> findAllByTestId(@Param("testId") Long testId);
     
 }

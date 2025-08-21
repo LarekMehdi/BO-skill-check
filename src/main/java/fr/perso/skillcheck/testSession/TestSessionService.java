@@ -96,6 +96,12 @@ public class TestSessionService {
         return this.tsRepository.save(ts);
     }
 
+    /** DELETE **/
+
+    public Integer deleteAllByIds(List<Long> ids) {
+        return this.tsRepository.deleteAllByIds(ids);
+    }
+
 
     
 }

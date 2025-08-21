@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,6 +50,7 @@ import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilEntity;
 import fr.perso.skillcheck.utils.UtilExcel;
 import fr.perso.skillcheck.utils.UtilMapper;
+
 
 @Service
 public class TestService {
@@ -175,6 +177,7 @@ public class TestService {
 
     /** UPDATE **/
 
+    @Transactional
     public UpdateTestQuestionsResultDto updateQuestions(UpdateTestQuestionDto dto) {
    
         List<TestHasQuestion> currentThqList = this.thqService.findAllByTestId(dto.getTestId());
@@ -303,6 +306,7 @@ public class TestService {
 
     /** DELETE **/
 
+    @Transactional
     public Integer deleteTest(Long id, UserPrincipal user) {
         if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
 
@@ -310,14 +314,20 @@ public class TestService {
         List<TestSession> sessionList = this.tsService.findAllByTestId(id);
         List<Long> sessionIds = sessionList.stream().map(TestSession::getId).collect(Collectors.toList());
 
-        // supprimer les TestHasQuestion
-        this.thqService.deleteAllByTestId(id);
-
         // supprimer les UserHasAnswer
         this.uhaService.deleteAllBySessionIds(sessionIds);
 
+        // supprimer les TestHasQuestion
+        this.thqService.deleteAllByTestId(id);
+
+        // suprimer les TestSession
+        this.tsService.deleteAllByIds(sessionIds);
+        
         // supprimer le Test
-        return this.testRepository.deleteTestById(id);
+        Integer deletedCount = this.testRepository.deleteTestById(id);
+        if (deletedCount == 0) throw new NotFoundException("No test found with id " + id);
+
+        return deletedCount;
     }
     
 }

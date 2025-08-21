@@ -90,7 +90,7 @@ public class TestController {
     /** DELETE **/
 
     @DeleteMapping("/{id}")
-    public int deleteTest(@PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+    public Integer deleteTest(@PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
         return this.testService.deleteTest(id, user);
     }
 }

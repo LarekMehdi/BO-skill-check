@@ -22,6 +22,7 @@ import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.utils.GenericFilter;
+import fr.perso.skillcheck.utils.PageDto;
 import fr.perso.skillcheck.utils.UtilList;
 
 @Service
@@ -41,7 +42,7 @@ public class QuestionService {
 
     /** FIND ALL **/
 
-    public List<QuestionDtoWithTags> findAll(GenericFilter filter) {
+    public PageDto<QuestionDtoWithTags> findAll(GenericFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
         Page<Question> questions = this.questionRepository.findAll(pageable);
@@ -61,7 +62,8 @@ public class QuestionService {
         }
 
         List<QuestionDtoWithTags> dtos = this.__mapQuestionToDtosWithTags(questions.toList(), tags, tagsByQuestionId);
-        return dtos;
+        PageDto<QuestionDtoWithTags> result = new PageDto<>(dtos, questions.getTotalElements());
+        return result;
     }
 
     public List<Question> findAllByIds(List<Long> ids) {

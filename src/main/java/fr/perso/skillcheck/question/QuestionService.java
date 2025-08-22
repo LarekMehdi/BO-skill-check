@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerRepository;
@@ -86,6 +88,9 @@ public class QuestionService {
     
     public Question create(QuestionDtoWithTagIds dto, UserPrincipal user) {
         Question question = new Question(dto);
+        if (dto.getAnswers().size() > 4 || dto.getAnswers().size() < 2) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Wrong amount of answers");
+        }
         question.computeIsMultipleAnswer(dto.getAnswers());
         question.setCreatedBy(user.getId());
 

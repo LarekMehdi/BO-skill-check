@@ -284,7 +284,10 @@ public class TestService {
             }
         }
 
-        double sessionSuccessRate = ((double) correctQuestionCount / questionIdsSet.size()) * 100;
+        double sessionSuccessRate = 0.0;
+        if (!questionIdsSet.isEmpty()) {
+            sessionSuccessRate = ((double) correctQuestionCount / questionIdsSet.size()) * 100;
+        }
         session.setSuccessRate(sessionSuccessRate);
 
 

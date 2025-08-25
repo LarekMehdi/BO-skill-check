@@ -12,8 +12,17 @@ public class ResultQuestionDto {
     private String                      code;
     private List<ResultAnswerDto>       choices;
     private Boolean                     isCorrect;
+    private Boolean                     isMultipleAnswer;
 
     public ResultQuestionDto() {}
+
+    public ResultQuestionDto(Long id, String content, String code, List<ResultAnswerDto> choices, Boolean isMultipleAnswer) {
+        this.id = id;
+        this.content = content;
+        this.code = code;
+        this.choices = choices;
+        this.isMultipleAnswer = isMultipleAnswer;
+    }
 
     public ResultQuestionDto(Long id, String content, String code, List<ResultAnswerDto> choices) {
         this.id = id;
@@ -26,6 +35,7 @@ public class ResultQuestionDto {
         this.id = question.getId();
         this.content = question.getContent();
         this.code = question.getCode();
+        this.isMultipleAnswer = question.getIsMultipleAnswer();
     }
 
     /** ID **/
@@ -100,6 +110,24 @@ public class ResultQuestionDto {
 
     public boolean isCorrectTrue() {
         return this.hasIsCorrect() && Boolean.TRUE.equals(this.isCorrect);
+    }
+
+    /** IS MULTIPLE ANSWER **/
+
+    public Boolean getIsMultipleAnswer() {
+        return this.isMultipleAnswer;
+    }
+
+    public void setIsMultipleAnswer(Boolean isMultipleAnswer) {
+        this.isMultipleAnswer = isMultipleAnswer;
+    }
+
+    public boolean hasIsMultipleAnswer() {
+        return !UtilEntity.isEmpty(this.isMultipleAnswer);
+    }
+
+    public boolean isMultipleAnswerTrue() {
+        return this.hasIsMultipleAnswer() && Boolean.TRUE.equals(this.isMultipleAnswer);
     }
 
 }

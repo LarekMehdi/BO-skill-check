@@ -21,6 +21,7 @@ import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
+import fr.perso.skillcheck.user.dto.UserProfileDto;
 import fr.perso.skillcheck.user.dto.UserRoleDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
@@ -93,6 +94,17 @@ public class UserService {
         
         User u = this.findById(dto.getId());
         u.setRole(dto.getRole());
+        this.userRepository.save(u);
+        return u;
+    }
+
+    public User updateProfil(UserProfileDto dto, Long id, UserPrincipal user) {
+        if (!Objects.equals(dto.getId(), id)) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Id mismatch");
+        if (!Objects.equals(dto.getId(), user.getId())) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to modify this ressource");
+
+        User u = this.findById(id);
+        u.setPseudo(dto.getPseudo());
+        u.setEmail(dto.getEmail());
         this.userRepository.save(u);
         return u;
     }

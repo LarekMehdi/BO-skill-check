@@ -13,6 +13,7 @@ import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
+import fr.perso.skillcheck.user.dto.UserProfileDto;
 import fr.perso.skillcheck.user.dto.UserRoleDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
@@ -44,6 +45,11 @@ public class UserController {
     @PatchMapping("/{id}/role")
     public User changeUserRole(@RequestBody @Valid UserRoleDto dto, @PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
         return this.userService.changeUserRole(dto, id, user);
+    }
+
+    @PatchMapping("/{id}/profil")
+    public User updateProfil(@RequestBody @Valid UserProfileDto dto, @PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+        return this.userService.updateProfil(dto, id, user);
     }
    
 }

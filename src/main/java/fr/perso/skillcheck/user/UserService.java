@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.user;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,7 @@ public class UserService {
         Page<User> users= this.userRepository.findAll(pageable);
 
         List<User> userList = users.stream().collect(Collectors.toList());
+        userList.sort(Comparator.comparing(User::getId));
         List<SmallUserDto> dtos = UtilMapper.mapUserListToSmallUserDtos(userList);
 
         PageDto<SmallUserDto> result= new PageDto<>(dtos, users.getTotalElements());

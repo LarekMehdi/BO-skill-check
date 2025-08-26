@@ -103,6 +103,16 @@ public class UserService {
         if (!Objects.equals(dto.getId(), user.getId())) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to modify this ressource");
 
         User u = this.findById(id);
+
+        if (!Objects.equals(u.getPseudo(), dto.getPseudo())) {
+            boolean pseudoExist = this.userRepository.existsByPseudo(dto.getPseudo());
+            if (pseudoExist) throw new ResponseStatusException(HttpStatus.CONFLICT, "A user with this pseudo already exist: " + dto.getPseudo());
+        }
+        if (!Objects.equals(u.getEmail(), dto.getEmail())) {
+            boolean emailExist = this.userRepository.existsByEmail(dto.getEmail());
+            if (emailExist) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "A user with this email already exist: " + dto.getEmail());
+        }
+
         u.setPseudo(dto.getPseudo());
         u.setEmail(dto.getEmail());
         this.userRepository.save(u);

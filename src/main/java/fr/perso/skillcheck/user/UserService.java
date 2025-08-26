@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.user;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.user.dto.UserDetailsDto;
+import fr.perso.skillcheck.user.dto.UserProfileDto;
 import fr.perso.skillcheck.user.dto.UserRoleDto;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
@@ -78,6 +80,7 @@ public class UserService {
         Page<User> users= this.userRepository.findAll(pageable);
 
         List<User> userList = users.stream().collect(Collectors.toList());
+        userList.sort(Comparator.comparing(User::getId));
         List<SmallUserDto> dtos = UtilMapper.mapUserListToSmallUserDtos(userList);
 
         PageDto<SmallUserDto> result= new PageDto<>(dtos, users.getTotalElements());
@@ -93,6 +96,27 @@ public class UserService {
         
         User u = this.findById(dto.getId());
         u.setRole(dto.getRole());
+        this.userRepository.save(u);
+        return u;
+    }
+
+    public User updateProfil(UserProfileDto dto, Long id, UserPrincipal user) {
+        if (!Objects.equals(dto.getId(), id)) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Id mismatch");
+        if (!Objects.equals(dto.getId(), user.getId())) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to modify this ressource");
+
+        User u = this.findById(id);
+
+        if (!Objects.equals(u.getPseudo(), dto.getPseudo())) {
+            boolean pseudoExist = this.userRepository.existsByPseudo(dto.getPseudo());
+            if (pseudoExist) throw new ResponseStatusException(HttpStatus.CONFLICT, "A user with this pseudo already exist: " + dto.getPseudo());
+        }
+        if (!Objects.equals(u.getEmail(), dto.getEmail())) {
+            boolean emailExist = this.userRepository.existsByEmail(dto.getEmail());
+            if (emailExist) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "A user with this email already exist: " + dto.getEmail());
+        }
+
+        u.setPseudo(dto.getPseudo());
+        u.setEmail(dto.getEmail());
         this.userRepository.save(u);
         return u;
     }

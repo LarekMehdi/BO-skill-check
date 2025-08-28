@@ -82,14 +82,7 @@ public class TestImportService {
 
                 // création des tags
                 // TODO: a mettre plus bas? Aprés sauvegarde des questions
-                for (TagDto tagDto : qDto.getTags()) {
-                    //Tag tag = this.tagService.findByLabel(tagDto.getLabel());
-
-                    // if (tag == null) {
-                    //     tagListToCreate.add(new Tag(tagDto));
-                    // }
-
-                }
+       
             }
         }
 

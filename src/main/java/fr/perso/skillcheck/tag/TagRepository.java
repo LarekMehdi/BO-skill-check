@@ -17,7 +17,7 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
     @Query("SELECT t FROM Tag t WHERE id in :ids")
     public List<Tag> findAllByIds(@Param("ids") List<Long> ids);
 
-    @Query("SELECT t FROM Tag t WHERE LOWER(t.label) IN LOWER(:labels)")
+    @Query("SELECT t FROM Tag t WHERE LOWER(t.label) IN :labels")
     public List<Tag> findAllByLabels(@Param("labels") List<String> labels);
 
     /** FIND **/

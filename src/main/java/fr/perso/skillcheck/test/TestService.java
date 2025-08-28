@@ -115,7 +115,6 @@ public class TestService {
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         List<Answer> answerList = this.answerService.findAllByQuestionIds(questionIds);
 
-        //TODO: questionHasTag
         List<QuestionHasTag> qhtList = this.qhtService.findAllByQuestionIds(questionIds);
         List<Long> tagIds = qhtList.stream().map(qht -> qht.getTag().getId()).collect(Collectors.toList());
         List<Tag> tagList = this.tagService.findAllByIds(tagIds);
@@ -125,11 +124,10 @@ public class TestService {
         Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
         Map<Long, List<Question>> questionsByTestId = thqList.stream().collect(Collectors.groupingBy(thq -> thq.getTest().getId(), Collectors.mapping(thq -> questionById.get(thq.getQuestion().getId()), Collectors.toList())));
         Map<Long, Tag> tagById = tagList.stream().collect(Collectors.toMap(Tag::getId, Function.identity()));
-        Map<Long, List<Tag>> tagListByQuestionId = qhtList.stream().collect(Collectors.groupingBy(qht -> qht.getQuestion().getId(), Collectors.mapping(qht -> tagById.get(qht.getTag().getId()), Collectors.toList())));
+        Map<Long, List<Tag>> tagsByQuestionId = qhtList.stream().collect(Collectors.groupingBy(qht -> qht.getQuestion().getId(), Collectors.mapping(qht -> tagById.get(qht.getTag().getId()), Collectors.toList())));
 
         // création des dtos
-        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId);
-
+        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId, tagsByQuestionId);
 
         return UtilExcel.exportTestList(dtos);
     }

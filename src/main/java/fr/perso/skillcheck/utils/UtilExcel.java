@@ -141,14 +141,15 @@ public abstract class UtilExcel {
                 Difficulty questionDifficulty = Difficulty.valueOf(row.getCell(9).getStringCellValue());
                 Long questionCreatedBy = user.getId();
 
-                String answer1Content = getString(row.getCell(11));
-                Boolean answer1IsCorrect = getBoolean(row.getCell(12));
-                String answer2Content = getString(row.getCell(13));
-                Boolean answer2IsCorrect = getBoolean(row.getCell(14));
-                String answer3Content = getString(row.getCell(15));
-                Boolean answer3IsCorrect = getBoolean(row.getCell(16));
-                String answer4Content = getString(row.getCell(17));
-                Boolean answer4IsCorrect = getBoolean(row.getCell(18));
+                String tagLabelList = getString(row.getCell(11));
+                String answer1Content = getString(row.getCell(12));
+                Boolean answer1IsCorrect = getBoolean(row.getCell(13));
+                String answer2Content = getString(row.getCell(14));
+                Boolean answer2IsCorrect = getBoolean(row.getCell(15));
+                String answer3Content = getString(row.getCell(16));
+                Boolean answer3IsCorrect = getBoolean(row.getCell(17));
+                String answer4Content = getString(row.getCell(18));
+                Boolean answer4IsCorrect = getBoolean(row.getCell(19));
 
                 Test test = testList.stream().filter(t -> Objects.equals(t.getId(), testId)).findFirst().orElse(null);
                 TestExportDto dto = dtos.stream().filter(d ->Objects.equals(d.getId(), testId)).findFirst().orElse(null);
@@ -164,6 +165,14 @@ public abstract class UtilExcel {
 
                 Question question = new Question(questionId, questionContent, questionCode, questionIsMultipleAnswer, 0.0, questionTimeLimit, questionDifficulty, questionCreatedBy);
                 QuestionExportDto qDto = new QuestionExportDto(question);
+
+                List<TagDto> tagDtos = new ArrayList<>();
+                List<String> labels = List.of(tagLabelList.split(";"));
+                for (String label : labels) {
+                    TagDto tDto = new TagDto(label);
+                    tagDtos.add(tDto);
+                }
+                qDto.setTags(tagDtos);
 
                 List<SmallAnswerDto> answerList = new ArrayList<>();
                 if (answer1Content != null) {

@@ -5,6 +5,7 @@ import java.util.List;
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.Question;
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class QuestionExportDto {
@@ -16,10 +17,11 @@ public class QuestionExportDto {
     private Difficulty              difficulty;
     private Long                    createdBy;
     private List<SmallAnswerDto>    answers;
+    private List<TagDto>            tags;
 
     public QuestionExportDto() {}
 
-    public QuestionExportDto(Long id, String content, String code, Boolean isMultipleAnswer, Integer timeLimit, Difficulty difficulty, Long createdBy, List<SmallAnswerDto> answers) {
+    public QuestionExportDto(Long id, String content, String code, Boolean isMultipleAnswer, Integer timeLimit, Difficulty difficulty, Long createdBy, List<SmallAnswerDto> answers, List<TagDto> tags) {
         this.id = id;
         this.content = content;
         this.code = code;
@@ -28,6 +30,7 @@ public class QuestionExportDto {
         this.difficulty = difficulty;
         this.createdBy = createdBy;
         this.answers = answers;
+        this.tags = tags;
     }
 
     public QuestionExportDto(Question question) {
@@ -154,5 +157,19 @@ public class QuestionExportDto {
 
     public boolean hasAnswers() {
         return !UtilEntity.isEmpty(answers);
+    }
+
+    /** TAGS **/
+
+    public List<TagDto> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<TagDto> tags) {
+        this.tags = tags;
+    }
+
+    public boolean hasTags() {
+        return !UtilEntity.isEmpty(tags);
     }
 }

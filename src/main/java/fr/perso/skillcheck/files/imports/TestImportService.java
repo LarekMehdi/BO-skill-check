@@ -17,6 +17,7 @@ import fr.perso.skillcheck.queryServices.TestQueryService;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
+import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
@@ -57,7 +58,8 @@ public class TestImportService {
         List<Question> questionList = new ArrayList<>();
         List<Answer> answerList = new ArrayList<>();
         List<TestHasQuestion> thqList = new ArrayList<>();
-        List<Tag> tagList = new ArrayList<>();
+        List<Tag> tagListToCreate = new ArrayList<>();
+        List<QuestionHasTag> qhtList = new ArrayList<>();
 
         // regroupement des données
         Map<Long, Long> testBaseIdByImportId = new HashMap<>();
@@ -79,8 +81,14 @@ public class TestImportService {
                 questionList.add(q);
 
                 // création des tags
+                // TODO: a mettre plus bas? Aprés sauvegarde des questions
                 for (TagDto tagDto : qDto.getTags()) {
-                    //Tag tag = this.tagService.findById(null)
+                    //Tag tag = this.tagService.findByLabel(tagDto.getLabel());
+
+                    // if (tag == null) {
+                    //     tagListToCreate.add(new Tag(tagDto));
+                    // }
+
                 }
             }
         }

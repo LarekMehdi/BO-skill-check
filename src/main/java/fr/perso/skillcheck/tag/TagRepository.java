@@ -16,6 +16,11 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
 
     @Query("SELECT t FROM Tag t WHERE id in :ids")
     public List<Tag> findAllByIds(@Param("ids") List<Long> ids);
+
+    /** FIND **/
+
+    @Query("SELECT t FROM Tag t WHERE t.label = :label")
+    public Tag findByLabel(@Param("label") String label);
     
     /** UPDATE **/
 

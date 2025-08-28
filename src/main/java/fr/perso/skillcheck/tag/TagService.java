@@ -34,6 +34,10 @@ public class TagService {
         return this.tagRepository.findById(id).orElse(null);
     }
 
+    public Tag findByLabel(String label) {
+        return this.tagRepository.findByLabel(label);
+    }
+
     /** UPDATE **/
 
     public Tag update(Long id, TagDto dto) {

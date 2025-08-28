@@ -1,0 +1,1 @@
+ALTER TABLE Tag ADD CONSTRAINT uq_tag_label UNIQUE (label);

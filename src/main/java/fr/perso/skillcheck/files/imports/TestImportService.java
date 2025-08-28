@@ -18,6 +18,9 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.tag.Tag;
+import fr.perso.skillcheck.tag.TagService;
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
@@ -40,6 +43,9 @@ public class TestImportService {
     @Autowired
     private TestHasQuestionService      thqService;
 
+    @Autowired
+    private TagService                  tagService;
+
 
     public List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
 
@@ -51,6 +57,7 @@ public class TestImportService {
         List<Question> questionList = new ArrayList<>();
         List<Answer> answerList = new ArrayList<>();
         List<TestHasQuestion> thqList = new ArrayList<>();
+        List<Tag> tagList = new ArrayList<>();
 
         // regroupement des données
         Map<Long, Long> testBaseIdByImportId = new HashMap<>();
@@ -70,8 +77,14 @@ public class TestImportService {
             for (QuestionExportDto qDto : dto.getQuestions()) {
                 Question q = new Question(qDto);
                 questionList.add(q);
+
+                // création des tags
+                for (TagDto tagDto : qDto.getTags()) {
+                    //Tag tag = this.tagService.findById(null)
+                }
             }
         }
+
 
         // sauvegarde des questions en base
         questionList = this.questionService.createMany(questionList);

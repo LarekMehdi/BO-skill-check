@@ -2,6 +2,7 @@ package fr.perso.skillcheck.tag;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class TagService {
         return this.tagRepository.findAllByIds(ids);
     }
 
+    public List<Tag> findAllByLabels(List<String> labels) {
+        labels = labels.stream().map(l -> l.toLowerCase()).collect(Collectors.toList());
+        return this.tagRepository.findAllByLabels(labels);
+    }
+
     /** FIND **/
 
     public Tag findById(Long id) {
@@ -52,6 +58,10 @@ public class TagService {
     public Tag create(TagDto dto) {
         Tag tag = new Tag(dto);
         return this.tagRepository.save(tag);
+    }
+
+    public List<Tag> createMany(List<Tag> tags) {
+        return this.tagRepository.saveAll(tags);
     }
 
     /** DELETE **/

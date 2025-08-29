@@ -2,9 +2,12 @@ package fr.perso.skillcheck.files.imports;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,7 @@ public class TestImportService {
         List<Question> questionList = new ArrayList<>();
         List<Answer> answerList = new ArrayList<>();
         List<TestHasQuestion> thqList = new ArrayList<>();
+        Set<String> tagLabelSet = new HashSet<>();
         List<Tag> tagListToCreate = new ArrayList<>();
         List<QuestionHasTag> qhtList = new ArrayList<>();
 
@@ -80,9 +84,9 @@ public class TestImportService {
                 Question q = new Question(qDto);
                 questionList.add(q);
 
-                // création des tags
-                // TODO: a mettre plus bas? Aprés sauvegarde des questions
-       
+                // récupération des tags de la question
+                List<String> tagLabels = qDto.getTags().stream().map(TagDto::getLabel).flatMap(l -> Arrays.stream(l.split(";"))).map(String::trim).collect(Collectors.toList());
+                tagLabelSet.addAll(tagLabels);
             }
         }
 
@@ -106,6 +110,27 @@ public class TestImportService {
                 idx++;
             }
         }
+        
+        // création des tags
+        List<Tag> existingTags = this.tagService.findAllByLabels(new ArrayList<>(tagLabelSet));
+        Set<String> existingLabels = existingTags.stream().map(Tag::getLabel).map(String::toLowerCase).collect(Collectors.toSet());
+        for (String tLabel : tagLabelSet) {
+            if (!existingLabels.contains(tLabel.toLowerCase())) {
+                tagListToCreate.add(new Tag(tLabel));
+            }
+        }
+
+        List<Tag> createdTags = this.tagService.createMany(tagListToCreate);
+        existingTags.addAll(createdTags);
+
+        // TODO
+        // map tagByLabel
+        // boucle sur les dto et split des labels
+        // questionHastag
+
+
+
+
 
         // sauvegarde des answers en base
         answerList = this.answerService.createMany(answerList);

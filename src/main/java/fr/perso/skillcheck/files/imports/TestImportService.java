@@ -8,10 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
@@ -21,6 +23,7 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
+import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
@@ -50,7 +53,11 @@ public class TestImportService {
     @Autowired
     private TagService                  tagService;
 
+    @Autowired
+    private QuestionHasTagService       qhtService;
 
+
+    @Transactional
     public List<Test> importExcel(InputStream inputStream, UserPrincipal user) {
 
         // lecture du fichier
@@ -123,14 +130,23 @@ public class TestImportService {
         List<Tag> createdTags = this.tagService.createMany(tagListToCreate);
         existingTags.addAll(createdTags);
 
-        // TODO
-        // map tagByLabel
-        // boucle sur les dto et split des labels
-        // questionHastag
+        Map<String, Tag> tagByLabel = existingTags.stream().collect(Collectors.toMap(t -> t.getLabel().toLowerCase(), Function.identity()));
+        for (TestExportDto dto : dtos) {
+            for (QuestionExportDto qDto : dto.getQuestions()) {
+                Long questionId = questionBaseIdByImportId.get(qDto.getId());
+                List<String> tagLabels = qDto.getTags().stream().map(TagDto::getLabel).flatMap(l -> Arrays.stream(l.split(";"))).map(String::trim).collect(Collectors.toList());
+                for (String label : tagLabels) {
+                    Tag tag = tagByLabel.get(label.toLowerCase());
+                    Long tagId = tag.getId();
 
+                    QuestionHasTag qht = new QuestionHasTag(new Question(questionId), new Tag(tagId));
+                    qhtList.add(qht);
+                }
+            }
+        }
 
-
-
+        // sauvegarde des liens QuestionHasTag
+        this.qhtService.createMany(qhtList);
 
         // sauvegarde des answers en base
         answerList = this.answerService.createMany(answerList);

@@ -28,6 +28,8 @@ public class QuestionDto {
     
     protected Double                    successRate;
 
+    protected Integer                   doneCount;
+
     @NotNull(message = "Le champ timeLimit est requis")
     @Positive(message = "Le champ timeLimit doit être supérieur à 0")
     protected Integer                   timeLimit;
@@ -61,6 +63,7 @@ public class QuestionDto {
         this.isMultipleAnswer = question.getIsMultipleAnswer();
         this.timeLimit = question.getTimeLimit();
         this.successRate = question.getSuccessRate();
+        this.doneCount = question.getDoneCount();
         this.difficulty = question.getDifficulty();
     }
 
@@ -136,6 +139,20 @@ public class QuestionDto {
 
     public boolean hasSuccessRate() {
         return !UtilEntity.isEmpty(this.successRate);
+    }
+
+    /** DONE COUNT **/
+
+    public Integer getDoneCount() {
+        return this.doneCount;
+    }
+
+    public void setDoneCount(Integer doneCount) {
+        this.doneCount = doneCount;
+    }
+
+    public boolean hasDoneCount() {
+        return !UtilEntity.isEmpty(this.doneCount);
     }
 
     /** TIME LIMIT **/

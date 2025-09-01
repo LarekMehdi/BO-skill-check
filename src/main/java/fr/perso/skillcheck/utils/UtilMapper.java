@@ -13,6 +13,8 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.question.dto.QuestionSmallDto;
 import fr.perso.skillcheck.question.dto.ResultQuestionDto;
+import fr.perso.skillcheck.tag.Tag;
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.testSession.TestSession;
@@ -64,14 +66,21 @@ public abstract class UtilMapper {
         return questions;
     }
 
-    public static List<QuestionExportDto> mapQuestionListToQuestionExportDtos(List<Question> questionList, Map<Long, List<Answer>> answersByQuestionId) {
+    public static List<QuestionExportDto> mapQuestionListToQuestionExportDtos(List<Question> questionList, Map<Long, List<Answer>> answersByQuestionId, Map<Long, List<Tag>> tagsByQuestionId) {
         List<QuestionExportDto> dtos = new ArrayList<>();
         for (Question question : questionList) {
-            if (answersByQuestionId.containsKey(question.getId())) {
-                List<Answer> answerList = answersByQuestionId.get(question.getId());
+            Long questionId = question.getId();
+            if (answersByQuestionId.containsKey(questionId)) {
+                List<Answer> answerList = answersByQuestionId.get(questionId);
                 QuestionExportDto dto = new QuestionExportDto(question);
                 List<SmallAnswerDto> aList = mapAnswerListToSmallAnswerDtos(answerList);
                 dto.setAnswers(aList);
+
+                if (tagsByQuestionId.containsKey(questionId)) {
+                    List<Tag> tagList = tagsByQuestionId.get(questionId);
+                    List<TagDto> tagDtos = mapTagListToTagDtos(tagList);
+                    dto.setTags(tagDtos);
+                }
 
                 dtos.add(dto);
             }
@@ -136,19 +145,18 @@ public abstract class UtilMapper {
 
     /** TEST **/
 
-    public static List<TestExportDto> mapTestListToTestExportDtos(List<Test> testList, Map<Long, List<Question>> questionsByTestId, Map<Long, List<Answer>> answersByQuestionId) {
+    public static List<TestExportDto> mapTestListToTestExportDtos(List<Test> testList, Map<Long, List<Question>> questionsByTestId, Map<Long, List<Answer>> answersByQuestionId, Map<Long, List<Tag>> tagsByQuestionId) {
         List<TestExportDto> dtos = new ArrayList<>();
         for (Test test : testList) {
             TestExportDto dto = new TestExportDto(test);
             if (questionsByTestId.containsKey(test.getId())) {
                 List<Question> questionList = questionsByTestId.get(test.getId());
-                List<QuestionExportDto> questions = mapQuestionListToQuestionExportDtos(questionList, answersByQuestionId);
+                List<QuestionExportDto> questions = mapQuestionListToQuestionExportDtos(questionList, answersByQuestionId, tagsByQuestionId);
                 dto.setQuestions(questions);
 
                 dtos.add(dto);
             }
         }
-
         return dtos;
     }
 
@@ -159,7 +167,6 @@ public abstract class UtilMapper {
 
             tests.add(test);
         }
-
         return tests;
     }
 
@@ -169,6 +176,19 @@ public abstract class UtilMapper {
         List<SmallUserDto> dtos = new ArrayList<>();
         for (User user : users) {
             SmallUserDto dto = new SmallUserDto(user);
+
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    /** TAG **/
+
+    public static List<TagDto> mapTagListToTagDtos(List<Tag> tags) {
+        List<TagDto> dtos = new ArrayList<>();
+        for (Tag tag : tags) {
+            TagDto dto = new TagDto(tag);
+
             dtos.add(dto);
         }
         return dtos;

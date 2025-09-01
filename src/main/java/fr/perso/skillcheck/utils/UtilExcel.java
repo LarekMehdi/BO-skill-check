@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -21,6 +22,7 @@ import fr.perso.skillcheck.constants.Difficulty;
 import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.dto.QuestionExportDto;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 
@@ -51,15 +53,16 @@ public abstract class UtilExcel {
             headerRow.createCell(8).setCellValue("TimeLimit");
             headerRow.createCell(9).setCellValue("Difficulty");
             headerRow.createCell(10).setCellValue("QuestionCreatedBy");
+            headerRow.createCell(11).setCellValue("Tags");
             
-            headerRow.createCell(11).setCellValue("Answer 1");
-            headerRow.createCell(12).setCellValue("IsCorrect 1");
-            headerRow.createCell(13).setCellValue("Answer 2");
-            headerRow.createCell(14).setCellValue("IsCorrect 2");
-            headerRow.createCell(15).setCellValue("Answer 3");
-            headerRow.createCell(16).setCellValue("IsCorrect 3");
-            headerRow.createCell(17).setCellValue("Answer 4");
-            headerRow.createCell(18).setCellValue("IsCorrect 4");
+            headerRow.createCell(12).setCellValue("Answer 1");
+            headerRow.createCell(13).setCellValue("IsCorrect 1");
+            headerRow.createCell(14).setCellValue("Answer 2");
+            headerRow.createCell(15).setCellValue("IsCorrect 2");
+            headerRow.createCell(16).setCellValue("Answer 3");
+            headerRow.createCell(17).setCellValue("IsCorrect 3");
+            headerRow.createCell(18).setCellValue("Answer 4");
+            headerRow.createCell(19).setCellValue("IsCorrect 4");
 
             int answerMax = 4;
             int rowId = 1;
@@ -79,15 +82,16 @@ public abstract class UtilExcel {
                     row.createCell(8).setCellValue(question.getTimeLimit());
                     row.createCell(9).setCellValue(question.getDifficulty().toString());
                     row.createCell(10).setCellValue(question.getCreatedBy());
+                    row.createCell(11).setCellValue(question.getTags().stream().map(TagDto::getLabel).collect(Collectors.joining(";")));
 
                     for(int i=0; i<answerMax; i++) {
                         if (i < question.getAnswers().size()) {
                             SmallAnswerDto a = question.getAnswers().get(i);
-                            row.createCell(11 + i*2).setCellValue(a.getContent());
-                            row.createCell(12 + i*2).setCellValue(a.getIsCorrect());
+                            row.createCell(12 + i*2).setCellValue(a.getContent());
+                            row.createCell(13 + i*2).setCellValue(a.getIsCorrect());
                         } else {
-                            row.createCell(11 + i*2).setCellValue("");
                             row.createCell(12 + i*2).setCellValue("");
+                            row.createCell(13 + i*2).setCellValue("");
                         }
                     }
                 }
@@ -137,14 +141,15 @@ public abstract class UtilExcel {
                 Difficulty questionDifficulty = Difficulty.valueOf(row.getCell(9).getStringCellValue());
                 Long questionCreatedBy = user.getId();
 
-                String answer1Content = getString(row.getCell(11));
-                Boolean answer1IsCorrect = getBoolean(row.getCell(12));
-                String answer2Content = getString(row.getCell(13));
-                Boolean answer2IsCorrect = getBoolean(row.getCell(14));
-                String answer3Content = getString(row.getCell(15));
-                Boolean answer3IsCorrect = getBoolean(row.getCell(16));
-                String answer4Content = getString(row.getCell(17));
-                Boolean answer4IsCorrect = getBoolean(row.getCell(18));
+                String tagLabelList = getString(row.getCell(11));
+                String answer1Content = getString(row.getCell(12));
+                Boolean answer1IsCorrect = getBoolean(row.getCell(13));
+                String answer2Content = getString(row.getCell(14));
+                Boolean answer2IsCorrect = getBoolean(row.getCell(15));
+                String answer3Content = getString(row.getCell(16));
+                Boolean answer3IsCorrect = getBoolean(row.getCell(17));
+                String answer4Content = getString(row.getCell(18));
+                Boolean answer4IsCorrect = getBoolean(row.getCell(19));
 
                 Test test = testList.stream().filter(t -> Objects.equals(t.getId(), testId)).findFirst().orElse(null);
                 TestExportDto dto = dtos.stream().filter(d ->Objects.equals(d.getId(), testId)).findFirst().orElse(null);
@@ -160,6 +165,14 @@ public abstract class UtilExcel {
 
                 Question question = new Question(questionId, questionContent, questionCode, questionIsMultipleAnswer, 0.0, questionTimeLimit, questionDifficulty, questionCreatedBy);
                 QuestionExportDto qDto = new QuestionExportDto(question);
+
+                List<TagDto> tagDtos = new ArrayList<>();
+                List<String> labels = List.of(tagLabelList.split(";"));
+                for (String label : labels) {
+                    TagDto tDto = new TagDto(label);
+                    tagDtos.add(tDto);
+                }
+                qDto.setTags(tagDtos);
 
                 List<SmallAnswerDto> answerList = new ArrayList<>();
                 if (answer1Content != null) {

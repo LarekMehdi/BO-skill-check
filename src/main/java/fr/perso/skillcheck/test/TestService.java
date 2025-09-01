@@ -28,7 +28,11 @@ import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.question.QuestionService;
 import fr.perso.skillcheck.question.dto.SubmitQuestionDto;
 import fr.perso.skillcheck.question.dto.TakeQuestionDto;
+import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
+import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
 import fr.perso.skillcheck.security.UserPrincipal;
+import fr.perso.skillcheck.tag.Tag;
+import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
@@ -76,6 +80,12 @@ public class TestService {
     @Autowired
     private TestImportService       testImportService;
 
+    @Autowired
+    private QuestionHasTagService   qhtService;
+
+    @Autowired
+    private TagService              tagService;
+
     /** FIND ALL **/
 
     // TODO: recuperer les tags en meme temps
@@ -105,16 +115,19 @@ public class TestService {
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         List<Answer> answerList = this.answerService.findAllByQuestionIds(questionIds);
 
-        //TODO: questionHasTag
+        List<QuestionHasTag> qhtList = this.qhtService.findAllByQuestionIds(questionIds);
+        List<Long> tagIds = qhtList.stream().map(qht -> qht.getTag().getId()).collect(Collectors.toList());
+        List<Tag> tagList = this.tagService.findAllByIds(tagIds);
 
         // regroupement des données
         Map<Long, List<Answer>> answersByQuestionId = answerList.stream().collect(Collectors.groupingBy(a -> a.getQuestion().getId(), Collectors.toList()));
         Map<Long, Question> questionById = questionList.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
         Map<Long, List<Question>> questionsByTestId = thqList.stream().collect(Collectors.groupingBy(thq -> thq.getTest().getId(), Collectors.mapping(thq -> questionById.get(thq.getQuestion().getId()), Collectors.toList())));
+        Map<Long, Tag> tagById = tagList.stream().collect(Collectors.toMap(Tag::getId, Function.identity()));
+        Map<Long, List<Tag>> tagsByQuestionId = qhtList.stream().collect(Collectors.groupingBy(qht -> qht.getQuestion().getId(), Collectors.mapping(qht -> tagById.get(qht.getTag().getId()), Collectors.toList())));
 
         // création des dtos
-        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId);
-
+        List<TestExportDto> dtos = UtilMapper.mapTestListToTestExportDtos(testList, questionsByTestId, answersByQuestionId, tagsByQuestionId);
 
         return UtilExcel.exportTestList(dtos);
     }

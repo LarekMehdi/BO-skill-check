@@ -65,7 +65,7 @@ public class QuestionService {
         }
 
         List<QuestionDtoWithTags> dtos = this.__mapQuestionToDtosWithTags(questions.toList(), tags, tagsByQuestionId);
-        dtos.sort(Comparator.comparing(QuestionDtoWithTags::getId));
+
         PageDto<QuestionDtoWithTags> result = new PageDto<>(dtos, questions.getTotalElements());
         return result;
     }

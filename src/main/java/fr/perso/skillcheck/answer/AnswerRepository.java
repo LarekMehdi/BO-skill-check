@@ -14,7 +14,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>  {
     @Query("SELECT a FROM Answer a WHERE a.id IN :ids")
     public List<Answer> findAllByIds(@Param("ids") List<Long> ids);
 
-    @Query("SELECT a FROM Answer WHERE a.question.id = :questionId")
+    @Query("SELECT a FROM Answer a WHERE a.question.id = :questionId")
     public List<Answer> findAllByQuestionId(@Param("id") Long id);
 
     @Query("SELECT a FROM Answer a WHERE a.question.id in :questionIds")
@@ -25,7 +25,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>  {
 
     /** DELETE **/
 
-    @Modifying()
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Answer a WHERE a.question.id = :questionId")
     public Integer deleteAllByQuestionId(@Param("questionId") Long questionId);
     

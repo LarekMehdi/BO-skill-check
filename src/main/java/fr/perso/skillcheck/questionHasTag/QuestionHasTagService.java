@@ -30,5 +30,10 @@ public class QuestionHasTagService {
     public List<QuestionHasTag> createMany(List<QuestionHasTag> tags) {
         return this.qhtRepository.saveAll(tags);
     }
+
+    /** DELETE **/
+    public Integer deleteAllByQuestionId(Long questionId) {
+        return this.qhtRepository.deleteAllByQuestionId(questionId);
+    }
     
 }

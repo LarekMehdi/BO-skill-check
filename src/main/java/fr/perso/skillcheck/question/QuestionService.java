@@ -1,7 +1,6 @@
 package fr.perso.skillcheck.question;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.answer.Answer;
-import fr.perso.skillcheck.answer.AnswerRepository;
+import fr.perso.skillcheck.answer.AnswerService;
+import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
@@ -24,8 +25,11 @@ import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
+import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
+import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilList;
 
 @Service
@@ -35,13 +39,19 @@ public class QuestionService {
     private QuestionRepository              questionRepository;
 
     @Autowired
-    private AnswerRepository                answerRepository;
+    private AnswerService                   answerService;
 
     @Autowired
     private QuestionHasTagService           qhtService;
 
     @Autowired
     private TagService                      tagService;
+
+    @Autowired
+    private UserHasAnswerService            uhaService;
+
+    @Autowired
+    private TestHasQuestionService          thqService;
 
     /** FIND ALL **/
 
@@ -65,7 +75,7 @@ public class QuestionService {
         }
 
         List<QuestionDtoWithTags> dtos = this.__mapQuestionToDtosWithTags(questions.toList(), tags, tagsByQuestionId);
-        dtos.sort(Comparator.comparing(QuestionDtoWithTags::getId));
+
         PageDto<QuestionDtoWithTags> result = new PageDto<>(dtos, questions.getTotalElements());
         return result;
     }
@@ -99,7 +109,7 @@ public class QuestionService {
         this.questionRepository.save(question);
 
         List<Answer> answers = dto.getAnswersEntitiesWithQuestionId(question.getId());
-        this.answerRepository.saveAll(answers);
+        this.answerService.createMany(answers);
 
         List<QuestionHasTag> tags = new ArrayList<>();
         for (Long tagId : dto.getTagIds()) {
@@ -114,6 +124,33 @@ public class QuestionService {
 
     public List<Question> createMany(List<Question> questionList) {
         return this.questionRepository.saveAll(questionList);
+    }
+
+    /** DELETE **/
+
+    @Transactional
+    public boolean delete(Long id, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+        if (!this.questionRepository.existsById(id)) throw new NotFoundException("No question found with id " + id);
+
+        // userHasAnswer
+        this.uhaService.deleteAllByQuestionId(id);
+
+        // questionHastag
+        this.qhtService.deleteAllByQuestionId(id);
+
+        // answer
+        this.answerService.deleteAllByQuestionId(id);
+
+        // testHasQuestion
+        this.thqService.deleteAllByQuestionId(id);
+
+        // question
+        int questionDeletedCount = this.questionRepository.deleteQuestionById(id);
+        boolean deleted = questionDeletedCount > 0;
+        if (!deleted) throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "An error occured while deleting question " + id);
+
+        return deleted;
     }
 
     /** PRIVATE **/

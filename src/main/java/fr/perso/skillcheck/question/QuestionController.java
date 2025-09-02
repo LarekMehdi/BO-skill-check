@@ -3,6 +3,7 @@ package fr.perso.skillcheck.question;
 import fr.perso.skillcheck.security.UserPrincipal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,5 +44,12 @@ public class QuestionController {
   @PostMapping()
   public Question create(@RequestBody @Valid QuestionDtoWithTagIds question, @CurrentUser UserPrincipal user) {
     return this.questionService.create(question, user);
+  }
+
+  /** DELETE **/
+
+  @DeleteMapping("/{id}")
+  public boolean delete(@PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+    return this.questionService.delete(id, user);
   }
 }

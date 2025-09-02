@@ -17,6 +17,10 @@ public class AnswerService {
         return this.answerRepository.findAllByIds(ids);
     }
 
+    public List<Answer> findAllByQuestionId(Long questionId) {
+        return this.answerRepository.findAllByQuestionId(questionId);
+    }
+
     public List<Answer> findAllByQuestionIds(List<Long> questionIds) {
         return this.answerRepository.findAllByQuestionIds(questionIds);
     }
@@ -29,6 +33,12 @@ public class AnswerService {
 
     public List<Answer> createMany(List<Answer> answers) {
         return this.answerRepository.saveAll(answers);
+    }
+
+    /** DELETE **/
+
+    public Integer deleteAllByQuestionId(Long questionId) {
+        return this.answerRepository.deleteAllByQuestionId(questionId);
     }
     
 }

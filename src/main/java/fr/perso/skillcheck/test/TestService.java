@@ -1,6 +1,8 @@
 package fr.perso.skillcheck.test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -300,6 +302,7 @@ public class TestService {
         double sessionSuccessRate = 0.0;
         if (!questionIdsSet.isEmpty()) {
             sessionSuccessRate = ((double) correctQuestionCount / questionIdsSet.size()) * 100;
+            sessionSuccessRate = BigDecimal.valueOf(sessionSuccessRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
         session.setSuccessRate(sessionSuccessRate);
 

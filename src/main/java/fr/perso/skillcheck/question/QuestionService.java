@@ -16,7 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
+import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
+import fr.perso.skillcheck.queryServices.TestQueryService;
+import fr.perso.skillcheck.queryServices.UserQueryService;
+import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
@@ -25,12 +29,18 @@ import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.test.dto.SmallTestDto;
+import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
+import fr.perso.skillcheck.user.User;
+import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
 import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilList;
+import fr.perso.skillcheck.utils.UtilMapper;
 
 @Service
 public class QuestionService {
@@ -52,6 +62,12 @@ public class QuestionService {
 
     @Autowired
     private TestHasQuestionService          thqService;
+
+    @Autowired
+    private UserQueryService                userQueryService;
+
+    @Autowired
+    private TestQueryService                testQueryService;
 
     /** FIND ALL **/
 
@@ -86,8 +102,35 @@ public class QuestionService {
 
     /** FIND **/
 
-    public Question findById(Long id) {
-        return this.questionRepository.findById(id).orElse(null);
+    public QuestionDetailsDto findDetailsById(Long id) {
+        
+        // récupération de la question
+        Question question = this.questionRepository.findById(id).orElse(null);
+        if (question == null) throw new NotFoundException("No question found with id " + id);
+
+        // récupération du créateur de la question
+        User creator = this.userQueryService.findById(question.getCreatedBy());
+        SmallUserDto createdBy = new SmallUserDto(creator);
+
+        // récupération des tests
+        List<TestHasQuestion> thqList = this.thqService.findAllByQuestionId(id);
+        List<Long> testIds = thqList.stream().map(thq -> thq.getTest().getId()).collect(Collectors.toList());
+        List<Test> tests = this.testQueryService.findAllByIds(testIds);
+        List<SmallTestDto> testList = UtilMapper.mapTestListToSmallTestDtos(tests);
+
+        // récupération des answers
+        List<Answer> answers = this.answerService.findAllByQuestionId(id);
+        List<SmallAnswerDto> answerList = UtilMapper.mapAnswerListToSmallAnswerDtos(answers);
+
+        // récupération des tags
+        List<QuestionHasTag> qhtList = this.qhtService.findAllByQuestionId(id);
+        List<Long> tagIds = qhtList.stream().map(qht -> qht.getTag().getId()).collect(Collectors.toList());
+        List<Tag> tags = this.tagService.findAllByIds(tagIds);
+        List<TagDto> tagList = UtilMapper.mapTagListToTagDtos(tags); 
+
+        // construction du dto
+        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy, testList, answerList, tagList);
+        return dto;
     }
 
     /** UPDATE **/

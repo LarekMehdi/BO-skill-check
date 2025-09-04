@@ -19,6 +19,9 @@ public interface TestHasQuestionRepository extends JpaRepository<TestHasQuestion
     @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.test.id IN :testIds")
     public List<TestHasQuestion> findAllByTestIds(@Param("testIds") List<Long> testIds);
 
+    @Query("SELECT thq FROM TestHasQuestion thq WHERE thq.question.id = :questionId")
+    public List<TestHasQuestion> findAllByQuestionId(@Param("questionId") Long questionId);
+
     /** DELETE **/
 
     @Modifying(clearAutomatically = true)

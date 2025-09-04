@@ -86,7 +86,7 @@ public class QuestionService {
 
     /** FIND **/
 
-    public Question findById(Long id) {
+    public Question findDetailsById(Long id) {
         return this.questionRepository.findById(id).orElse(null);
     }
 

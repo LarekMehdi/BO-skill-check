@@ -1,5 +1,7 @@
 package fr.perso.skillcheck.question;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import fr.perso.skillcheck.answer.Answer;
@@ -261,7 +263,8 @@ public class Question {
         boolean correct = this.areAnswersCorrect(userAnswers, correctAnswers);
         this.doneCount += 1;
         this.correctCount += correct ? 1 : 0;
-        this.successRate = (double) this.correctCount / this.doneCount;
+        BigDecimal rate = BigDecimal.valueOf((double) this.correctCount / this.doneCount);
+        this.successRate = rate.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     public boolean areAnswersCorrect(List<Answer> userAnswers, List<Answer> correctAnswers) {

@@ -28,8 +28,8 @@ public class QuestionController {
   /** FIND **/
 
   @GetMapping("/{id}")
-  public Question findById(@PathVariable("id") Long id) {
-    return this.questionService.findById(id);
+  public Question findDetailsById(@PathVariable("id") Long id) {
+    return this.questionService.findDetailsById(id);
   }
 
   /** FIND ALL **/

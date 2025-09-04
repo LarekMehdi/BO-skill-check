@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.constants.Difficulty;
+import fr.perso.skillcheck.question.Question;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.dto.SmallTestDto;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
@@ -41,6 +42,22 @@ public class QuestionDetailsDto {
         this.answerList = answerList;
         this.tagList = tagList;
         this.testList = testList;
+    }
+
+    public QuestionDetailsDto(Question question, SmallUserDto createdBy) {
+        this.id = question.getId();
+        this.content = question.getContent();
+        this.code = question.getCode();
+        this.isMultipleAnswer = question.getIsMultipleAnswer();
+        this.successRate = question.getSuccessRate();
+        this.doneCount = question.getDoneCount();
+        this.correctCount = question.getCorrectCount();
+        this.timeLimit = question.getTimeLimit();
+        this.difficulty = question.getDifficulty();
+        this.createdBy = createdBy;
+        // this.answerList = answerList;
+        // this.tagList = tagList;
+        // this.testList = testList;
     }
 
     /** ID **/

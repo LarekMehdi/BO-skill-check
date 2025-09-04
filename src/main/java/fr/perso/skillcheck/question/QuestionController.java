@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
@@ -28,7 +30,7 @@ public class QuestionController {
   /** FIND **/
 
   @GetMapping("/{id}")
-  public Question findDetailsById(@PathVariable("id") Long id) {
+  public QuestionDetailsDto findDetailsById(@PathVariable("id") Long id) {
     return this.questionService.findDetailsById(id);
   }
 

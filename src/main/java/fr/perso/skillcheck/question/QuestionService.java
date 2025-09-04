@@ -17,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
 import fr.perso.skillcheck.exceptions.NotFoundException;
+import fr.perso.skillcheck.queryServices.UserQueryService;
+import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
@@ -26,6 +28,8 @@ import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
+import fr.perso.skillcheck.user.User;
+import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
 import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
@@ -52,6 +56,9 @@ public class QuestionService {
 
     @Autowired
     private TestHasQuestionService          thqService;
+
+    @Autowired
+    private UserQueryService                userQueryService;
 
     /** FIND ALL **/
 
@@ -86,8 +93,25 @@ public class QuestionService {
 
     /** FIND **/
 
-    public Question findDetailsById(Long id) {
-        return this.questionRepository.findById(id).orElse(null);
+    public QuestionDetailsDto findDetailsById(Long id) {
+        
+        // récupération de la question
+        Question question = this.questionRepository.findById(id).orElse(null);
+        if (question == null) throw new NotFoundException("No question found with id " + id);
+
+        // récupération du créateur de la question
+        User creator = this.userQueryService.findById(question.getCreatedBy());
+        SmallUserDto createdBy = new SmallUserDto(creator);
+
+        // récupération des tests
+
+        // récupération des answers
+
+        // récupération des tags
+
+        // construction du dto
+        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy);
+        return dto;
     }
 
     /** UPDATE **/

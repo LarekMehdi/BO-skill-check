@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
+import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.queryServices.UserQueryService;
 import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
@@ -118,11 +119,17 @@ public class QuestionService {
         List<SmallTestDto> testList = UtilMapper.mapTestListToSmallTestDtos(tests);
 
         // récupération des answers
+        List<Answer> answers = this.answerService.findAllByQuestionId(id);
+        List<SmallAnswerDto> answerList = UtilMapper.mapAnswerListToSmallAnswerDtos(answers);
 
         // récupération des tags
+        List<QuestionHasTag> qhtList = this.qhtService.findAllByQuestionId(id);
+        List<Long> tagIds = qhtList.stream().map(qht -> qht.getTag().getId()).collect(Collectors.toList());
+        List<Tag> tags = this.tagService.findAllByIds(tagIds);
+        List<TagDto> tagList = UtilMapper.mapTagListToTagDtos(tags); 
 
         // construction du dto
-        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy, testList);
+        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy, testList, answerList, tagList);
         return dto;
     }
 

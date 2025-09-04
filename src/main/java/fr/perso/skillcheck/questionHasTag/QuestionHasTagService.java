@@ -21,6 +21,10 @@ public class QuestionHasTagService {
         return this.qhtRepository.findAllByQuestionIds(questionIds);
     }
 
+    public List<QuestionHasTag> findAllByQuestionId(Long questionId) {
+        return this.qhtRepository.findAllByQuestionId(questionId);
+    }
+
     public List<QuestionHasTag> findAllByTagIds(List<Long> tagIds) {
         return this.qhtRepository.findAllByTagIds(tagIds);
     }

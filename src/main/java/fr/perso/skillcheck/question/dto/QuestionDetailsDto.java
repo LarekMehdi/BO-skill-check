@@ -44,7 +44,7 @@ public class QuestionDetailsDto {
         this.testList = testList;
     }
 
-    public QuestionDetailsDto(Question question, SmallUserDto createdBy, List<SmallTestDto> testList) {
+    public QuestionDetailsDto(Question question, SmallUserDto createdBy, List<SmallTestDto> testList, List<SmallAnswerDto> answerList, List<TagDto> tagList) {
         this.id = question.getId();
         this.content = question.getContent();
         this.code = question.getCode();
@@ -55,8 +55,8 @@ public class QuestionDetailsDto {
         this.timeLimit = question.getTimeLimit();
         this.difficulty = question.getDifficulty();
         this.createdBy = createdBy;
-        // this.answerList = answerList;
-        // this.tagList = tagList;
+        this.answerList = answerList;
+        this.tagList = tagList;
         this.testList = testList;
     }
 

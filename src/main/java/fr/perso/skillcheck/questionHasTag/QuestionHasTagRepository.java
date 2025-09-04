@@ -17,6 +17,9 @@ public interface QuestionHasTagRepository extends JpaRepository<QuestionHasTag, 
     @Query("SELECT qht FROM QuestionHasTag qht WHERE qht.question.id in :questionIds")
     List<QuestionHasTag> findAllByQuestionIds(@Param("questionIds") List<Long> questionIds);
 
+    @Query("SELECT qht FROM QuestionHasTag qht WHERE qht.question.id = :questionId")
+    List<QuestionHasTag> findAllByQuestionId(@Param("questionIds") Long questionId);
+
     @Query("SELECT qht FROM QuestionHasTag qht WHERE qht.tag.id in :tagIds")
     List<QuestionHasTag> findAllByTagIds(@Param("tagIds") List<Long> tagIds);
 

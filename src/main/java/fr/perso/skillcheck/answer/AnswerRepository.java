@@ -15,7 +15,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>  {
     public List<Answer> findAllByIds(@Param("ids") List<Long> ids);
 
     @Query("SELECT a FROM Answer a WHERE a.question.id = :questionId")
-    public List<Answer> findAllByQuestionId(@Param("id") Long id);
+    public List<Answer> findAllByQuestionId(@Param("questionId") Long questionId);
 
     @Query("SELECT a FROM Answer a WHERE a.question.id in :questionIds")
     public List<Answer> findAllByQuestionIds(@Param("questionIds") List<Long> questionIds);

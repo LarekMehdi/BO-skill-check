@@ -18,6 +18,7 @@ import fr.perso.skillcheck.answer.Answer;
 import fr.perso.skillcheck.answer.AnswerService;
 import fr.perso.skillcheck.answer.dto.SmallAnswerDto;
 import fr.perso.skillcheck.exceptions.NotFoundException;
+import fr.perso.skillcheck.queryServices.TestQueryService;
 import fr.perso.skillcheck.queryServices.UserQueryService;
 import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
@@ -29,7 +30,6 @@ import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
-import fr.perso.skillcheck.test.TestService;
 import fr.perso.skillcheck.test.dto.SmallTestDto;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
@@ -67,7 +67,7 @@ public class QuestionService {
     private UserQueryService                userQueryService;
 
     @Autowired
-    private TestService                     testService;
+    private TestQueryService                testQueryService;
 
     /** FIND ALL **/
 
@@ -115,7 +115,7 @@ public class QuestionService {
         // récupération des tests
         List<TestHasQuestion> thqList = this.thqService.findAllByQuestionId(id);
         List<Long> testIds = thqList.stream().map(thq -> thq.getTest().getId()).collect(Collectors.toList());
-        List<Test> tests = this.testService.findAllByIds(testIds);
+        List<Test> tests = this.testQueryService.findAllByIds(testIds);
         List<SmallTestDto> testList = UtilMapper.mapTestListToSmallTestDtos(tests);
 
         // récupération des answers

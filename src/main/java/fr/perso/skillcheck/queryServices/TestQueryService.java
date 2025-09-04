@@ -23,6 +23,12 @@ public class TestQueryService {
         return this.testRepository.findById(id).orElseThrow(() -> new NotFoundException("No test found with id " + id));
     }
 
+    /** FIND ALL **/
+
+    public List<Test> findAllByIds(List<Long> ids) {
+        return this.testRepository.findAllByIds(ids);
+    }
+
     /** CREATE **/
 
     public List<Test> createMany(List<Test> tests) {

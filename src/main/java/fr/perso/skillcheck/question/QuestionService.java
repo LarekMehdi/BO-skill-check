@@ -27,6 +27,10 @@ import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.test.TestService;
+import fr.perso.skillcheck.test.dto.SmallTestDto;
+import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
@@ -35,6 +39,7 @@ import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
 import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilList;
+import fr.perso.skillcheck.utils.UtilMapper;
 
 @Service
 public class QuestionService {
@@ -59,6 +64,9 @@ public class QuestionService {
 
     @Autowired
     private UserQueryService                userQueryService;
+
+    @Autowired
+    private TestService                     testService;
 
     /** FIND ALL **/
 
@@ -104,13 +112,17 @@ public class QuestionService {
         SmallUserDto createdBy = new SmallUserDto(creator);
 
         // récupération des tests
+        List<TestHasQuestion> thqList = this.thqService.findAllByQuestionId(id);
+        List<Long> testIds = thqList.stream().map(thq -> thq.getTest().getId()).collect(Collectors.toList());
+        List<Test> tests = this.testService.findAllByIds(testIds);
+        List<SmallTestDto> testList = UtilMapper.mapTestListToSmallTestDtos(tests);
 
         // récupération des answers
 
         // récupération des tags
 
         // construction du dto
-        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy);
+        QuestionDetailsDto dto = new QuestionDetailsDto(question, createdBy, testList);
         return dto;
     }
 

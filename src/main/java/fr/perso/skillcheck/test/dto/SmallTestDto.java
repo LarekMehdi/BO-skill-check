@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.test.dto;
 
+import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.utils.UtilEntity;
 
 public class SmallTestDto {
@@ -11,6 +12,11 @@ public class SmallTestDto {
     public SmallTestDto(Long id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public SmallTestDto(Test test) {
+        this.id = test.getId();
+        this.title = test.getTitle();
     }
 
     /** ID **/

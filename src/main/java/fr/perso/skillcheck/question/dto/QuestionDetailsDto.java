@@ -44,7 +44,7 @@ public class QuestionDetailsDto {
         this.testList = testList;
     }
 
-    public QuestionDetailsDto(Question question, SmallUserDto createdBy) {
+    public QuestionDetailsDto(Question question, SmallUserDto createdBy, List<SmallTestDto> testList) {
         this.id = question.getId();
         this.content = question.getContent();
         this.code = question.getCode();
@@ -57,7 +57,7 @@ public class QuestionDetailsDto {
         this.createdBy = createdBy;
         // this.answerList = answerList;
         // this.tagList = tagList;
-        // this.testList = testList;
+        this.testList = testList;
     }
 
     /** ID **/

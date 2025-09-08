@@ -53,7 +53,7 @@ public class QuestionController {
 
   /** UPDATE **/
 
-  @PatchMapping("/")
+  @PatchMapping("/{id}/tag/add")
   public QuestionHasTag addTagToQuestion(@RequestBody @Valid QuestionHasTagDto dto, @PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
     return this.questionService.addTagToQuestion(dto, user);
   }

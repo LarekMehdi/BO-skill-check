@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
+
 @Service
 public class QuestionHasTagService {
 
@@ -44,8 +46,13 @@ public class QuestionHasTagService {
     }
 
     /** DELETE **/
+
     public Integer deleteAllByQuestionId(Long questionId) {
         return this.qhtRepository.deleteAllByQuestionId(questionId);
+    }
+
+    public Integer deleteByQuestionIdTagId(QuestionHasTagDto dto) {
+        return this.qhtRepository.deleteByQuestionIdTagId(dto.getQuestionId(), dto.getTagId());
     }
     
 }

@@ -183,6 +183,14 @@ public class QuestionService {
         return this.qhtService.create(qht);
     }
 
+    @Transactional
+    public Integer removeTagFromQuestion(QuestionHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+        if (!this.questionRepository.existsById(dto.getQuestionId())) throw new NotFoundException("No question found with id " + dto.getQuestionId());
+
+        return this.qhtService.deleteByQuestionIdTagId(dto);
+    }
+
     /** DELETE **/
 
     @Transactional

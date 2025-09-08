@@ -31,5 +31,9 @@ public interface QuestionHasTagRepository extends JpaRepository<QuestionHasTag, 
     @Modifying( clearAutomatically = true)
     @Query("DELETE FROM QuestionHasTag qht WHERE qht.question.id = :questionId")
     public Integer deleteAllByQuestionId(@Param("questionId") Long questionId);
+
+    @Modifying( clearAutomatically = true)
+    @Query("DELETE FROM QuestionHasTag qht WHERE qht.question.id = :questionId AND qht.tag.id = :tagId")
+    public Integer deleteByQuestionIdTagId(@Param("questionId") Long questionId, @Param("tagId") Long tagId);
     
 }

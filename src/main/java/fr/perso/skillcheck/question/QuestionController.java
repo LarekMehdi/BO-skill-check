@@ -58,6 +58,11 @@ public class QuestionController {
     return this.questionService.addTagToQuestion(dto, user);
   }
 
+  @PatchMapping("{id}/tag/remove")
+  public Integer removeTagFromQuestion(@RequestBody @Valid QuestionHasTagDto dto, @PathVariable("id") Long id, @CurrentUser UserPrincipal user) {
+    return this.questionService.removeTagFromQuestion(dto, user);
+  }
+
   /** DELETE **/
 
   @DeleteMapping("/{id}")

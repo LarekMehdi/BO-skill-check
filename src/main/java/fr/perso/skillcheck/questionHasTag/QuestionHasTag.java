@@ -1,6 +1,7 @@
 package fr.perso.skillcheck.questionHasTag;
 
 import fr.perso.skillcheck.question.Question;
+import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
@@ -37,6 +38,11 @@ public class QuestionHasTag {
     public QuestionHasTag(Question question, Tag tag) {
         this.question = question;
         this.tag = tag;
+    }
+
+    public QuestionHasTag(QuestionHasTagDto dto) {
+        this.question = new Question(dto.getQuestionId());
+        this.tag = new Tag(dto.getTagId());
     }
 
     /** ID **/

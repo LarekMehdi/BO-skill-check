@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
+
 @Service
 public class QuestionHasTagService {
 
@@ -29,15 +31,28 @@ public class QuestionHasTagService {
         return this.qhtRepository.findAllByTagIds(tagIds);
     }
 
+    public int countByQuestionIdTagId(Long questionId, Long tagId) {
+        return this.qhtRepository.countByQuestionIdTagId(questionId, tagId);
+    }
+
     /** CREATE **/
+
+    public QuestionHasTag create(QuestionHasTag tag) {
+        return this.qhtRepository.save(tag);
+    }
 
     public List<QuestionHasTag> createMany(List<QuestionHasTag> tags) {
         return this.qhtRepository.saveAll(tags);
     }
 
     /** DELETE **/
+
     public Integer deleteAllByQuestionId(Long questionId) {
         return this.qhtRepository.deleteAllByQuestionId(questionId);
+    }
+
+    public Integer deleteByQuestionIdTagId(QuestionHasTagDto dto) {
+        return this.qhtRepository.deleteByQuestionIdTagId(dto.getQuestionId(), dto.getTagId());
     }
     
 }

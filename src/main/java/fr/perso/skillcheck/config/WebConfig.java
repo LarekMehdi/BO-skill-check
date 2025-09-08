@@ -2,6 +2,7 @@ package fr.perso.skillcheck.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -12,13 +13,17 @@ import fr.perso.skillcheck.security.resolvers.CurrentUserArgumentResolver;
 
 @Configuration
 public class WebConfig {
+
+    @Value("${app.cors.allowed-origin}")
+    private String allowedOrigin;
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // toutes les routes
-                    .allowedOrigins("http://localhost:5173") // frontend Vite
+                    .allowedOrigins(allowedOrigin) // frontend Vite
                     .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true);

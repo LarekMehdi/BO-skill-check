@@ -25,6 +25,7 @@ import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
+import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
@@ -167,6 +168,19 @@ public class QuestionService {
 
     public List<Question> createMany(List<Question> questionList) {
         return this.questionRepository.saveAll(questionList);
+    }
+
+    /** UPDATE **/
+
+    @Transactional
+    public QuestionHasTag addTagToQuestion(QuestionHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+        if (!this.questionRepository.existsById(dto.getQuestionId())) throw new NotFoundException("No question found with id " + dto.getQuestionId());
+
+        int exist = this.qhtService.countByQuestionIdTagId(dto.getQuestionId(), dto.getTagId());
+        if (exist > 0) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "This tag is already linked to this question [questionId:" + dto.getQuestionId() + " , tagId:" + dto.getTagId() + "]");
+        QuestionHasTag qht = new QuestionHasTag(dto);
+        return this.qhtService.create(qht);
     }
 
     /** DELETE **/

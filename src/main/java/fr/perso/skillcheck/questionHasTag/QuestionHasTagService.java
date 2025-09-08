@@ -29,7 +29,15 @@ public class QuestionHasTagService {
         return this.qhtRepository.findAllByTagIds(tagIds);
     }
 
+    public int countByQuestionIdTagId(Long questionId, Long tagId) {
+        return this.qhtRepository.countByQuestionIdTagId(questionId, tagId);
+    }
+
     /** CREATE **/
+
+    public QuestionHasTag create(QuestionHasTag tag) {
+        return this.qhtRepository.save(tag);
+    }
 
     public List<QuestionHasTag> createMany(List<QuestionHasTag> tags) {
         return this.qhtRepository.saveAll(tags);

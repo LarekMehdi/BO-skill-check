@@ -45,6 +45,12 @@ public class AnswerService {
         return this.answerRepository.saveAll(answers);
     }
 
+    /** UPDATE **/
+
+    public List<Answer> updateMany(List<Answer> answers) {
+        return this.answerRepository.saveAll(answers);
+    }
+
     /** DELETE **/
 
     @Transactional

@@ -187,9 +187,6 @@ public class QuestionService {
         question.setTimeLimit(dto.getTimeLimit());
         question.setDifficulty(dto.getDifficulty());
 
-        this.questionRepository.save(question);
-
-        // questionHasAnswer
         List<Answer> oldAnswers = this.answerService.findAllByQuestionId(dto.getId());
 
         // answers avec id recu du front
@@ -205,12 +202,20 @@ public class QuestionService {
         this.uhaService.deleteAllByAnswerIds(idsToDelete);
         this.answerService.deleteAllByIds(idsToDelete, user);
 
-       
-        
+        // mise a jour des réponses
+        List<Answer> updateAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToUpdate, dto.getId());
+        this.answerService.updateMany(updateAnswers);
 
-        return question;
+        // création des réponses
+        if (answersToCreate.size() > 0) {
+            List<Answer> createAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToCreate);
+            this.answerService.createMany(createAnswers);
+        }
 
+        long correctCount = dto.getAnswers().stream().filter(SmallAnswerDto::isCorrectTrue).count();
+        question.setIsMultipleAnswer(correctCount > 1);
 
+        return this.questionRepository.save(question);
     }
 
     @Transactional

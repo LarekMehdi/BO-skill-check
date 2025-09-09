@@ -190,6 +190,23 @@ public class QuestionService {
         this.questionRepository.save(question);
 
         // questionHasAnswer
+        List<Answer> oldAnswers = this.answerService.findAllByQuestionId(dto.getId());
+
+        // answers avec id recu du front
+        List<Long> answerIds = dto.getAnswers().stream().filter(SmallAnswerDto::hasId).map(SmallAnswerDto::getId).collect(Collectors.toList());
+
+        // organisation des données
+        List<Answer> answersToDelete = oldAnswers.stream().filter(old -> !answerIds.contains(old.getId())).collect(Collectors.toList());
+        List<Long> idsToDelete = answersToDelete.stream().map(Answer::getId).collect(Collectors.toList());
+        List<SmallAnswerDto> answersToCreate = dto.getAnswers().stream().filter(a -> !a.hasId()).collect(Collectors.toList());
+        List<SmallAnswerDto> answersToUpdate = dto.getAnswers().stream().filter(SmallAnswerDto::hasId).collect(Collectors.toList());
+
+        // suppression des réponses
+        this.uhaService.deleteAllByAnswerIds(idsToDelete);
+        this.answerService.deleteAllByIds(idsToDelete, user);
+
+       
+        
 
         return question;
 

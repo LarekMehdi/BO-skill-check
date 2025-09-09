@@ -32,4 +32,8 @@ public class UserHasAnswerService {
     public Integer deleteAllByQuestionId(Long questionId) {
         return this.uhaRepository.deleteAllByQuestionId(questionId);
     }
+
+    public Integer deleteAllByAnswerIds(List<Long> answerIds) {
+        return this.uhaRepository.deleteAllByAnswerIds(answerIds);
+    }
 }

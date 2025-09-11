@@ -208,7 +208,7 @@ public class QuestionService {
 
         // création des réponses
         if (answersToCreate.size() > 0) {
-            List<Answer> createAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToCreate);
+            List<Answer> createAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToCreate, dto.getId());
             this.answerService.createMany(createAnswers);
         }
 

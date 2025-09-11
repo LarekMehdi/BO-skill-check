@@ -130,6 +130,18 @@ public abstract class UtilMapper {
         return answers;
     }
 
+    // Override avec questionId
+    public static List<Answer> mapSmallAnswerListToAnswers(List<SmallAnswerDto> dtos, Long questionId) {
+        List<Answer> answers = new ArrayList<>();
+        for (SmallAnswerDto dto : dtos) {
+            Answer answer = new Answer(dto);
+            answer.setQuestion(new Question(questionId));
+
+            answers.add(answer);
+        }
+        return answers;
+    }
+
     /** SESSIONS **/
 
     public static List<UserTestSessionDto> mapTestSessionListToUserTestSessionDtos(List<TestSession> sessions, Map<Long, Test> testById) {

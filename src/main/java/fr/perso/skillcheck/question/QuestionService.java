@@ -23,6 +23,7 @@ import fr.perso.skillcheck.queryServices.UserQueryService;
 import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
+import fr.perso.skillcheck.question.dto.UpdateQuestionDto;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
 import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
@@ -103,6 +104,10 @@ public class QuestionService {
 
     /** FIND **/
 
+    public Question findById(Long id) {
+        return this.questionRepository.findById(id).orElseThrow(() -> new NotFoundException("No question found with id " + id));
+    }
+
     public QuestionDetailsDto findDetailsById(Long id) {
         
         // récupération de la question
@@ -171,6 +176,48 @@ public class QuestionService {
     }
 
     /** UPDATE **/
+
+    @Transactional
+    public Question update(UpdateQuestionDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        Question question = this.findById(dto.getId());
+        question.setContent(dto.getContent());
+        question.setCode(dto.getCode());
+        question.setTimeLimit(dto.getTimeLimit());
+        question.setDifficulty(dto.getDifficulty());
+
+        List<Answer> oldAnswers = this.answerService.findAllByQuestionId(dto.getId());
+
+        // answers avec id recu du front
+        List<Long> answerIds = dto.getAnswerList().stream().filter(SmallAnswerDto::hasId).map(SmallAnswerDto::getId).collect(Collectors.toList());
+
+        // organisation des données
+        List<Answer> answersToDelete = oldAnswers.stream().filter(old -> !answerIds.contains(old.getId())).collect(Collectors.toList());
+        List<Long> idsToDelete = answersToDelete.stream().map(Answer::getId).collect(Collectors.toList());
+        List<SmallAnswerDto> answersToCreate = dto.getAnswerList().stream().filter(a -> !a.hasId()).collect(Collectors.toList());
+        List<SmallAnswerDto> answersToUpdate = dto.getAnswerList().stream().filter(SmallAnswerDto::hasId).collect(Collectors.toList());
+
+        // suppression des réponses
+        this.uhaService.deleteAllByAnswerIds(idsToDelete);
+        this.answerService.deleteAllByIds(idsToDelete, user);
+
+        // mise a jour des réponses
+        List<Answer> updateAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToUpdate, dto.getId());
+        this.answerService.updateMany(updateAnswers);
+
+        // création des réponses
+        if (answersToCreate.size() > 0) {
+            List<Answer> createAnswers = UtilMapper.mapSmallAnswerListToAnswers(answersToCreate, dto.getId());
+            this.answerService.createMany(createAnswers);
+        }
+
+        // mise à jour de la question
+        long correctCount = dto.getAnswerList().stream().filter(SmallAnswerDto::isCorrectTrue).count();
+        question.setIsMultipleAnswer(correctCount > 1);
+
+        return this.questionRepository.save(question);
+    }
 
     @Transactional
     public QuestionHasTag addTagToQuestion(QuestionHasTagDto dto, UserPrincipal user) {

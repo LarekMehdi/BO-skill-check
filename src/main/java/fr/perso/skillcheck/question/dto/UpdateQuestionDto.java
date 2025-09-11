@@ -13,7 +13,7 @@ public class UpdateQuestionDto {
     private String                      code;
     private Integer                     timeLimit;
     private Difficulty                  difficulty;
-    private List<SmallAnswerDto>        answers;
+    private List<SmallAnswerDto>        answerList;
 
     public UpdateQuestionDto() {}
 
@@ -23,7 +23,7 @@ public class UpdateQuestionDto {
         this.code = code;
         this.timeLimit = timeLimit;
         this.difficulty = difficulty;
-        this.answers = answers;
+        this.answerList = answers;
     }
 
     /** ID **/
@@ -98,15 +98,15 @@ public class UpdateQuestionDto {
 
     /** ANSWERS **/
 
-    public List<SmallAnswerDto> getAnswers() {
-        return this.answers;
+    public List<SmallAnswerDto> getAnswerList() {
+        return this.answerList;
     }
 
-    public void setAnswers(List<SmallAnswerDto> answers) {
-        this.answers = answers;
+    public void setAnswerList(List<SmallAnswerDto> answerList) {
+        this.answerList = answerList;
     }
 
-    public boolean hasAnswers() {
-        return !UtilEntity.isEmpty(this.answers);
+    public boolean hasAnswerList() {
+        return !UtilEntity.isEmpty(this.answerList);
     }
 }

@@ -33,6 +33,10 @@ public class UserHasAnswerService {
         return this.uhaRepository.deleteAllByQuestionId(questionId);
     }
 
+    public Integer deleteAllByQuestionIds(List<Long> questionIds) {
+        return this.uhaRepository.deleteAllByQuestionIds(questionIds);
+    }
+
     public Integer deleteAllByAnswerIds(List<Long> answerIds) {
         return this.uhaRepository.deleteAllByAnswerIds(answerIds);
     }

@@ -59,6 +59,11 @@ public class AnswerService {
     }
 
     @Transactional
+    public Integer deleteAllByQuestionIds(List<Long> questionIds) {
+        return this.answerRepository.deleteAllByQuestionIds(questionIds);
+    }
+
+    @Transactional
     public Integer deleteAllByIds(List<Long> ids,  UserPrincipal user) {
         if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
         

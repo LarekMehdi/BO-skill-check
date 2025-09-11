@@ -30,4 +30,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Modifying
     @Query("DELETE FROM Question q WHERE q.id = :id")
     public Integer deleteQuestionById(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM Question q WHERE q.id IN :ids")
+    public Integer deleteQuestionByIds(@Param("ids") List<Long> ids);
 }

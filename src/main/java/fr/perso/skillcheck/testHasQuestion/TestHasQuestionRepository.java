@@ -35,4 +35,8 @@ public interface TestHasQuestionRepository extends JpaRepository<TestHasQuestion
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TestHasQuestion thq WHERE thq.question.id = :questionId")
     public Integer deleteAllByQuestionId(@Param("questionId") Long questionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM TestHasQuestion thq WHERE thq.question.id IN :questionIds")
+    public Integer deleteAllByQuestionIds(@Param("questionIds") List<Long> questionIds);
 }

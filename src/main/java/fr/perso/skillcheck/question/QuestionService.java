@@ -265,6 +265,30 @@ public class QuestionService {
         return deleted;
     }
 
+    @Transactional
+    public boolean deleteAll(List<Long> ids, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        // userHasAnswer
+        this.uhaService.deleteAllByQuestionIds(ids);
+
+        // questionHastag
+        this.qhtService.deleteAllByQuestionIds(ids);
+
+        // answer
+        this.answerService.deleteAllByQuestionIds(ids);
+
+        // testHasQuestion
+        this.thqService.deleteAllByQuestionIds(ids);
+
+        // question
+        int questionDeletedCount = this.questionRepository.deleteQuestionByIds(ids);
+        boolean deleted = questionDeletedCount > 0;
+        if (!deleted) throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "An error occured while deleting questions");
+
+        return deleted;
+    }
+
     /** PRIVATE **/
 
     private List<QuestionDtoWithTags> __mapQuestionToDtosWithTags(List<Question> questions, List<Tag> tagList, Map<Long, List<Long>> tagsByQuestionId) {

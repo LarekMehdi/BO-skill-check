@@ -51,6 +51,10 @@ public class QuestionHasTagService {
         return this.qhtRepository.deleteAllByQuestionId(questionId);
     }
 
+    public Integer deleteAllByQuestionIds(List<Long> questionIds) {
+        return this.qhtRepository.deleteAllByQuestionIds(questionIds);
+    }
+
     public Integer deleteByQuestionIdTagId(QuestionHasTagDto dto) {
         return this.qhtRepository.deleteByQuestionIdTagId(dto.getQuestionId(), dto.getTagId());
     }

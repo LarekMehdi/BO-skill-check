@@ -26,6 +26,10 @@ public interface UserHasAnswerRepository extends JpaRepository<UserHasAnswer, Lo
     @Query("DELETE FROM UserHasAnswer uha WHERE uha.question.id = :questionId")
     public Integer deleteAllByQuestionId(@Param("questionId") Long questionId);
 
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM UserHasAnswer uha WHERE uha.question.id IN :questionIds")
+    public Integer deleteAllByQuestionIds(@Param("questionIds") List<Long> questionIds);
+
     @Modifying
     @Query("DELETE FROM UserHasAnswer uha WHERE uha.answer.id IN :answerIds")
     public Integer deleteAllByAnswerIds(@Param("answerIds") List<Long> answerIds);

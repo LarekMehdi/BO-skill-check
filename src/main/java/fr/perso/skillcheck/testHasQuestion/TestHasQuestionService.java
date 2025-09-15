@@ -44,4 +44,8 @@ public class TestHasQuestionService {
     public Integer deleteAllByQuestionId(Long questionId) {
         return this.thqRepository.deleteAllByQuestionId(questionId);
     }
+
+    public Integer deleteAllByQuestionIds(List<Long> questionIds) {
+        return this.thqRepository.deleteAllByQuestionIds(questionIds);
+    }
 }

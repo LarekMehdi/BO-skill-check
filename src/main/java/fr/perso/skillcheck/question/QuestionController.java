@@ -21,10 +21,10 @@ import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.question.dto.UpdateQuestionDto;
+import fr.perso.skillcheck.question.filter.QuestionFilter;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
 import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
 import fr.perso.skillcheck.security.annotations.CurrentUser;
-import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
 import jakarta.validation.Valid;
 
@@ -45,7 +45,7 @@ public class QuestionController {
   /** FIND ALL **/
 
   @GetMapping()
-  public PageDto<QuestionDtoWithTags> findAll(@ModelAttribute @Valid GenericFilter filter) {
+  public PageDto<QuestionDtoWithTags> findAll(@ModelAttribute @Valid QuestionFilter filter) {
     return this.questionService.findAll(filter);
   }
 

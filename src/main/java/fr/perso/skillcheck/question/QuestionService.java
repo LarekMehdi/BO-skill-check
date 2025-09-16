@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +77,8 @@ public class QuestionService {
     public PageDto<QuestionDtoWithTags> findAll(QuestionFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
-        Page<Question> questions = this.questionRepository.findAll(pageable);
+        Specification<Question> spec = filter.toSpecification();
+        Page<Question> questions = this.questionRepository.findAll(spec, pageable);
 
         List<Long> questionIds =  UtilList.collect(questions.toList(), Question::getId);
         List<QuestionHasTag> qhtList = qhtService.findAllByQuestionIds(questionIds);

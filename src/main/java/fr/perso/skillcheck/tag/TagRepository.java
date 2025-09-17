@@ -20,6 +20,9 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
     @Query("SELECT t FROM Tag t WHERE LOWER(t.label) IN :labels")
     public List<Tag> findAllByLabels(@Param("labels") List<String> labels);
 
+    @Query("SELECT t FROM Tag t WHERE LOWER(t.label) LIKE LOWER(CONCAT('%', :label, '%'))")
+    public List<Tag> findAllByLabel(@Param("label") String label);
+
     /** FIND **/
 
     @Query("SELECT t FROM Tag t WHERE LOWER(t.label) = LOWER(:label)")

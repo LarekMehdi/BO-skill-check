@@ -1,5 +1,6 @@
 package fr.perso.skillcheck.tag;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import fr.perso.skillcheck.exceptions.NotFoundException;
 import fr.perso.skillcheck.tag.dto.TagDto;
+import fr.perso.skillcheck.utils.QuerySearch;
 
 @Service
 public class TagService {
@@ -23,6 +25,12 @@ public class TagService {
         tags.sort(Comparator.comparing(Tag::getId));
 
         return tags;
+    }
+
+    public List<Tag> findAllByLabel(QuerySearch search) {
+        List<Tag> results = new ArrayList<>();
+        if (search.hasLabel()) results = this.tagRepository.findAllByLabel(search.getLabel());
+        return results;
     }
 
     public List<Tag> findAllByIds(List<Long> ids) {

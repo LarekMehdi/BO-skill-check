@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import fr.perso.skillcheck.question.dto.QuestionDetailsDto;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTagIds;
 import fr.perso.skillcheck.question.dto.QuestionDtoWithTags;
 import fr.perso.skillcheck.question.dto.UpdateQuestionDto;
+import fr.perso.skillcheck.question.filter.QuestionFilter;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTag;
 import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
 import fr.perso.skillcheck.questionHasTag.dto.QuestionHasTagDto;
@@ -38,7 +40,6 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.user.dto.SmallUserDto;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
-import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.PageDto;
 import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilList;
@@ -73,10 +74,11 @@ public class QuestionService {
 
     /** FIND ALL **/
 
-    public PageDto<QuestionDtoWithTags> findAll(GenericFilter filter) {
+    public PageDto<QuestionDtoWithTags> findAll(QuestionFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
-        Page<Question> questions = this.questionRepository.findAll(pageable);
+        Specification<Question> spec = filter.toSpecification();
+        Page<Question> questions = this.questionRepository.findAll(spec, pageable);
 
         List<Long> questionIds =  UtilList.collect(questions.toList(), Question::getId);
         List<QuestionHasTag> qhtList = qhtService.findAllByQuestionIds(questionIds);

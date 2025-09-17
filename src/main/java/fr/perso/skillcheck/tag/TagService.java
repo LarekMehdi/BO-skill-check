@@ -29,7 +29,7 @@ public class TagService {
 
     public List<Tag> findAllByLabel(QuerySearch search) {
         List<Tag> results = new ArrayList<>();
-        if (search.hasLabel()) results = this.tagRepository.findAllByLabel(search.getLabel().toLowerCase());
+        if (search.hasLabel()) results = this.tagRepository.findAllByLabel(search.getLabel());
         return results;
     }
 

@@ -27,7 +27,6 @@ import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
-import fr.perso.skillcheck.utils.GenericFilter;
 import jakarta.validation.Valid;
 
 @RestController
@@ -40,7 +39,7 @@ public class TestController {
     /** FIND ALL **/
 
     @GetMapping()
-    public Page<Test> findAllWithPagination(@ModelAttribute @Valid GenericFilter filter) {
+    public Page<Test> findAllWithPagination(@ModelAttribute @Valid TestFilter filter) {
         return this.testService.findAllWithPagination(filter);
     }
 

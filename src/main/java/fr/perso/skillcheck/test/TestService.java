@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,6 @@ import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import fr.perso.skillcheck.user.User;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswer;
 import fr.perso.skillcheck.userHasAnswer.UserHasAnswerService;
-import fr.perso.skillcheck.utils.GenericFilter;
 import fr.perso.skillcheck.utils.UtilAuth;
 import fr.perso.skillcheck.utils.UtilEntity;
 import fr.perso.skillcheck.utils.UtilExcel;
@@ -91,10 +91,13 @@ public class TestService {
     /** FIND ALL **/
 
     // TODO: recuperer les tags en meme temps
-    public Page<Test> findAllWithPagination(GenericFilter filter) {
+    public Page<Test> findAllWithPagination(TestFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
-        return this.testRepository.findAllWithPagination(pageable);
+        Specification<Test> spec = filter.toSpecification();
+        
+        Page<Test> tests = this.testRepository.findAll(spec, pageable);
+        return tests;
     }
 
     public List<Test> findAllByIds(List<Long> ids) {

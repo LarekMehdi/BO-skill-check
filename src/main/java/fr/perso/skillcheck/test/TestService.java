@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +37,7 @@ import fr.perso.skillcheck.questionHasTag.QuestionHasTagService;
 import fr.perso.skillcheck.security.UserPrincipal;
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.TagService;
+import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
@@ -46,6 +48,8 @@ import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.testHasTag.TestHasTag;
+import fr.perso.skillcheck.testHasTag.TestHasTagService;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
@@ -88,16 +92,45 @@ public class TestService {
     @Autowired
     private TagService              tagService;
 
+    @Autowired
+    private TestHasTagService       thtService;
+
     /** FIND ALL **/
 
-    // TODO: recuperer les tags en meme temps
     public Page<TestDto> findAllWithPagination(TestFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
         Specification<Test> spec = filter.toSpecification();
         
+        // récupération des tests filtrés et paginés
         Page<Test> tests = this.testRepository.findAll(spec, pageable);
-        Page<TestDto> result = tests.map(test -> UtilMapper.mapTestToTestDto(test));
+        if (tests.isEmpty()) return Page.empty(pageable);
+        
+        // récupération des tags
+        List<Long> testIds = tests.getContent().stream().map(Test::getId).collect(Collectors.toList());
+        List<TestHasTag> thtList = this.thtService.findAllByTestIds(testIds);
+        List<Long> tagIds = thtList.stream().map(tht -> tht.getTag().getId()).distinct().collect(Collectors.toList());
+        List<Tag> tags = this.tagService.findAllByIds(tagIds);
+        List<TagDto> tagDtos = UtilMapper.mapTagListToTagDtos(tags);
+
+        // mappage des données
+        Map<Long, TagDto> tagById = new HashMap<>();
+        Map<Long, List<TagDto>> tagsByTestId = new HashMap<>();
+
+        tagById = tagDtos.stream().collect(Collectors.toMap(TagDto::getId, Function.identity()));
+        for (TestHasTag tht : thtList) {
+            Long testId = tht.getTest().getId();
+            Long tagId = tht.getTag().getId();
+
+            TagDto tagDto = tagById.get(tagId);
+            tagsByTestId.computeIfAbsent(testId, k -> new ArrayList<>()).add(tagDto);
+        }
+
+        // construction du dto final
+        Page<TestDto> result = tests.map(test -> {
+            List<TagDto> tagList = tagsByTestId.getOrDefault(test.getId(), Collections.emptyList());
+            return UtilMapper.mapTestToTestDto(test, tagList);
+        });
         return result;
     }
 

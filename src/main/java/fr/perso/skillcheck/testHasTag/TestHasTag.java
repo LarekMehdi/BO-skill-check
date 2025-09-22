@@ -2,6 +2,7 @@ package fr.perso.skillcheck.testHasTag;
 
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,4 +25,59 @@ public class TestHasTag {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag         tag;
+
+    public TestHasTag() {}
+
+    public TestHasTag(Long id, Test test, Tag tag) {
+        this.id = id;
+        this.test = test;
+        this.tag = tag;
+    }
+
+    public TestHasTag(Test test, Tag tag) {
+        this.test = test;
+        this.tag = tag;
+    }
+
+    /** ID **/
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean hasId() {
+        return !UtilEntity.isEmpty(this.id);
+    }
+
+    /** TEST **/
+
+    public Test getTest() {
+        return this.test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
+    }
+
+    public boolean hasTest() {
+        return !UtilEntity.isEmpty(this.test);
+    }
+
+    /** TAG **/
+
+    public Tag getTag() {
+        return this.tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    public boolean hasTag() {
+        return !UtilEntity.isEmpty(this.tag);
+    }
 }

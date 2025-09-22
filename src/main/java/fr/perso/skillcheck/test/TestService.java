@@ -43,6 +43,7 @@ import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.TestExportDto;
+import fr.perso.skillcheck.test.dto.UpdateTestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
@@ -263,6 +264,16 @@ public class TestService {
 
         UpdateTestQuestionsResultDto result = new UpdateTestQuestionsResultDto(newThqList.size(), questionIdsToRemove.size());
         return result;
+    }
+
+    @Transactional
+    public Test updateTest(UpdateTestDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+        
+        Test test = this.findById(dto.getId());
+        if (dto.hasDescription()) test.setDescription(dto.getDescription());
+
+        return this.testRepository.save(test);
     }
 
     /** CREATE **/

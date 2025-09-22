@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +24,7 @@ import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
+import fr.perso.skillcheck.test.dto.UpdateTestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
@@ -66,6 +68,11 @@ public class TestController {
     @PutMapping("/questions")
     public UpdateTestQuestionsResultDto updateQuestions(@RequestBody @Valid UpdateTestQuestionDto dto) {
         return this.testService.updateQuestions(dto);
+    }
+
+    @PatchMapping("/{id}")
+    public Test updateTest(@PathVariable("id") Long id, @RequestBody @Valid UpdateTestDto dto, @CurrentUser UserPrincipal user) {
+        return this.testService.updateTest(dto, user);
     }
 
     /** CREATE **/

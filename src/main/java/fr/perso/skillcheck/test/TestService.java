@@ -91,13 +91,14 @@ public class TestService {
     /** FIND ALL **/
 
     // TODO: recuperer les tags en meme temps
-    public Page<Test> findAllWithPagination(TestFilter filter) {
+    public Page<TestDto> findAllWithPagination(TestFilter filter) {
         filter.initGenericFilterIfNeeded();
         Pageable pageable = filter.toPageable();
         Specification<Test> spec = filter.toSpecification();
         
         Page<Test> tests = this.testRepository.findAll(spec, pageable);
-        return tests;
+        Page<TestDto> result = tests.map(test -> UtilMapper.mapTestToTestDto(test));
+        return result;
     }
 
     public List<Test> findAllByIds(List<Long> ids) {

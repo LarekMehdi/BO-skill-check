@@ -39,7 +39,7 @@ public class TestController {
     /** FIND ALL **/
 
     @GetMapping()
-    public Page<Test> findAllWithPagination(@ModelAttribute @Valid TestFilter filter) {
+    public Page<TestDto> findAllWithPagination(@ModelAttribute @Valid TestFilter filter) {
         return this.testService.findAllWithPagination(filter);
     }
 

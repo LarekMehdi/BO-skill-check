@@ -17,6 +17,7 @@ import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.tag.dto.TagDto;
 import fr.perso.skillcheck.test.Test;
 import fr.perso.skillcheck.test.dto.SmallTestDto;
+import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.TestExportDto;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.dto.UserTestSessionDto;
@@ -191,6 +192,32 @@ public abstract class UtilMapper {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    public static List<TestDto> mapTestListToTestDtos(List<Test> tests, Map<Long, List<TagDto>> tagsByTestId) {
+        List<TestDto> dtos = new ArrayList<>();
+        for (Test test : tests) {
+            TestDto dto = new TestDto(test);
+            if (tagsByTestId.containsKey(test.getId())) {
+                List<TagDto> tagList = tagsByTestId.get(test.getId());
+                dto.setTags(tagList);
+            }
+
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    public static TestDto mapTestToTestDto(Test test) {
+        return mapTestToTestDto(test, null);
+    }
+
+    public static TestDto mapTestToTestDto(Test test, List<TagDto> tags) {
+        TestDto dto = new TestDto(test);
+        if (tags != null) {
+            dto.setTags(tags);
+        }
+        return dto;
     }
 
     /** USER **/

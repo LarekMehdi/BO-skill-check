@@ -187,10 +187,16 @@ public class TestService {
         List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
         List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
 
+        List<TestHasTag> thtList = this.thtService.findAllByTestId(id);
+        List<Long> tagIds = thtList.stream().map(tht -> tht.getTag().getId()).collect(Collectors.toList());
+        List<Tag> tagList = this.tagService.findAllByIds(tagIds);
+        List<TagDto> tags = UtilMapper.mapTagListToTagDtos(tagList);
+
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         dto.setQuestionList(UtilMapper.mapQuestionListToQuestionSmallDtos(questionList));
         dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
         dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
+        dto.setTagList(tags);
 
         return dto;
     }

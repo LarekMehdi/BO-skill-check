@@ -19,6 +19,10 @@ public class TestHasTagService {
         return this.thtRepository.findAllByTestIds(testIds);
     }
 
+    public List<TestHasTag> findAllByTestId(Long testId) {
+        return this.thtRepository.findAllByTestId(testId);
+    }
+
     /** CREATE **/
 
     public TestHasTag create(TestHasTag tht) {

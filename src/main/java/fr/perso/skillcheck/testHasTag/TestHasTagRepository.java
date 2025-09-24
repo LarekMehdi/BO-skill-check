@@ -14,6 +14,9 @@ public interface TestHasTagRepository extends JpaRepository<TestHasTag, Long>{
     @Query("SELECT tht FROM TestHasTag tht WHERE tht.test.id IN :testIds")
     public List<TestHasTag> findAllByTestIds(@Param("testIds") List<Long> testIds);
 
+    @Query("SELECT tht FROM TestHasTag tht WHERE tht.test.id = :testId")
+    public List<TestHasTag> findAllByTestId(@Param("testId") Long testId);
+
     @Query("SELECT COUNT(tht) FROM TestHasTag tht WHERE tht.test.id = :testId AND tht.tag.id = :tagId")
     public Integer countByTestIdAndTagId(@Param("testId") Long testId, @Param("tagId") Long tagId);
     

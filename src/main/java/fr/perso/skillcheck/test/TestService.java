@@ -51,6 +51,7 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.testHasTag.TestHasTag;
 import fr.perso.skillcheck.testHasTag.TestHasTagService;
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
@@ -269,7 +270,7 @@ public class TestService {
     @Transactional
     public Test updateTest(UpdateTestDto dto, UserPrincipal user) {
         if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
-        
+
         Test test = this.findById(dto.getId());
         if (dto.hasDescription()) test.setDescription(dto.getDescription());
 
@@ -369,6 +370,14 @@ public class TestService {
         } catch(IOException e) {
             throw new RuntimeException("An error occured while importing file", e);
         }
+    }
+
+    @Transactional
+    public TestHasTag addTagToTest(TestHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        TestHasTag tht = new TestHasTag(dto);
+        return this.thtService.create(tht);
     }
 
     /** DELETE **/

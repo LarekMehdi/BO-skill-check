@@ -28,6 +28,8 @@ import fr.perso.skillcheck.test.dto.UpdateTestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.testHasTag.TestHasTag;
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import jakarta.validation.Valid;
 
@@ -91,6 +93,11 @@ public class TestController {
     public ResponseEntity<List<Test>> importTestList(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal user) {
         List<Test> tests = this.testService.importTestList(file, user);
         return ResponseEntity.ok(tests);
+    }
+
+    @PutMapping("/tag")
+    public TestHasTag addTagToTest(@RequestBody @Valid TestHasTagDto dto, @CurrentUser UserPrincipal user) {
+        return this.testService.addTagToTest(dto, user);
     }
 
     /** DELETE **/

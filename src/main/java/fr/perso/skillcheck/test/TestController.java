@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,11 +24,15 @@ import fr.perso.skillcheck.test.dto.SubmitTestDto;
 import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
+import fr.perso.skillcheck.test.dto.UpdateTestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
+import fr.perso.skillcheck.testHasTag.TestHasTag;
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/tests")
@@ -68,6 +73,16 @@ public class TestController {
         return this.testService.updateQuestions(dto);
     }
 
+    @PatchMapping("/{id}")
+    public Test updateTest(@PathVariable("id") Long id, @RequestBody @Valid UpdateTestDto dto, @CurrentUser UserPrincipal user) {
+        return this.testService.updateTest(dto, user);
+    }
+
+    @PatchMapping("/{id}/tag/remove")
+    public Integer removeTagFromTest(@RequestBody @Valid TestHasTagDto dto, @PathParam("id") Long id, @CurrentUser UserPrincipal user) {
+        return this.testService.removeTagFromTest(dto, user);
+    }
+
     /** CREATE **/
 
     @PostMapping()
@@ -84,6 +99,11 @@ public class TestController {
     public ResponseEntity<List<Test>> importTestList(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal user) {
         List<Test> tests = this.testService.importTestList(file, user);
         return ResponseEntity.ok(tests);
+    }
+
+    @PutMapping("/tag")
+    public TestHasTag addTagToTest(@RequestBody @Valid TestHasTagDto dto, @CurrentUser UserPrincipal user) {
+        return this.testService.addTagToTest(dto, user);
     }
 
     /** DELETE **/

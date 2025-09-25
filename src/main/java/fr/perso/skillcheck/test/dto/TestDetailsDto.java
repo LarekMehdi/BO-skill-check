@@ -9,21 +9,21 @@ import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.validation.constraints.NotBlank;
 
 public class TestDetailsDto {
-     private Long               id;
+     private Long                   id;
 
     @NotBlank(message = "Le titre ne doit pas être vide")
-    private String              title;
+    private String                  title;
 
     @NotBlank(message = "La description ne doit pas être vide")
-    private String              description;
+    private String                  description;
 
-    private Double              successRate;
+    private Double                  successRate;
 
-    private Integer             timeLimit;
+    private Integer                 timeLimit;
 
-    private Long                createdBy;
+    private Long                    createdBy;
 
-    private List<TagDto>        tags;
+    private List<TagDto>            tagList;
     
     private List<QuestionSmallDto>  questionList;
 
@@ -144,16 +144,16 @@ public class TestDetailsDto {
 
     /** TAGS **/
 
-    public List<TagDto> getTags() {
-        return this.tags;
+    public List<TagDto> getTagList() {
+        return this.tagList;
     }
 
-    public void setTags(List<TagDto> tags) {
-        this.tags = tags;
+    public void setTagList(List<TagDto> tagList) {
+        this.tagList = tagList;
     }
 
-    public boolean hasTags() {
-        return !UtilEntity.isEmpty(tags);
+    public boolean hasTagList() {
+        return !UtilEntity.isEmpty(tagList);
     }
 
     /** QUESTION LIST **/

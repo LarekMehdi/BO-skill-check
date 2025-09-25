@@ -2,6 +2,7 @@ package fr.perso.skillcheck.testHasTag;
 
 import fr.perso.skillcheck.tag.Tag;
 import fr.perso.skillcheck.test.Test;
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.utils.UtilEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,6 +38,12 @@ public class TestHasTag {
     public TestHasTag(Test test, Tag tag) {
         this.test = test;
         this.tag = tag;
+    }
+
+    public TestHasTag(TestHasTagDto dto) {
+        this.id = dto.getId();
+        this.test = new Test(dto.getTestId());
+        this.tag = new Tag(dto.getTagId());
     }
 
     /** ID **/

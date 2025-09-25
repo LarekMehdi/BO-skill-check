@@ -43,6 +43,7 @@ import fr.perso.skillcheck.test.dto.TakeTestDto;
 import fr.perso.skillcheck.test.dto.TestDetailsDto;
 import fr.perso.skillcheck.test.dto.TestDto;
 import fr.perso.skillcheck.test.dto.TestExportDto;
+import fr.perso.skillcheck.test.dto.UpdateTestDto;
 import fr.perso.skillcheck.test.dto.UpdateTestQuestionDto;
 import fr.perso.skillcheck.test.filter.TestFilter;
 import fr.perso.skillcheck.testHasQuestion.TestHasQuestion;
@@ -50,6 +51,7 @@ import fr.perso.skillcheck.testHasQuestion.TestHasQuestionService;
 import fr.perso.skillcheck.testHasQuestion.dto.UpdateTestQuestionsResultDto;
 import fr.perso.skillcheck.testHasTag.TestHasTag;
 import fr.perso.skillcheck.testHasTag.TestHasTagService;
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.testSession.TestSession;
 import fr.perso.skillcheck.testSession.TestSessionService;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
@@ -185,10 +187,16 @@ public class TestService {
         List<TestHasQuestion> thqList = this.thqService.findAllByTestId(id);
         List<Long> questionIds = thqList.stream().map((thq) -> thq.getQuestion().getId()).collect(Collectors.toList());
 
+        List<TestHasTag> thtList = this.thtService.findAllByTestId(id);
+        List<Long> tagIds = thtList.stream().map(tht -> tht.getTag().getId()).collect(Collectors.toList());
+        List<Tag> tagList = this.tagService.findAllByIds(tagIds);
+        List<TagDto> tags = UtilMapper.mapTagListToTagDtos(tagList);
+
         List<Question> questionList = this.questionService.findAllByIds(questionIds);
         dto.setQuestionList(UtilMapper.mapQuestionListToQuestionSmallDtos(questionList));
         dto.setSuccessRate(UtilEntity.computeSuccessRate(questionList));
         dto.setTimeLimit(UtilEntity.computeTimeLimit(questionList));
+        dto.setTagList(tags);
 
         return dto;
     }
@@ -263,6 +271,23 @@ public class TestService {
 
         UpdateTestQuestionsResultDto result = new UpdateTestQuestionsResultDto(newThqList.size(), questionIdsToRemove.size());
         return result;
+    }
+
+    @Transactional
+    public Test updateTest(UpdateTestDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        Test test = this.findById(dto.getId());
+        if (dto.hasDescription()) test.setDescription(dto.getDescription());
+
+        return this.testRepository.save(test);
+    }
+
+    @Transactional
+    public Integer removeTagFromTest(TestHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        return this.thtService.deleteByTestIdAndTagId(dto);
     }
 
     /** CREATE **/
@@ -358,6 +383,14 @@ public class TestService {
         } catch(IOException e) {
             throw new RuntimeException("An error occured while importing file", e);
         }
+    }
+
+    @Transactional
+    public TestHasTag addTagToTest(TestHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        TestHasTag tht = new TestHasTag(dto);
+        return this.thtService.create(tht);
     }
 
     /** DELETE **/

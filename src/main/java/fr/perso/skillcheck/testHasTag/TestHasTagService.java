@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
+
 @Service
 public class TestHasTagService {
 
@@ -29,6 +31,12 @@ public class TestHasTagService {
         int exist = this.thtRepository.countByTestIdAndTagId(tht.getTest().getId(), tht.getTag().getId());
         if (exist > 0) throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "This test is already linked to this tag [ testId: " + tht.getTest().getId() + ", tagId: " + tht.getTag().getId() + "]");
         return this.thtRepository.save(tht);
+    }
+
+    /** DELETE **/
+
+    public Integer deleteByTestIdAndTagId(TestHasTagDto dto) {
+        return this.thtRepository.deleteByTestIdAndTagId(dto.getTestId(), dto.getTagId());
     }
     
 }

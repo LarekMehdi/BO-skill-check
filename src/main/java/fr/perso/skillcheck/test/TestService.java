@@ -283,6 +283,13 @@ public class TestService {
         return this.testRepository.save(test);
     }
 
+    @Transactional
+    public Integer removeTagFromTest(TestHasTagDto dto, UserPrincipal user) {
+        if (!UtilAuth.isAdmin(user)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot perform this action");
+
+        return this.thtService.deleteByTestIdAndTagId(dto);
+    }
+
     /** CREATE **/
 
     public Test create(TestDto dto, UserPrincipal user) {

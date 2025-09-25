@@ -32,6 +32,7 @@ import fr.perso.skillcheck.testHasTag.TestHasTag;
 import fr.perso.skillcheck.testHasTag.dto.TestHasTagDto;
 import fr.perso.skillcheck.testSession.dto.TestSessionDto;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/tests")
@@ -75,6 +76,11 @@ public class TestController {
     @PatchMapping("/{id}")
     public Test updateTest(@PathVariable("id") Long id, @RequestBody @Valid UpdateTestDto dto, @CurrentUser UserPrincipal user) {
         return this.testService.updateTest(dto, user);
+    }
+
+    @PatchMapping("/{id}/tag/remove")
+    public Integer removeTagFromTest(@RequestBody @Valid TestHasTagDto dto, @PathParam("id") Long id, @CurrentUser UserPrincipal user) {
+        return this.testService.removeTagFromTest(dto, user);
     }
 
     /** CREATE **/
